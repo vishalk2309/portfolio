@@ -193,7 +193,10 @@ export default function CommandPalette() {
             </div>
 
             {/* results */}
-            <ul className="max-h-[50vh] overflow-y-auto p-2">
+            <ul
+              data-lenis-prevent
+              className="max-h-[50vh] overflow-y-auto overscroll-contain p-2"
+            >
               {filtered.length === 0 && (
                 <li className="px-3 py-6 text-center text-sm text-white/40">
                   No results
