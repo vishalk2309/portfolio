@@ -4,6 +4,10 @@
 
 :root {
   color-scheme: dark;
+  /* UI accent — swapped at runtime by the theme switcher */
+  --accent-from: #6ee7f9;
+  --accent-to: #a855f7;
+  --accent-glow: #6ee7f9;
 }
 
 * {
@@ -49,14 +53,22 @@ html.lenis body {
   background: #050816;
 }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(#6ee7f9, #a855f7);
+  background: linear-gradient(var(--accent-from), var(--accent-to));
   border-radius: 9px;
 }
 
 @layer components {
   /* Gradient text used for headings + hero name */
   .gradient-text {
-    @apply bg-gradient-text bg-clip-text text-transparent;
+    background-image: linear-gradient(
+      45deg,
+      var(--accent-from),
+      var(--accent-to),
+      #ffffff
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
 
   /* Reusable glassmorphism surface */
@@ -79,7 +91,7 @@ html.lenis body {
   bottom: -4px;
   height: 2px;
   width: 0;
-  background: linear-gradient(90deg, #6ee7f9, #a855f7);
+  background: linear-gradient(90deg, var(--accent-from), var(--accent-to));
   transition: width 0.3s ease;
 }
 .nav-link:hover::after,

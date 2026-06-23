@@ -6,8 +6,10 @@ import {
   FiExternalLink,
   FiCopy,
   FiCornerDownLeft,
+  FiDroplet,
 } from "react-icons/fi";
 import { navLinks, socials, profile, leetcode, gfg, github } from "../data";
+import { ACCENTS, setAccent } from "../theme";
 
 /**
  * ⌘K / Ctrl+K command palette: jump to sections, open external links,
@@ -89,7 +91,14 @@ export default function CommandPalette() {
       },
     ];
 
-    return [...nav, ...links, ...actions];
+    const themes = Object.entries(ACCENTS).map(([key, a]) => ({
+      group: "Theme",
+      label: `Accent: ${a.label}`,
+      icon: FiDroplet,
+      run: () => setAccent(key),
+    }));
+
+    return [...nav, ...links, ...actions, ...themes];
   }, []);
 
   const filtered = useMemo(() => {

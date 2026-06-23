@@ -18,8 +18,9 @@ export default {
       },
       backgroundImage: {
         "gradient-text":
-          "linear-gradient(45deg, #6EE7F9, #A855F7, #FFFFFF)",
-        "gradient-btn": "linear-gradient(90deg, #6EE7F9, #A855F7)",
+          "linear-gradient(45deg, var(--accent-from), var(--accent-to), #FFFFFF)",
+        "gradient-btn":
+          "linear-gradient(90deg, var(--accent-from), var(--accent-to))",
       },
       keyframes: {
         float: {

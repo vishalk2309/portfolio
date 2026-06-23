@@ -3,6 +3,7 @@ import Lenis from "lenis";
 import Background from "./components/Background";
 import CursorTrail from "./components/CursorTrail";
 import CommandPalette from "./components/CommandPalette";
+import FloatingThemeButton from "./components/FloatingThemeButton";
 import Loader from "./components/Loader";
 import ScrollProgress from "./components/ScrollProgress";
 import Navbar from "./components/Navbar";
@@ -73,6 +74,7 @@ export default function App() {
       <Background />
       <CursorTrail />
       <CommandPalette />
+      <FloatingThemeButton />
       <Navbar />
       <main>
         <Hero />

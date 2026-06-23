@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FiArrowRight, FiSearch } from "react-icons/fi";
 import { navLinks, profile } from "../data";
+import AccentDots from "./AccentDots";
 
 const openPalette = () =>
   window.dispatchEvent(new Event("open-command-palette"));
@@ -70,7 +71,12 @@ export default function Navbar() {
           })}
         </ul>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
+          {/* Accent theme dots (desktop) */}
+          <div className="hidden sm:block">
+            <AccentDots size={16} />
+          </div>
+
           {/* ⌘K command palette trigger */}
           <button
             onClick={openPalette}
