@@ -3,13 +3,42 @@ import { motion } from "framer-motion";
 import { profile, socials } from "../data";
 
 export default function Contact() {
-  const [sent, setSent] = useState(false);
+  // status: idle | sending | success | error
+  const [status, setStatus] = useState("idle");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSent(true);
-    setTimeout(() => setSent(false), 3500);
+    const form = e.target;
+    const data = new FormData(form);
+    data.append("access_key", profile.web3formsKey);
+    data.append("subject", `Portfolio message from ${data.get("name") || "visitor"}`);
+    data.append("from_name", "Portfolio Contact Form");
+
+    setStatus("sending");
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: data,
+      });
+      const json = await res.json();
+      if (json.success) {
+        setStatus("success");
+        form.reset();
+        setTimeout(() => setStatus("idle"), 4000);
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
   };
+
+  const btnLabel = {
+    idle: "Send Message",
+    sending: "Sending…",
+    success: "✓ Message Sent!",
+    error: "Failed — try again",
+  }[status];
 
   return (
     <section id="contact" className="relative px-6 py-24">
@@ -63,17 +92,36 @@ export default function Contact() {
             <Input name="email" type="email" placeholder="Email" />
           </div>
           <textarea
+            name="message"
             required
             rows={5}
             placeholder="Message"
             className="mt-5 w-full resize-none rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-4 text-white placeholder-white/40 outline-none transition-all duration-300 focus:border-neon-purple focus:shadow-[0_0_25px_-5px_rgba(168,85,247,0.7)]"
           />
+
+          {/* honeypot — hidden from humans, catches bots */}
+          <input
+            type="checkbox"
+            name="botcheck"
+            tabIndex={-1}
+            autoComplete="off"
+            className="hidden"
+            aria-hidden="true"
+          />
+
           <button
             type="submit"
-            className="mt-6 w-full rounded-2xl bg-gradient-btn py-4 font-semibold text-base shadow-[0_0_25px_rgba(110,231,249,0.4)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(168,85,247,0.6)]"
+            disabled={status === "sending"}
+            className="mt-6 w-full rounded-2xl bg-gradient-btn py-4 font-semibold text-base shadow-[0_0_25px_rgba(110,231,249,0.4)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(168,85,247,0.6)] disabled:opacity-70"
           >
-            {sent ? "✓ Message Sent!" : "Send Message"}
+            {btnLabel}
           </button>
+
+          {status === "error" && (
+            <p className="mt-3 text-center text-sm text-red-400">
+              Something went wrong. Email me directly at {profile.email}.
+            </p>
+          )}
         </motion.form>
       </div>
     </section>
