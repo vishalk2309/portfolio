@@ -1,8 +1,8 @@
 import { useRef } from "react";
 import { motion } from "framer-motion";
-import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { FiChevronLeft, FiChevronRight, FiExternalLink } from "react-icons/fi";
 import { FaGraduationCap, FaRegCalendarAlt } from "react-icons/fa";
-import { certificates } from "../data";
+import { certificates, profile } from "../data";
 
 export default function Certificates() {
   const trackRef = useRef(null);
@@ -51,7 +51,7 @@ export default function Certificates() {
         {/* Track */}
         <div
           ref={trackRef}
-          className="flex gap-6 overflow-x-auto scroll-smooth px-2 pb-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="flex gap-6 overflow-x-auto scroll-smooth px-2 pb-10 pt-24 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           style={{ scrollSnapType: "x mandatory" }}
         >
           {certificates.map((cert, i) => (
@@ -71,54 +71,66 @@ function CertCard({ cert, index }) {
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.5, delay: (index % 4) * 0.08 }}
       style={{ scrollSnapAlign: "start" }}
-      className="group relative w-[300px] shrink-0"
+      className="group relative z-0 h-[420px] w-[300px] shrink-0 hover:z-30"
     >
+      {/* Certificate sheet — slides UP out of the pocket on hover */}
+      <div className="absolute inset-x-4 top-0 z-0 rounded-2xl bg-[#f1efe9] px-5 pb-32 pt-5 text-center shadow-[0_14px_34px_-12px_rgba(0,0,0,0.65)] transition-transform duration-500 ease-out group-hover:-translate-y-[88px]">
+        <div className="mx-auto mb-3 flex items-center justify-center gap-2 text-[#9a9488]">
+          <span className="h-px w-10 bg-[#cfc9bd]" />
+          <span>❦</span>
+          <span className="h-px w-10 bg-[#cfc9bd]" />
+        </div>
+        <div
+          className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-full text-white shadow-inner"
+          style={{ background: "#7c1f1f" }}
+        >
+          ❀
+        </div>
+        <h3
+          className="text-2xl leading-none tracking-wide text-[#2a2a35]"
+          style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
+        >
+          CERTIFICATE
+        </h3>
+        <p className="mt-1.5 text-[11px] font-semibold tracking-[0.3em] text-[#8a8478]">
+          OF ACHIEVEMENT
+        </p>
+        <p className="mt-4 text-[9px] tracking-[0.2em] text-[#9a9488]">
+          THIS CERTIFICATE IS PRESENTED TO
+        </p>
+        <p
+          className="mt-1 text-lg font-semibold text-[#2a2a35]"
+          style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
+        >
+          {profile.name}
+        </p>
+      </div>
+
+      {/* Colored pocket (front) */}
       <div
-        className="overflow-hidden rounded-3xl transition-transform duration-300 group-hover:-translate-y-2"
+        className="absolute inset-x-0 bottom-0 z-10 flex h-[60%] flex-col items-center px-6 pb-6 pt-10 text-center text-white"
         style={{
           background: cert.color,
-          boxShadow: `0 25px 60px -20px ${cert.color}`,
+          borderRadius: "42% 42% 24px 24px / 26% 26% 24px 24px",
+          boxShadow: `0 25px 60px -22px ${cert.color}`,
         }}
       >
-        {/* Certificate sheet */}
-        <div className="relative m-3 mb-0 rounded-t-2xl bg-[#f1efe9] px-6 pb-16 pt-6 text-center">
-          <div className="mx-auto mb-4 flex items-center justify-center gap-2 text-[#9a9488]">
-            <span className="h-px w-12 bg-[#cfc9bd]" />
-            <span className="text-lg">❦</span>
-            <span className="h-px w-12 bg-[#cfc9bd]" />
-          </div>
-          <div
-            className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full text-xs font-bold text-white shadow-inner"
-            style={{ background: "#7c1f1f" }}
-          >
-            ❀
-          </div>
-          <h3
-            className="text-3xl tracking-wide text-[#2a2a35]"
-            style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
-          >
-            CERTIFICATE
-          </h3>
+        <h4 className="text-xl font-bold leading-snug">{cert.title}</h4>
+        <div className="mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-sm text-white/90">
+          <span className="flex items-center gap-1.5">
+            <FaGraduationCap /> {cert.issuer}
+          </span>
+          <span className="opacity-50">•</span>
+          <span className="flex items-center gap-1.5">
+            <FaRegCalendarAlt /> {cert.date}
+          </span>
         </div>
-
-        {/* Colored info area */}
-        <div className="relative -mt-10 px-6 pb-6 pt-12 text-center text-white">
-          <h4 className="text-xl font-bold leading-snug">{cert.title}</h4>
-          <div className="mt-4 flex flex-col items-center gap-2 text-sm text-white/90">
-            <span className="flex items-center gap-2">
-              <FaGraduationCap /> {cert.issuer}
-            </span>
-            <span className="flex items-center gap-2">
-              <FaRegCalendarAlt /> {cert.date}
-            </span>
-          </div>
-          <a
-            href={cert.link}
-            className="mt-5 inline-block rounded-xl border border-white/40 bg-white/15 px-5 py-2 text-sm font-semibold backdrop-blur-sm transition-colors hover:bg-white/25"
-          >
-            View Certificate
-          </a>
-        </div>
+        <a
+          href={cert.link}
+          className="mt-auto inline-flex items-center gap-2 rounded-xl border border-white/40 bg-white/15 px-6 py-2 text-sm font-semibold backdrop-blur-sm transition-colors hover:bg-white/25"
+        >
+          View <FiExternalLink />
+        </a>
       </div>
     </motion.div>
   );

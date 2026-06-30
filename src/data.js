@@ -28,7 +28,7 @@ export const profile = {
   photo: "/profile1.png",
   // Web3Forms access key (free, emails you each submission; safe to expose).
   // Get yours at https://web3forms.com -> enter your email -> paste the key here.
-  web3formsKey: "YOUR_WEB3FORMS_ACCESS_KEY",
+  web3formsKey: "536426bf-cd7d-47ab-8cfc-b9d74f501c2f",
 };
 
 export const navLinks = [
@@ -261,16 +261,16 @@ export const projects = [
 /* --------------------------- Certificates --------------------------- */
 export const certificates = [
   {
-    title: "AWS Certified Solutions Architect",
-    issuer: "Amazon Web Services",
-    date: "Dec 2024",
+    title: "Python From Scratch",
+    issuer: "CodeWithHarry",
+    date: "June 2026",
     color: "#C8881F",
     link: "#",
   },
   {
-    title: "React Advanced Certification",
-    issuer: "Meta Blueprint",
-    date: "Nov 2024",
+    title: "Generative AI",
+    issuer: "Aakriti E-Learning Academy",
+    date: "April 2026",
     color: "#3E7C97",
     link: "#",
   },
