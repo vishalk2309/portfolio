@@ -209,14 +209,12 @@ export const playgroundSkills = [
   { name: "Aiven", img: "/aiven.svg", bg: "#FF3554", fg: "#FFFFFF" },
 ];
 
-
 /* ----------------------------- Projects ----------------------------- */
 export const projects = [
   {
     category: "PDF-Toolkit",
     title: "PDFVish",
-    description:
-      "Every PDF tool you need — in one place.",
+    description: "Every PDF tool you need — in one place.",
     tags: ["React", "Python", "Tailwind"],
     image: "/project1.png",
     fit: "contain", // show the full screenshot (no cropping)
@@ -224,13 +222,12 @@ export const projects = [
     link: "https://pdfvish.onrender.com/",
   },
   {
-    category: "Analytics",
-    title: "Nebula Dashboard",
+    category: "Food & Menu",
+    title: "Kitchen King",
     description:
-      "Real-time analytics dashboard with live charts, role-based access and a themable design system.",
-    tags: ["TypeScript", "React", "D3"],
-    image:
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1000&q=80",
+      "Kitchen King that has daily menu as well as logs and stocks also remind for water intake.",
+    tags: ["React", "MySql"],
+    image: "/project2.jpg",
     glow: "#6EE7F9",
     link: "#",
   },
