@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { profile } from "../data";
+import { useContent } from "../lib/ContentContext";
 
 /**
  * Branded intro splash: reveals the name, then fades into the site.
  * Shows once per browser session.
  */
 export default function Loader() {
+  const { profile } = useContent();
   const [show, setShow] = useState(
     () => !sessionStorage.getItem("introSeen")
   );

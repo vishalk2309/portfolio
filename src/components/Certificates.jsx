@@ -2,9 +2,10 @@ import { useRef } from "react";
 import { motion } from "framer-motion";
 import { FiChevronLeft, FiChevronRight, FiExternalLink } from "react-icons/fi";
 import { FaGraduationCap, FaRegCalendarAlt } from "react-icons/fa";
-import { certificates, profile } from "../data";
+import { useContent } from "../lib/ContentContext";
 
 export default function Certificates() {
+  const { certificates, profile } = useContent();
   const trackRef = useRef(null);
 
   const scroll = (dir) => {
@@ -55,7 +56,7 @@ export default function Certificates() {
           style={{ scrollSnapType: "x mandatory" }}
         >
           {certificates.map((cert, i) => (
-            <CertCard key={cert.title} cert={cert} index={i} />
+            <CertCard key={cert.title} cert={cert} index={i} name={profile.name} />
           ))}
         </div>
       </div>
@@ -63,7 +64,7 @@ export default function Certificates() {
   );
 }
 
-function CertCard({ cert, index }) {
+function CertCard({ cert, index, name }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 60 }}
@@ -102,7 +103,7 @@ function CertCard({ cert, index }) {
           className="mt-1 text-lg font-semibold text-[#2a2a35]"
           style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
         >
-          {profile.name}
+          {name}
         </p>
       </div>
 

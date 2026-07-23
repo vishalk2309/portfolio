@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { orbitSkills, profile } from "../data";
+import { useContent } from "../lib/ContentContext";
 
 /**
  * Profile photo in the centre with tech icons orbiting around it.
@@ -8,6 +8,7 @@ import { orbitSkills, profile } from "../data";
  * overflows on small screens.
  */
 export default function OrbitPhoto() {
+  const { orbitSkills, profile } = useContent();
   const ref = useRef(null);
   const [size, setSize] = useState(420);
 

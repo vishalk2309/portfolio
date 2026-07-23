@@ -8,7 +8,8 @@ import {
   FiCornerDownLeft,
   FiDroplet,
 } from "react-icons/fi";
-import { navLinks, socials, profile, leetcode, gfg, github } from "../data";
+import { leetcode, gfg, github } from "../data";
+import { useContent } from "../lib/ContentContext";
 import { ACCENTS, setAccent } from "../theme";
 
 /**
@@ -16,6 +17,7 @@ import { ACCENTS, setAccent } from "../theme";
  * copy email. Opens on the keyboard shortcut or an "open-command-palette" event.
  */
 export default function CommandPalette() {
+  const { navLinks, socials, profile } = useContent();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
@@ -99,7 +101,7 @@ export default function CommandPalette() {
     }));
 
     return [...nav, ...links, ...actions, ...themes];
-  }, []);
+  }, [navLinks, socials, profile]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();

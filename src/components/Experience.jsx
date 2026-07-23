@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { education, achievements } from "../data";
-
-const tabs = [
-  { key: "education", label: "Education", icon: "🎓", data: education },
-  { key: "achievements", label: "Achievements", icon: "🏆", data: achievements },
-];
+import { useContent } from "../lib/ContentContext";
 
 export default function Experience() {
+  const { education, achievements } = useContent();
   const [active, setActive] = useState("education");
+
+  const tabs = [
+    { key: "education", label: "Education", icon: "🎓", data: education },
+    { key: "achievements", label: "Achievements", icon: "🏆", data: achievements },
+  ];
   const items = tabs.find((t) => t.key === active).data;
 
   return (

@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
-import { projects } from "../data";
+import { useContent } from "../lib/ContentContext";
 
 export default function Projects() {
+  const { projects } = useContent();
   return (
     <section id="projects" className="relative px-6 py-24">
       <div className="mx-auto max-w-6xl">

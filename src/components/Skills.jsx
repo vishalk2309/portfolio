@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import Matter from "matter-js";
-import { playgroundSkills } from "../data";
+import { useContent } from "../lib/ContentContext";
 
 export default function Skills() {
+  const { playgroundSkills } = useContent();
   const sceneRef = useRef(null);
   const cardRefs = useRef([]);
   // Smaller cards on phones so all 15 fit comfortably.
@@ -130,7 +131,7 @@ export default function Skills() {
       Composite.clear(world, false);
       Engine.clear(engine);
     };
-  }, [CARD]);
+  }, [CARD, playgroundSkills]);
 
   return (
     <section

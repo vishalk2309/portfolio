@@ -1,6 +1,7 @@
-import { profile } from "../data";
+import { useContent } from "../lib/ContentContext";
 
 export default function Footer() {
+  const { profile } = useContent();
   const firstName = profile.name.split(" ")[0].toUpperCase();
   return (
     <footer className="relative overflow-hidden px-6 pb-10 pt-20">

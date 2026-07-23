@@ -1,12 +1,13 @@
 import { Suspense, lazy } from "react";
 import { motion } from "framer-motion";
-import { profile, socials } from "../data";
+import { useContent } from "../lib/ContentContext";
 import Magnetic from "./Magnetic";
 
 // Lazy-load the WebGL cube so three.js ships as its own chunk.
 const HeroCube = lazy(() => import("./HeroCube"));
 
 export default function Hero() {
+  const { profile, socials } = useContent();
   return (
     <section
       id="home"

@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FiArrowRight, FiSearch } from "react-icons/fi";
-import { navLinks, profile } from "../data";
+import { useContent } from "../lib/ContentContext";
 import AccentDots from "./AccentDots";
 
 const openPalette = () =>
   window.dispatchEvent(new Event("open-command-palette"));
 
 export default function Navbar() {
+  const { navLinks, profile } = useContent();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [activeId, setActiveId] = useState("home");
@@ -35,7 +36,7 @@ export default function Navbar() {
     );
     sections.forEach((s) => obs.observe(s));
     return () => obs.disconnect();
-  }, []);
+  }, [navLinks]);
 
   return (
     <motion.header

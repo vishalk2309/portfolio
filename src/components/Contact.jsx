@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { profile, socials } from "../data";
+import { useContent } from "../lib/ContentContext";
 
 export default function Contact() {
+  const { profile, socials } = useContent();
   // status: idle | sending | success | error
   const [status, setStatus] = useState("idle");
 
