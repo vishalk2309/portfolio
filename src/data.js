@@ -40,10 +40,10 @@ export const navLinks = [
 ];
 
 export const socials = [
-  { Icon: FaGithub, href: "https://github.com", label: "GitHub" },
-  { Icon: FaLinkedin, href: "https://linkedin.com", label: "LinkedIn" },
-  { Icon: FaXTwitter, href: "https://x.com", label: "X" },
-  { Icon: FaEnvelope, href: "mailto:hello@vishal.dev", label: "Email" },
+  { Icon: FaGithub, href: "https://github.com/vishalk2309", label: "GitHub" },
+  { Icon: FaLinkedin, href: "https://linkedin.com/in/vishalkumarkushwaha", label: "LinkedIn" },
+  // { Icon: FaXTwitter, href: "https://x.com", label: "X" },
+  { Icon: FaEnvelope, href: "mailto:kushwahavishal296@gmail.com", label: "Email" },
 ];
 
 /* --------------------- About: orbiting tech icons -------------------- */
