@@ -229,7 +229,7 @@ export const projects = [
     tags: ["React", "MySql"],
     image: "/project2.jpg",
     glow: "#6EE7F9",
-    link: "#",
+    link: "https://kitchen-king.onrender.com",
   },
   {
     category: "Realtime",
@@ -242,17 +242,17 @@ export const projects = [
     glow: "#3B82F6",
     link: "#",
   },
-  {
-    category: "AI",
-    title: "Aurora AI Studio",
-    description:
-      "AI content studio that turns prompts into polished copy with streaming responses and history.",
-    tags: ["Next.js", "OpenAI", "Prisma"],
-    image:
-      "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=1000&q=80",
-    glow: "#22D3EE",
-    link: "#",
-  },
+  // {
+  //   category: "AI",
+  //   title: "Aurora AI Studio",
+  //   description:
+  //     "AI content studio that turns prompts into polished copy with streaming responses and history.",
+  //   tags: ["Next.js", "OpenAI", "Prisma"],
+  //   image:
+  //     "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=1000&q=80",
+  //   glow: "#22D3EE",
+  //   link: "#",
+  // },
 ];
 
 /* --------------------------- Certificates --------------------------- */
@@ -264,6 +264,14 @@ export const certificates = [
     color: "#C8881F",
     link: "#",
   },
+  {
+    title: "AWS from Scratch",
+    issuer: "Telusko",
+    date: "July 2026",
+    color: "#2496ED",
+    link: "#",
+  },
+
   {
     title: "Generative AI",
     issuer: "Aakriti E-Learning Academy",
@@ -283,13 +291,6 @@ export const certificates = [
     issuer: "Adobe",
     date: "Sep 2024",
     color: "#B23A63",
-    link: "#",
-  },
-  {
-    title: "Docker & Kubernetes Mastery",
-    issuer: "Cloud Native CF",
-    date: "Aug 2024",
-    color: "#2496ED",
     link: "#",
   },
 ];
