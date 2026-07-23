@@ -220,10 +220,38 @@ export default function TableEditor({ table }) {
 }
 
 // ---- single field --------------------------------------------------------
+const BUCKET = "media";
+
 function Field({ field, value, onChange }) {
   const base =
     "w-full rounded-lg border border-white/15 bg-white/[0.04] px-3 py-2 text-sm text-white outline-none focus:border-neon-purple";
   const wrap = field.full ? "sm:col-span-2" : "";
+
+  // image upload state (only used by the "image" field type)
+  const [uploading, setUploading] = useState(false);
+  const [upErr, setUpErr] = useState("");
+
+  const handleFile = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    setUpErr("");
+    // unique, URL-safe filename
+    const safe = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
+    const path = `${Date.now()}-${safe}`;
+    const { error } = await supabase.storage
+      .from(BUCKET)
+      .upload(path, file, { cacheControl: "3600", upsert: false });
+    if (error) {
+      setUpErr(error.message);
+      setUploading(false);
+      return;
+    }
+    const { data } = supabase.storage.from(BUCKET).getPublicUrl(path);
+    onChange(data.publicUrl);
+    setUploading(false);
+    e.target.value = ""; // allow re-selecting the same file later
+  };
 
   return (
     <div className={wrap}>
@@ -281,6 +309,20 @@ function Field({ field, value, onChange }) {
             onChange={(e) => onChange(e.target.value)}
             className={base}
           />
+          <div className="mt-2 flex items-center gap-3">
+            <label className="cursor-pointer rounded-lg border border-white/15 px-3 py-1.5 text-xs text-white/70 hover:text-white">
+              {uploading ? "Uploading…" : "⬆ Upload from computer"}
+              <input
+                type="file"
+                accept="image/*"
+                disabled={uploading}
+                onChange={handleFile}
+                className="hidden"
+              />
+            </label>
+            {value && <span className="text-xs text-white/40">image set ✓</span>}
+          </div>
+          {upErr && <p className="mt-1 text-xs text-red-400">{upErr}</p>}
           {value && (
             <img
               src={value}
