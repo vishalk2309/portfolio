@@ -212,6 +212,18 @@ export const playgroundSkills = [
 /* ----------------------------- Projects ----------------------------- */
 export const projects = [
   {
+    category: "AI",
+    title: "AI WorkHub",
+    description:
+      "AI WorkHub is an enterprise-grade AI-powered project management platform. It combines classic PM features (projects, Kanban boards, tasks, comments, file attachments) with an AI assistant that can break a raw project idea into actionable tasks and answer project-management questions.",
+    tags: ["React 19", "Vite", "Java 21", "Spring Boot", "Spring Security","Spring Data JPA", "JWT (jjwt)","OpenAI"],
+    image:
+      "/portfolio-banner.svg",
+    glow: "#22D3EE",
+    link: "#",
+  },
+  
+  {
     category: "PDF-Toolkit",
     title: "PDFVish",
     description: "Every PDF tool you need — in one place.",
@@ -242,17 +254,7 @@ export const projects = [
     glow: "#3B82F6",
     link: "#",
   },
-  // {
-  //   category: "AI",
-  //   title: "Aurora AI Studio",
-  //   description:
-  //     "AI content studio that turns prompts into polished copy with streaming responses and history.",
-  //   tags: ["Next.js", "OpenAI", "Prisma"],
-  //   image:
-  //     "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=1000&q=80",
-  //   glow: "#22D3EE",
-  //   link: "#",
-  // },
+  
 ];
 
 /* --------------------------- Certificates --------------------------- */
