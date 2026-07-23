@@ -13,7 +13,11 @@ export default function Footer() {
       </div>
 
       <div className="relative mx-auto -mt-8 flex max-w-6xl flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-sm text-white/50 sm:flex-row">
-        <p>© {new Date().getFullYear()} {profile.name}. All rights reserved.</p>
+        <p>
+          {/* Discreet dashboard entrance — looks like normal text to visitors. */}
+          <a href="/admin" aria-label="Admin dashboard" title="Admin" className="cursor-text transition-colors hover:text-neon-cyan">©</a>{" "}
+          {new Date().getFullYear()} {profile.name}. All rights reserved.
+        </p>
         <p>
           Built with <span className="text-neon-cyan">React</span>,{" "}
           <span className="text-neon-purple">Tailwind</span> &{" "}

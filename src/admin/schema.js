@@ -10,6 +10,7 @@ export const TABLES = [
     key: "profile",
     label: "Profile",
     singleRow: true,
+    
     icon: "👤",
     fields: [
       { name: "name", label: "Full name", type: "text" },
