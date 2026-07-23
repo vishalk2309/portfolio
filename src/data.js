@@ -232,13 +232,13 @@ export const projects = [
     link: "https://kitchen-king.onrender.com",
   },
   {
-    category: "Realtime",
-    title: "Pulse Chat",
+    category: "E-Commerce",
+    title: "Vi-mmerce",
     description:
-      "End-to-end encrypted realtime chat with presence, typing indicators and WebSocket updates.",
-    tags: ["Node.js", "Socket.io", "Redis"],
+      "Creating a E-Commerce website",
+    tags: ["Node.js", "React js", "Springboot", "MySql", "Redis"],
     image:
-      "https://images.unsplash.com/photo-1611606063065-ee7946f0787a?auto=format&fit=crop&w=1000&q=80",
+      "/ecommerce.svg",
     glow: "#3B82F6",
     link: "#",
   },
