@@ -23,7 +23,7 @@ export const profile = {
   shortName: "VK",
   role: "Software Developer & Web Developer",
   email: "kushwahavishal296@gmail.com",
-  resumeUrl: "#",
+  resumeUrl: "/resume.pdf",
   // Your photo lives in /public. Served at the site root.
   photo: "/profile1.png",
   // Web3Forms access key (free, emails you each submission; safe to expose).
