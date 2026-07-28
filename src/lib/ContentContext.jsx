@@ -29,8 +29,6 @@ const shapeProfile = (row) =>
         email: row.email,
         resumeUrl: row.resume_url,
         photo: row.photo,
-        // web3formsKey isn't in the DB — keep the static one from data.js.
-        web3formsKey: fallback.profile.web3formsKey,
       };
 
 const shapeNav = (rows) => rows.map((r) => ({ label: r.label, href: r.href }));

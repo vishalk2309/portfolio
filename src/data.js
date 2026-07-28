@@ -23,12 +23,9 @@ export const profile = {
   shortName: "VK",
   role: "Software Developer & Web Developer",
   email: "kushwahavishal296@gmail.com",
-  resumeUrl: "/resume.pdf",
+  resumeUrl: "/Vishal_Resume.pdf",
   // Your photo lives in /public. Served at the site root.
   photo: "/profile1.png",
-  // Web3Forms access key (free, emails you each submission; safe to expose).
-  // Get yours at https://web3forms.com -> enter your email -> paste the key here.
-  web3formsKey: "536426bf-cd7d-47ab-8cfc-b9d74f501c2f",
 };
 
 export const navLinks = [

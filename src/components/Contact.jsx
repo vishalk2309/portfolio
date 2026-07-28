@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useContent } from "../lib/ContentContext";
+import { supabase } from "../lib/supabase";
 
 export default function Contact() {
   const { profile, socials } = useContent();
@@ -11,24 +12,26 @@ export default function Contact() {
     e.preventDefault();
     const form = e.target;
     const data = new FormData(form);
-    data.append("access_key", profile.web3formsKey);
-    data.append("subject", `Portfolio message from ${data.get("name") || "visitor"}`);
-    data.append("from_name", "Portfolio Contact Form");
+    const payload = {
+      name: data.get("name"),
+      email: data.get("email"),
+      message: data.get("message"),
+      botcheck: Boolean(data.get("botcheck")), // honeypot
+    };
 
     setStatus("sending");
     try {
-      const res = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        body: data,
-      });
-      const json = await res.json();
-      if (json.success) {
-        setStatus("success");
-        form.reset();
-        setTimeout(() => setStatus("idle"), 4000);
-      } else {
-        setStatus("error");
-      }
+      if (!supabase) throw new Error("Contact service not configured");
+      // Calls the `send-contact` Edge Function, which emails me AND sends the
+      // visitor an automated confirmation reply.
+      const { data: res, error } = await supabase.functions.invoke(
+        "send-contact",
+        { body: payload }
+      );
+      if (error || !res?.success) throw new Error("Send failed");
+      setStatus("success");
+      form.reset();
+      setTimeout(() => setStatus("idle"), 4000);
     } catch {
       setStatus("error");
     }
