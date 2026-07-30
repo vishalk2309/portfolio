@@ -35,7 +35,7 @@ export default function Hero() {
             animate: { opacity: 1, scale: 1 },
             transition: { duration: 1, ease: "easeOut" },
           })}
-          className="font-serif text-5xl font-bold leading-[1.05] tracking-tight text-ink drop-shadow-[0_2px_20px_rgba(30,30,30,0.12)] sm:text-7xl md:text-8xl"
+          className="hero-name text-5xl font-bold leading-[1.05] tracking-tight text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.28)] sm:text-7xl md:text-8xl"
         >
           {profile.name}
         </motion.h1>
@@ -64,7 +64,7 @@ export default function Hero() {
           <Magnetic>
             <a
               href="#contact"
-              className="inline-block rounded-full bg-ink px-8 py-3.5 font-semibold text-base text-paper shadow-[0_8px_24px_-8px_rgba(30,30,30,0.4)] transition-transform hover:scale-105"
+              className="inline-block rounded-full bg-white px-8 py-3.5 font-semibold text-base text-[rgb(var(--c-base))] shadow-[0_8px_24px_-8px_rgba(0,0,0,0.35)] transition-transform hover:scale-105"
             >
               Contact Me
             </a>

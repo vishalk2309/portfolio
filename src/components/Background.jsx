@@ -9,6 +9,17 @@ import { useEffect, useRef, useState } from "react";
 export default function Background() {
   const canvasRef = useRef(null);
   const [pointer, setPointer] = useState({ x: -500, y: -500 });
+  // Re-run the particle effect whenever the light/dark mode changes so the
+  // dot colour is re-read from the active theme's CSS variable.
+  const [mode, setMode] = useState(() =>
+    document.documentElement.classList.contains("theme-dark") ? "dark" : "light"
+  );
+
+  useEffect(() => {
+    const on = (e) => setMode(e.detail === "dark" ? "dark" : "light");
+    window.addEventListener("modechange", on);
+    return () => window.removeEventListener("modechange", on);
+  }, []);
 
   // Mouse-following spotlight
   useEffect(() => {
@@ -22,6 +33,11 @@ export default function Background() {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
+    // Read the current theme's particle colour (space-separated RGB triple).
+    const rgb =
+      getComputedStyle(document.documentElement)
+        .getPropertyValue("--particle")
+        .trim() || "174 200 255";
     let raf;
     let particles = [];
 
@@ -52,7 +68,7 @@ export default function Background() {
         if (p.y > canvas.height) p.y = 0;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(180, 150, 90, ${p.a * 0.5})`;
+        ctx.fillStyle = `rgb(${rgb} / ${p.a})`;
         ctx.fill();
       }
       raf = requestAnimationFrame(draw);
@@ -63,7 +79,7 @@ export default function Background() {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
     };
-  }, []);
+  }, [mode]);
 
   return (
     <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
@@ -79,8 +95,8 @@ export default function Background() {
       <div
         className="absolute inset-0"
         style={{
-          background: `radial-gradient(600px circle at ${pointer.x}px ${pointer.y}px, rgba(217,164,65,0.10), transparent 45%)`,
-          mixBlendMode: "multiply",
+          background: `radial-gradient(600px circle at ${pointer.x}px ${pointer.y}px, rgb(var(--spotlight) / 0.10), transparent 45%)`,
+          mixBlendMode: "var(--spotlight-blend)",
         }}
       />
     </div>

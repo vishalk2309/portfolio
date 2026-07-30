@@ -3,19 +3,20 @@ export default {
   content: ["./index.html", "./src/**/*.{js,jsx}"],
   theme: {
     extend: {
+      // All theme colors are driven by CSS variables (see src/index.css) so
+      // they can swap between the dark and light themes at runtime. The
+      // <alpha-value> placeholder keeps opacity modifiers (e.g. text-white/60)
+      // working. `white` maps to the foreground token, so every existing
+      // text-white / border-white utility becomes theme-aware automatically.
       colors: {
-        base: "#FAF7F2", // page background — warm off-white / cream
-        ink: "#1E1E1E", // deep black — primary text
-        paper: "#FFFFFF", // real white (for dark buttons' text, etc.)
-        // NOTE: `white` is intentionally remapped to deep ink so the existing
-        // text-white / border-white utilities become dark on the light theme
-        // without editing every component. Use `paper` when you need true white.
-        white: "#1E1E1E",
-        // Accent utilities (neon-*) are remapped to warm gold for the light theme.
+        base: "rgb(var(--c-base) / <alpha-value>)", // page background
+        ink: "rgb(var(--c-ink) / <alpha-value>)", // deep black
+        paper: "rgb(var(--c-paper) / <alpha-value>)", // real white
+        white: "rgb(var(--c-fg) / <alpha-value>)", // foreground text token
         neon: {
-          cyan: "#D9A441", // primary gold accent
-          purple: "#C79A3E", // warm gold
-          blue: "#BE8A3A", // warm gold
+          cyan: "rgb(var(--c-neon-cyan) / <alpha-value>)",
+          purple: "rgb(var(--c-neon-purple) / <alpha-value>)",
+          blue: "rgb(var(--c-neon-blue) / <alpha-value>)",
         },
       },
       fontFamily: {

@@ -1,10 +1,14 @@
 import { useState } from "react";
 import { FaPalette } from "react-icons/fa";
+import { FiSun, FiMoon } from "react-icons/fi";
 import AccentDots from "./AccentDots";
+import { useMode } from "../theme";
 
-/** Bottom-right palette button that expands to reveal the accent swatches. */
+/** Bottom-right cluster: light/dark toggle + palette button (accent swatches). */
 export default function FloatingThemeButton() {
   const [open, setOpen] = useState(false);
+  const [mode, setMode] = useMode();
+  const isDark = mode === "dark";
 
   return (
     <div
@@ -21,6 +25,16 @@ export default function FloatingThemeButton() {
       >
         <AccentDots size={20} />
       </div>
+
+      {/* Light / dark mode toggle */}
+      <button
+        onClick={() => setMode(isDark ? "light" : "dark")}
+        aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
+        title={isDark ? "Light mode" : "Dark mode"}
+        className="glass flex h-12 w-12 items-center justify-center rounded-full text-lg text-white transition-transform hover:scale-110"
+      >
+        {isDark ? <FiSun /> : <FiMoon />}
+      </button>
 
       <button
         onClick={() => setOpen((o) => !o)}

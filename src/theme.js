@@ -47,3 +47,45 @@ export function useAccent() {
   }, []);
   return [accent, setAccent];
 }
+
+/* ------------------------------------------------------------------ */
+/* Light / dark mode — toggles a class on <html>; CSS variables in     */
+/* index.css do the rest. Independent of the accent above.             */
+/* ------------------------------------------------------------------ */
+const MODE_KEY = "mode";
+
+export function getMode() {
+  try {
+    return localStorage.getItem(MODE_KEY) === "dark" ? "dark" : "light";
+  } catch {
+    return "light";
+  }
+}
+
+export function applyMode(mode) {
+  const root = document.documentElement;
+  root.classList.remove("theme-light", "theme-dark");
+  root.classList.add(mode === "dark" ? "theme-dark" : "theme-light");
+}
+
+export function setMode(mode) {
+  const next = mode === "dark" ? "dark" : "light";
+  try {
+    localStorage.setItem(MODE_KEY, next);
+  } catch {
+    /* ignore */
+  }
+  applyMode(next);
+  window.dispatchEvent(new CustomEvent("modechange", { detail: next }));
+}
+
+/** [mode, setMode] — re-renders any component when the light/dark mode changes. */
+export function useMode() {
+  const [mode, setLocal] = useState(getMode);
+  useEffect(() => {
+    const on = (e) => setLocal(e.detail);
+    window.addEventListener("modechange", on);
+    return () => window.removeEventListener("modechange", on);
+  }, []);
+  return [mode, setMode];
+}

@@ -3,11 +3,44 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light;
-  /* UI accent — warm golden/yellow (swapped at runtime by the theme switcher) */
+  /* UI accent — swapped at runtime by the accent switcher (independent of mode) */
   --accent-from: #d9a441;
   --accent-to: #c8881f;
   --accent-glow: #d9a441;
+}
+
+/* ---------------------- DARK theme (original) ---------------------- */
+html.theme-dark {
+  color-scheme: dark;
+  --c-fg: 255 255 255; /* foreground / text-white */
+  --c-base: 5 8 22; /* #050816 page bg */
+  --c-ink: 10 10 10;
+  --c-paper: 255 255 255;
+  --c-neon-cyan: 110 231 249;
+  --c-neon-purple: 168 85 247;
+  --c-neon-blue: 59 130 246;
+  --body-bg: radial-gradient(ellipse at top, #0a0a0a 0%, #050816 55%, #050816 100%);
+  --scrollbar-track: #050816;
+  --particle: 174 200 255;
+  --spotlight: 110 231 249;
+  --spotlight-blend: screen;
+}
+
+/* ---------------------- LIGHT theme (new) -------------------------- */
+html.theme-light {
+  color-scheme: light;
+  --c-fg: 30 30 30; /* deep black text */
+  --c-base: 250 247 242; /* #FAF7F2 cream page bg */
+  --c-ink: 30 30 30;
+  --c-paper: 255 255 255;
+  --c-neon-cyan: 217 164 65; /* warm gold accents */
+  --c-neon-purple: 199 154 62;
+  --c-neon-blue: 190 138 58;
+  --body-bg: #faf7f2;
+  --scrollbar-track: #faf7f2;
+  --particle: 180 150 90;
+  --spotlight: 217 164 65;
+  --spotlight-blend: multiply;
 }
 
 * {
@@ -25,8 +58,8 @@ html {
 }
 
 body {
-  background: #faf7f2; /* warm off-white / cream */
-  color: #1e1e1e; /* deep black — primary text */
+  background: var(--body-bg);
+  color: rgb(var(--c-fg));
   font-family: "Space Grotesk", "Inter", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
@@ -49,7 +82,7 @@ html.lenis body {
   width: 9px;
 }
 ::-webkit-scrollbar-track {
-  background: #faf7f2;
+  background: var(--scrollbar-track);
 }
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(var(--accent-from), var(--accent-to));
@@ -57,21 +90,44 @@ html.lenis body {
 }
 
 @layer components {
-  /* Section headings + hero name — elegant editorial serif in deep black */
-  .gradient-text {
+  /* Headings — DARK: accent gradient (original). LIGHT: editorial serif. */
+  html.theme-dark .gradient-text {
+    background-image: linear-gradient(
+      45deg,
+      var(--accent-from),
+      var(--accent-to),
+      #ffffff
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+  html.theme-light .gradient-text {
     font-family: "Playfair Display", Georgia, Cambria, serif;
     color: #1e1e1e;
     -webkit-text-fill-color: #1e1e1e;
     background: none;
   }
 
-  /* Reusable card surface — pure white with a very soft shadow + light border */
-  .glass {
+  /* Card surface — DARK: glassmorphism (original). LIGHT: pure white + soft shadow. */
+  html.theme-dark .glass {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+  html.theme-light .glass {
     background: #ffffff;
     border: 1px solid #ece7df;
     box-shadow: 0 6px 28px -12px rgba(30, 30, 30, 0.12);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
+  }
+
+  /* Hero name gets the editorial serif only in the light theme. */
+  html.theme-light .hero-name {
+    font-family: "Playfair Display", Georgia, Cambria, serif;
   }
 }
 

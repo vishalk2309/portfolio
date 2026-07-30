@@ -3,13 +3,14 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./App.jsx";
 import "./index.css";
-import { applyAccent, getAccent } from "./theme";
+import { applyAccent, getAccent, applyMode, getMode } from "./theme";
 import { ContentProvider } from "./lib/ContentContext";
 
 // Admin ships as its own chunk — portfolio visitors never download it.
 const AdminApp = lazy(() => import("./admin/AdminApp.jsx"));
 
-// apply the saved accent before first paint
+// apply the saved light/dark mode + accent before first paint
+applyMode(getMode());
 applyAccent(getAccent());
 
 ReactDOM.createRoot(document.getElementById("root")).render(
