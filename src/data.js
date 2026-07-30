@@ -19,7 +19,7 @@ import { FaXTwitter } from "react-icons/fa6";
 
 /* ----------------------------- Profile ----------------------------- */
 export const profile = {
-  name: "Vishal Kushwaha",
+  name: "Vishal Kumar Kushwaha",
   shortName: "VK",
   role: "Software Developer & Web Developer",
   email: "kushwahavishal296@gmail.com",
@@ -38,9 +38,17 @@ export const navLinks = [
 
 export const socials = [
   { Icon: FaGithub, href: "https://github.com/vishalk2309", label: "GitHub" },
-  { Icon: FaLinkedin, href: "https://linkedin.com/in/vishalkumarkushwaha", label: "LinkedIn" },
+  {
+    Icon: FaLinkedin,
+    href: "https://linkedin.com/in/vishalkumarkushwaha",
+    label: "LinkedIn",
+  },
   // { Icon: FaXTwitter, href: "https://x.com", label: "X" },
-  { Icon: FaEnvelope, href: "mailto:kushwahavishal296@gmail.com", label: "Email" },
+  {
+    Icon: FaEnvelope,
+    href: "mailto:kushwahavishal296@gmail.com",
+    label: "Email",
+  },
 ];
 
 /* --------------------- About: orbiting tech icons -------------------- */
@@ -213,13 +221,21 @@ export const projects = [
     title: "AI WorkHub",
     description:
       "AI WorkHub is an enterprise-grade AI-powered project management platform. It combines classic PM features (projects, Kanban boards, tasks, comments, file attachments) with an AI assistant that can break a raw project idea into actionable tasks and answer project-management questions.",
-    tags: ["React 19", "Vite", "Java 21", "Spring Boot", "Spring Security","Spring Data JPA", "JWT (jjwt)","OpenAI"],
-    image:
-      "/portfolio-banner.svg",
+    tags: [
+      "React 19",
+      "Vite",
+      "Java 21",
+      "Spring Boot",
+      "Spring Security",
+      "Spring Data JPA",
+      "JWT (jjwt)",
+      "OpenAI",
+    ],
+    image: "/portfolio-banner.svg",
     glow: "#22D3EE",
     link: "#",
   },
-  
+
   {
     category: "PDF-Toolkit",
     title: "PDFVish",
@@ -243,15 +259,12 @@ export const projects = [
   {
     category: "E-Commerce",
     title: "Vi-mmerce",
-    description:
-      "Creating a E-Commerce website",
+    description: "Creating a E-Commerce website",
     tags: ["Node.js", "React js", "Springboot", "MySql", "Redis"],
-    image:
-      "/ecommerce.svg",
+    image: "/ecommerce.svg",
     glow: "#3B82F6",
     link: "#",
   },
-  
 ];
 
 /* --------------------------- Certificates --------------------------- */
