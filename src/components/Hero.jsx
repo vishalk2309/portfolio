@@ -35,7 +35,7 @@ export default function Hero() {
             animate: { opacity: 1, scale: 1 },
             transition: { duration: 1, ease: "easeOut" },
           })}
-          className="text-5xl font-bold leading-[1.05] tracking-tight text-white drop-shadow-[0_4px_40px_rgba(0,0,0,0.6)] sm:text-7xl md:text-8xl"
+          className="font-serif text-5xl font-bold leading-[1.05] tracking-tight text-ink drop-shadow-[0_2px_20px_rgba(30,30,30,0.12)] sm:text-7xl md:text-8xl"
         >
           {profile.name}
         </motion.h1>
@@ -64,7 +64,7 @@ export default function Hero() {
           <Magnetic>
             <a
               href="#contact"
-              className="inline-block rounded-full bg-white px-8 py-3.5 font-semibold text-base shadow-[0_0_30px_rgba(255,255,255,0.25)] transition-transform hover:scale-105"
+              className="inline-block rounded-full bg-ink px-8 py-3.5 font-semibold text-base text-paper shadow-[0_8px_24px_-8px_rgba(30,30,30,0.4)] transition-transform hover:scale-105"
             >
               Contact Me
             </a>
@@ -111,28 +111,28 @@ export default function Hero() {
           animate: { opacity: 1, y: 0 },
           transition: { delay: 1, duration: 0.6 },
         })}
-        className="absolute bottom-8 left-6 z-10"
+        className="absolute bottom-4 left-4 z-10 sm:bottom-8 sm:left-6"
       >
         <LiveVisitors />
       </motion.div>
 
-      {/* Scroll cue */}
+      {/* Scroll cue — hidden on mobile where vertical space is tight */}
       <motion.div
         {...fade({
           initial: { opacity: 0 },
           animate: { opacity: 1 },
           transition: { delay: 1.2 },
         })}
-        className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2"
+        className="absolute bottom-2 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-1.5 sm:flex"
       >
-        <div className="flex h-9 w-5 items-start justify-center rounded-full border border-white/30 p-1">
+        <div className="flex h-7 w-4 items-start justify-center rounded-full border border-white/30 p-1">
           <motion.div
-            animate={{ y: [0, 10, 0] }}
+            animate={{ y: [0, 7, 0] }}
             transition={{ duration: 1.5, repeat: Infinity }}
-            className="h-2 w-1 rounded-full bg-neon-cyan"
+            className="h-1.5 w-0.5 rounded-full bg-neon-cyan"
           />
         </div>
-        <span className="text-xs text-white/40">Scroll</span>
+        <span className="text-[10px] text-white/40">Scroll</span>
       </motion.div>
     </section>
   );

@@ -4,17 +4,24 @@ export default {
   theme: {
     extend: {
       colors: {
-        base: "#050816",
-        ink: "#0A0A0A",
+        base: "#FAF7F2", // page background — warm off-white / cream
+        ink: "#1E1E1E", // deep black — primary text
+        paper: "#FFFFFF", // real white (for dark buttons' text, etc.)
+        // NOTE: `white` is intentionally remapped to deep ink so the existing
+        // text-white / border-white utilities become dark on the light theme
+        // without editing every component. Use `paper` when you need true white.
+        white: "#1E1E1E",
+        // Accent utilities (neon-*) are remapped to warm gold for the light theme.
         neon: {
-          cyan: "#6EE7F9",
-          purple: "#A855F7",
-          blue: "#3B82F6",
+          cyan: "#D9A441", // primary gold accent
+          purple: "#C79A3E", // warm gold
+          blue: "#BE8A3A", // warm gold
         },
       },
       fontFamily: {
         sans: ["Space Grotesk", "Inter", "system-ui", "sans-serif"],
         display: ["Space Grotesk", "Inter", "sans-serif"],
+        serif: ['"Playfair Display"', "Georgia", "Cambria", "serif"],
       },
       backgroundImage: {
         "gradient-text":

@@ -52,7 +52,7 @@ export default function Background() {
         if (p.y > canvas.height) p.y = 0;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(174, 200, 255, ${p.a})`;
+        ctx.fillStyle = `rgba(180, 150, 90, ${p.a * 0.5})`;
         ctx.fill();
       }
       raf = requestAnimationFrame(draw);
@@ -79,8 +79,8 @@ export default function Background() {
       <div
         className="absolute inset-0"
         style={{
-          background: `radial-gradient(600px circle at ${pointer.x}px ${pointer.y}px, rgba(110,231,249,0.10), transparent 45%)`,
-          mixBlendMode: "screen",
+          background: `radial-gradient(600px circle at ${pointer.x}px ${pointer.y}px, rgba(217,164,65,0.10), transparent 45%)`,
+          mixBlendMode: "multiply",
         }}
       />
     </div>

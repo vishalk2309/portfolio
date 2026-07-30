@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
-  /* UI accent — swapped at runtime by the theme switcher */
-  --accent-from: #6ee7f9;
-  --accent-to: #a855f7;
-  --accent-glow: #6ee7f9;
+  color-scheme: light;
+  /* UI accent — warm golden/yellow (swapped at runtime by the theme switcher) */
+  --accent-from: #d9a441;
+  --accent-to: #c8881f;
+  --accent-glow: #d9a441;
 }
 
 * {
@@ -25,13 +25,8 @@ html {
 }
 
 body {
-  background: radial-gradient(
-      ellipse at top,
-      #0a0a0a 0%,
-      #050816 55%,
-      #050816 100%
-    );
-  color: #e9e9f0;
+  background: #faf7f2; /* warm off-white / cream */
+  color: #1e1e1e; /* deep black — primary text */
   font-family: "Space Grotesk", "Inter", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
@@ -54,7 +49,7 @@ html.lenis body {
   width: 9px;
 }
 ::-webkit-scrollbar-track {
-  background: #050816;
+  background: #faf7f2;
 }
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(var(--accent-from), var(--accent-to));
@@ -62,25 +57,21 @@ html.lenis body {
 }
 
 @layer components {
-  /* Gradient text used for headings + hero name */
+  /* Section headings + hero name — elegant editorial serif in deep black */
   .gradient-text {
-    background-image: linear-gradient(
-      45deg,
-      var(--accent-from),
-      var(--accent-to),
-      #ffffff
-    );
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    font-family: "Playfair Display", Georgia, Cambria, serif;
+    color: #1e1e1e;
+    -webkit-text-fill-color: #1e1e1e;
+    background: none;
   }
 
-  /* Reusable glassmorphism surface */
+  /* Reusable card surface — pure white with a very soft shadow + light border */
   .glass {
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: #ffffff;
+    border: 1px solid #ece7df;
+    box-shadow: 0 6px 28px -12px rgba(30, 30, 30, 0.12);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
   }
 }
 

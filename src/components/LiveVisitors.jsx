@@ -13,7 +13,7 @@ export default function LiveVisitors({ className = "" }) {
 
   return (
     <div
-      className={`inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs text-white/60 backdrop-blur-md ${className}`}
+      className={`inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] text-white/60 backdrop-blur-md sm:gap-3 sm:px-4 sm:py-1.5 sm:text-xs ${className}`}
     >
       {live != null && (
         <span className="flex items-center gap-2">
