@@ -1,5 +1,5 @@
 import { Suspense, lazy } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useContent } from "../lib/ContentContext";
 import Magnetic from "./Magnetic";
 
@@ -8,6 +8,12 @@ const HeroCube = lazy(() => import("./HeroCube"));
 
 export default function Hero() {
   const { profile, socials } = useContent();
+  const reduceMotion = useReducedMotion();
+
+  // When the user prefers reduced motion, render everything in its final
+  // state instead of animating it in.
+  const fade = ({ initial, animate, transition }) =>
+    reduceMotion ? { initial: false, animate } : { initial, animate, transition };
   return (
     <section
       id="home"
@@ -23,9 +29,11 @@ export default function Hero() {
       <div className="relative z-10 mx-auto max-w-4xl text-center">
         {/* Name — fade in + scale 0.8 -> 1, 1s ease out */}
         <motion.h1
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, ease: "easeOut" }}
+          {...fade({
+            initial: { opacity: 0, scale: 0.8 },
+            animate: { opacity: 1, scale: 1 },
+            transition: { duration: 1, ease: "easeOut" },
+          })}
           className="text-5xl font-bold leading-[1.05] tracking-tight text-white drop-shadow-[0_4px_40px_rgba(0,0,0,0.6)] sm:text-7xl md:text-8xl"
         >
           {profile.name}
@@ -33,9 +41,11 @@ export default function Hero() {
 
         {/* Subtitle — slides up, delay 300ms */}
         <motion.p
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
+          {...fade({
+            initial: { opacity: 0, y: 30 },
+            animate: { opacity: 1, y: 0 },
+            transition: { duration: 0.7, delay: 0.3, ease: "easeOut" },
+          })}
           className="mx-auto mt-6 max-w-2xl text-lg font-medium text-white/60 sm:text-2xl md:text-3xl"
         >
           {profile.role}
@@ -43,9 +53,11 @@ export default function Hero() {
 
         {/* CTA buttons */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.55 }}
+          {...fade({
+            initial: { opacity: 0, y: 20 },
+            animate: { opacity: 1, y: 0 },
+            transition: { duration: 0.7, delay: 0.55 },
+          })}
           className="mt-10 flex flex-wrap items-center justify-center gap-4"
         >
           <Magnetic>
@@ -69,9 +81,11 @@ export default function Hero() {
 
         {/* Social icons */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
+          {...fade({
+            initial: { opacity: 0 },
+            animate: { opacity: 1 },
+            transition: { delay: 0.8 },
+          })}
           className="mt-8 flex items-center justify-center gap-6 text-2xl text-white/45"
         >
           {socials.slice(0, 3).map(({ Icon, href, label }) => (
@@ -91,9 +105,11 @@ export default function Hero() {
 
       {/* Scroll cue */}
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2 }}
+        {...fade({
+          initial: { opacity: 0 },
+          animate: { opacity: 1 },
+          transition: { delay: 1.2 },
+        })}
         className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2"
       >
         <div className="flex h-9 w-5 items-start justify-center rounded-full border border-white/30 p-1">

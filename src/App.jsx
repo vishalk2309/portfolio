@@ -40,6 +40,11 @@ export default function App() {
     //  - external http(s) links open in a new tab
     //  - everything else (mailto:, etc.) keeps default behaviour
     const onClick = (e) => {
+      // Never hijack a click the user meant to open in a new tab/window,
+      // or any non-primary mouse button — let the browser do its thing.
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0)
+        return;
+
       const link = e.target.closest("a");
       if (!link) return;
       const href = link.getAttribute("href") || "";
