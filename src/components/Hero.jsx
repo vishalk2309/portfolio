@@ -18,7 +18,7 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative flex min-h-screen items-center justify-center overflow-hidden px-6 pt-24"
+      className="relative flex min-h-screen min-h-[100svh] items-center justify-center overflow-hidden px-6 pt-24"
     >
       {/* 3D floating cube behind the name */}
       <div className="pointer-events-none absolute left-1/2 top-[14%] h-[55vh] w-[55vh] -translate-x-1/2 opacity-90">
@@ -116,14 +116,14 @@ export default function Hero() {
         <LiveVisitors />
       </motion.div>
 
-      {/* Scroll cue — hidden on mobile where vertical space is tight */}
+      {/* Scroll cue */}
       <motion.div
         {...fade({
           initial: { opacity: 0 },
           animate: { opacity: 1 },
           transition: { delay: 1.2 },
         })}
-        className="absolute bottom-2 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-1.5 sm:flex"
+        className="absolute bottom-2 left-1/2 flex -translate-x-1/2 flex-col items-center gap-1.5"
       >
         <div className="flex h-7 w-4 items-start justify-center rounded-full border border-white/30 p-1">
           <motion.div
