@@ -2,6 +2,7 @@ import { Suspense, lazy } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useContent } from "../lib/ContentContext";
 import Magnetic from "./Magnetic";
+import LiveVisitors from "./LiveVisitors";
 
 // Lazy-load the WebGL cube so three.js ships as its own chunk.
 const HeroCube = lazy(() => import("./HeroCube"));
@@ -102,6 +103,18 @@ export default function Hero() {
           ))}
         </motion.div>
       </div>
+
+      {/* Live viewers badge — pinned to the bottom-left */}
+      <motion.div
+        {...fade({
+          initial: { opacity: 0, y: 10 },
+          animate: { opacity: 1, y: 0 },
+          transition: { delay: 1, duration: 0.6 },
+        })}
+        className="absolute bottom-8 left-6 z-10"
+      >
+        <LiveVisitors />
+      </motion.div>
 
       {/* Scroll cue */}
       <motion.div
