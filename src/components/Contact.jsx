@@ -2,11 +2,13 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useContent } from "../lib/ContentContext";
 import { supabase } from "../lib/supabase";
+import ProjectRequestForm from "./ProjectRequestForm";
 
 export default function Contact() {
   const { profile, socials } = useContent();
   // status: idle | sending | success | error
   const [status, setStatus] = useState("idle");
+  const [tab, setTab] = useState("hi"); // "hi" | "project"
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -82,15 +84,46 @@ export default function Contact() {
           ))}
         </div>
 
-        {/* Form */}
-        <motion.form
-          onSubmit={handleSubmit}
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="glass mt-12 rounded-3xl p-6 text-left sm:p-8"
-        >
+        {/* Tabs */}
+        <div className="mt-12 flex justify-center">
+          <div className="glass inline-flex gap-1 rounded-full p-1">
+            {[
+              { key: "hi", label: "Say Hi" },
+              { key: "project", label: "Request a Project" },
+            ].map((t) => (
+              <button
+                key={t.key}
+                onClick={() => setTab(t.key)}
+                className={`rounded-full px-5 py-2 text-sm font-semibold transition-colors ${
+                  tab === t.key
+                    ? "bg-white text-[rgb(var(--c-base))]"
+                    : "text-white/60 hover:text-white"
+                }`}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {tab === "project" ? (
+          <motion.div
+            key="project"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="mt-6"
+          >
+            <ProjectRequestForm ownerEmail={profile.email} />
+          </motion.div>
+        ) : (
+          <motion.form
+            onSubmit={handleSubmit}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="glass mt-6 rounded-3xl p-6 text-left sm:p-8"
+          >
           <div className="grid gap-5 sm:grid-cols-2">
             <Input name="name" type="text" placeholder="Name" />
             <Input name="email" type="email" placeholder="Email" />
@@ -121,12 +154,13 @@ export default function Contact() {
             {btnLabel}
           </button>
 
-          {status === "error" && (
-            <p className="mt-3 text-center text-sm text-red-400">
-              Something went wrong. Email me directly at {profile.email}.
-            </p>
-          )}
-        </motion.form>
+            {status === "error" && (
+              <p className="mt-3 text-center text-sm text-red-400">
+                Something went wrong. Email me directly at {profile.email}.
+              </p>
+            )}
+          </motion.form>
+        )}
       </div>
     </section>
   );
