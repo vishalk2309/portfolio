@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FaHeart } from "react-icons/fa";
 
 /** A single post preview card, used on the home section and the /blog index. */
 export default function BlogCard({ post }) {
@@ -48,8 +49,15 @@ export default function BlogCard({ post }) {
             {post.author_name ? `${post.author_name} · ` : ""}
             {date}
           </span>
-          <span className="text-neon-cyan transition-all group-hover:underline">
-            Read →
+          <span className="flex items-center gap-3">
+            {post.likes > 0 && (
+              <span className="flex items-center gap-1 text-rose-400/80">
+                <FaHeart className="text-[10px]" /> {post.likes}
+              </span>
+            )}
+            <span className="text-neon-cyan transition-all group-hover:underline">
+              Read →
+            </span>
           </span>
         </div>
       </div>

@@ -2,6 +2,7 @@ import { useParams, Link } from "react-router-dom";
 import BlogLayout from "./BlogLayout";
 import BlogContent from "../components/BlogContent";
 import ShareButtons from "../components/ShareButtons";
+import LikeButton from "../components/LikeButton";
 import { useBlogPost } from "../hooks/useBlogs";
 
 export default function BlogPost() {
@@ -70,7 +71,8 @@ export default function BlogPost() {
 
           <BlogContent content={post.content || ""} className="mt-8" />
 
-          <div className="mt-12 border-t border-white/10 pt-6">
+          <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-6">
+            <LikeButton postId={post.id} initial={post.likes} />
             <ShareButtons
               url={typeof window !== "undefined" ? window.location.href : ""}
               title={post.title}
