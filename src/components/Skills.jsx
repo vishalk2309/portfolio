@@ -63,8 +63,9 @@ export default function Skills() {
       (window.matchMedia && window.matchMedia("(pointer: coarse)").matches) ||
       "ontouchstart" in window;
 
-    // Touch handlers we may need to detach on cleanup.
-    let onTouchStart, onTouchEnd;
+    // Interaction handlers we may need to detach on cleanup.
+    let onTouchStart, onTouchEnd, onMouseMove, onMouseLeave;
+    let cursor = null; // {x, y} relative to the arena while hovering (desktop)
 
     if (!isTouch) {
       const mouse = Mouse.create(container);
@@ -78,6 +79,16 @@ export default function Skills() {
         mouse.element.removeEventListener("wheel", mouse.mousewheel);
         mouse.element.removeEventListener("DOMMouseScroll", mouse.mousewheel);
       }
+      // Hover-repel: nearby cards scatter away from the cursor as it moves.
+      onMouseMove = (e) => {
+        const rect = container.getBoundingClientRect();
+        cursor = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      };
+      onMouseLeave = () => {
+        cursor = null;
+      };
+      container.addEventListener("mousemove", onMouseMove);
+      container.addEventListener("mouseleave", onMouseLeave);
     } else {
       // Touch: a TAP on a card pops it up (bounce), while swipes still scroll.
       // Passive listeners → we never block the page's native scroll.
@@ -128,6 +139,22 @@ export default function Skills() {
     const loop = (now) => {
       const dt = Math.min(32, now - last);
       last = now;
+      // Hover-repel: push cards away from the cursor (desktop).
+      if (cursor) {
+        const R = CARD * 1.15;
+        for (const b of bodies) {
+          const dx = b.position.x - cursor.x;
+          const dy = b.position.y - cursor.y;
+          const dist = Math.hypot(dx, dy) || 0.001;
+          if (dist < R) {
+            const s = (1 - dist / R) * 2.4;
+            Body.setVelocity(b, {
+              x: b.velocity.x + (dx / dist) * s,
+              y: b.velocity.y + (dy / dist) * s,
+            });
+          }
+        }
+      }
       Engine.update(engine, dt);
       render();
       rafId = requestAnimationFrame(loop);
@@ -169,6 +196,8 @@ export default function Skills() {
       window.removeEventListener("resize", onResize);
       if (onTouchStart) container.removeEventListener("touchstart", onTouchStart);
       if (onTouchEnd) container.removeEventListener("touchend", onTouchEnd);
+      if (onMouseMove) container.removeEventListener("mousemove", onMouseMove);
+      if (onMouseLeave) container.removeEventListener("mouseleave", onMouseLeave);
       Composite.clear(world, false);
       Engine.clear(engine);
     };
