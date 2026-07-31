@@ -6,6 +6,14 @@ import "react-quill-new/dist/quill.snow.css";
 // Rich HTML from the editor contains tags; older posts are plain markdown.
 const looksHtml = (s = "") => /<\/?[a-z][\s\S]*>/i.test(s);
 
+// Clean up whitespace artifacts the rich editor can leave behind.
+const normalize = (html = "") =>
+  html
+    .replace(/&amp;nbsp;/gi, " ") // double-encoded nbsp
+    .replace(/&nbsp;/gi, " ") // nbsp entity
+    .replace(/ /g, " ") // literal non-breaking space char
+    .replace(/<p>(?:\s|<br\s*\/?>)*<\/p>/gi, ""); // empty paragraphs
+
 /**
  * Renders a blog body safely. New posts are Quill HTML (sanitized with
  * DOMPurify, then rendered with Quill's content styles). Legacy posts are
@@ -13,7 +21,9 @@ const looksHtml = (s = "") => /<\/?[a-z][\s\S]*>/i.test(s);
  */
 export default function BlogContent({ content = "", className = "" }) {
   if (looksHtml(content)) {
-    const clean = DOMPurify.sanitize(content, { USE_PROFILES: { html: true } });
+    const clean = DOMPurify.sanitize(normalize(content), {
+      USE_PROFILES: { html: true },
+    });
     return (
       <div className={`ql-snow ${className}`}>
         <div
