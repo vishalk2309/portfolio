@@ -22,6 +22,7 @@ export default function BlogWrite() {
   const set = (k, v) => setF((p) => ({ ...p, [k]: v }));
   const [state, setState] = useState({ status: "idle", msg: "" }); // idle|sending|success|error
   const [otp, setOtp] = useState({ status: "idle", msg: "" }); // idle|sending|sent|error
+  const [submissionId, setSubmissionId] = useState("");
 
   // Upload an editor image via the edge function (visitors can't write storage directly).
   const uploadImage = async (file) => {
@@ -100,6 +101,7 @@ export default function BlogWrite() {
       });
       if (error || !data?.success)
         throw new Error(data?.error || "Something went wrong.");
+      setSubmissionId(data.id || "");
       setState({ status: "success", msg: "" });
     } catch (err) {
       setState({ status: "error", msg: err.message || "Something went wrong." });
@@ -118,6 +120,25 @@ export default function BlogWrite() {
             Your submission was received. It&rsquo;ll appear on the blog once
             it&rsquo;s been reviewed and approved.
           </p>
+
+          {submissionId && (
+            <div className="mx-auto mt-6 max-w-md rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+              <p className="text-xs text-white/50">Your submission ID</p>
+              <p className="mt-1 break-all font-mono text-sm text-white">
+                {submissionId}
+              </p>
+              <p className="mt-2 text-xs text-white/40">
+                Save this to track your submission&rsquo;s status.
+              </p>
+              <Link
+                to={`/blog/status?id=${submissionId}`}
+                className="mt-3 inline-block rounded-full bg-white px-4 py-2 text-sm font-semibold text-[rgb(var(--c-base))] transition-transform hover:scale-105"
+              >
+                Track status →
+              </Link>
+            </div>
+          )}
+
           <Link
             to="/blog"
             className="mt-6 inline-block text-sm text-neon-cyan hover:underline"
@@ -134,9 +155,14 @@ export default function BlogWrite() {
       <h1 className="font-serif text-4xl font-bold text-white sm:text-5xl">
         Write a post
       </h1>
-      <p className="mb-8 mt-2 text-white/55">
+      <p className="mb-2 mt-2 text-white/55">
         Share something with the community. Posts are reviewed before they go
         live.
+      </p>
+      <p className="mb-8">
+        <Link to="/blog/status" className="text-sm text-neon-cyan hover:underline">
+          Already submitted? Track your status →
+        </Link>
       </p>
 
       <form onSubmit={submit} className="glass rounded-3xl p-6 text-left sm:p-8">

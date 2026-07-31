@@ -12,6 +12,7 @@ const AdminApp = lazy(() => import("./admin/AdminApp.jsx"));
 const BlogIndex = lazy(() => import("./pages/BlogIndex.jsx"));
 const BlogPost = lazy(() => import("./pages/BlogPost.jsx"));
 const BlogWrite = lazy(() => import("./pages/BlogWrite.jsx"));
+const BlogStatus = lazy(() => import("./pages/BlogStatus.jsx"));
 
 // apply the saved light/dark mode + accent before first paint
 applyMode(getMode());
@@ -47,6 +48,16 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <ContentProvider>
               <Suspense fallback={null}>
                 <BlogWrite />
+              </Suspense>
+            </ContentProvider>
+          }
+        />
+        <Route
+          path="/blog/status"
+          element={
+            <ContentProvider>
+              <Suspense fallback={null}>
+                <BlogStatus />
               </Suspense>
             </ContentProvider>
           }

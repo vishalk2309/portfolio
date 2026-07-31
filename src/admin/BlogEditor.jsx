@@ -18,6 +18,7 @@ const EMPTY = {
   cover_image: "",
   tags: [],
   published: false,
+  status: "submitted",
   author_name: "",
   author_email: "",
   author_date: "",
@@ -83,7 +84,8 @@ export default function BlogEditor() {
       content: form.content || "",
       cover_image: form.cover_image || null,
       tags: form.tags,
-      published: form.published,
+      status: form.status || "submitted",
+      published: (form.status || "") === "published",
       author_name: form.author_name || null,
       author_email: form.author_email || null,
       author_date: form.author_date || null,
@@ -109,9 +111,13 @@ export default function BlogEditor() {
   };
 
   const togglePublish = async (p) => {
+    const nowPublish = !p.published;
     await supabase
       .from("blogs")
-      .update({ published: !p.published })
+      .update({
+        published: nowPublish,
+        status: nowPublish ? "published" : "in_review",
+      })
       .eq("id", p.id);
     await load();
   };
@@ -173,12 +179,21 @@ export default function BlogEditor() {
                     </span>
                     <span
                       className={`rounded-full px-2 py-0.5 text-[10px] ${
-                        p.published
+                        p.status === "published"
                           ? "bg-emerald-500/15 text-emerald-400"
+                          : p.status === "rejected"
+                          ? "bg-red-500/15 text-red-400"
+                          : p.status === "in_review"
+                          ? "bg-amber-500/15 text-amber-400"
                           : "bg-white/10 text-white/50"
                       }`}
                     >
-                      {p.published ? "Published" : "Draft"}
+                      {{
+                        published: "Published",
+                        rejected: "Rejected",
+                        in_review: "In review",
+                        submitted: "Submitted",
+                      }[p.status] || (p.published ? "Published" : "Draft")}
                     </span>
                   </div>
                   <div className="truncate text-xs text-white/40">
@@ -369,14 +384,21 @@ export default function BlogEditor() {
             />
           </div>
 
-          <label className="flex items-center gap-2 text-sm text-white/70">
-            <input
-              type="checkbox"
-              checked={form.published}
-              onChange={(e) => set("published", e.target.checked)}
-            />
-            Published (visible on the site)
-          </label>
+          <div>
+            <label className="mb-1 block text-sm text-white/70">Status</label>
+            <select
+              className={inputCls}
+              value={form.status}
+              onChange={(e) => set("status", e.target.value)}
+            >
+              <option value="submitted" className="bg-base">Submitted</option>
+              <option value="in_review" className="bg-base">In review</option>
+              <option value="published" className="bg-base">
+                Published (visible on site)
+              </option>
+              <option value="rejected" className="bg-base">Rejected</option>
+            </select>
+          </div>
         </div>
 
         {/* Right: live preview */}

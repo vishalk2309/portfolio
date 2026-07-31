@@ -153,20 +153,25 @@ Deno.serve(async (req) => {
     slug = `${base}-${n}`;
   }
 
-  const { error } = await supabase.from("blogs").insert({
-    title,
-    slug,
-    excerpt: makeExcerpt(content),
-    content,
-    tags,
-    author_name: authorName,
-    author_email: authorEmail || null,
-    author_date: authorDate || null,
-    author_linkedin: authorLinkedin || null,
-    published: false, // always a draft — owner reviews/publishes
-  });
+  const { data: inserted, error } = await supabase
+    .from("blogs")
+    .insert({
+      title,
+      slug,
+      excerpt: makeExcerpt(content),
+      content,
+      tags,
+      author_name: authorName,
+      author_email: authorEmail || null,
+      author_date: authorDate || null,
+      author_linkedin: authorLinkedin || null,
+      status: "submitted",
+      published: false, // always a draft — owner reviews/publishes
+    })
+    .select("id")
+    .single();
 
-  if (error)
+  if (error || !inserted)
     return json({ success: false, error: "Could not save your post." }, 500);
 
   // Optional owner notification.
@@ -193,5 +198,5 @@ Deno.serve(async (req) => {
     }
   }
 
-  return json({ success: true });
+  return json({ success: true, id: inserted.id });
 });

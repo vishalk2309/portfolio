@@ -64,6 +64,16 @@ alter table blogs add column if not exists author_email    text;
 alter table blogs add column if not exists author_date     date;
 alter table blogs add column if not exists author_linkedin text;
 alter table blogs add column if not exists likes           bigint not null default 0;
+alter table blogs add column if not exists status          text not null default 'submitted';
+update blogs set status = 'published' where published = true and status <> 'published';
+
+-- Submission status lookup (contributors track by id).
+create or replace function blog_submission_status(p_id uuid)
+returns table (status text, title text, slug text, published boolean)
+language sql security definer set search_path = public as $$
+  select b.status, b.title, b.slug, b.published from blogs b where b.id = p_id;
+$$;
+grant execute on function blog_submission_status(uuid) to anon, authenticated;
 
 -- Public like counter — ±1 on published posts only.
 create or replace function bump_blog_likes(p_id uuid, p_delta int)
