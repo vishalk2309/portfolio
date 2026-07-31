@@ -3,6 +3,7 @@ import BlogLayout from "./BlogLayout";
 import BlogContent from "../components/BlogContent";
 import ShareButtons from "../components/ShareButtons";
 import LikeButton from "../components/LikeButton";
+import Comments from "../components/Comments";
 import { useBlogPost } from "../hooks/useBlogs";
 
 export default function BlogPost() {
@@ -79,7 +80,9 @@ export default function BlogPost() {
             />
           </div>
 
-          <div className="mt-6">
+          <Comments blogId={post.id} />
+
+          <div className="mt-8">
             <Link to="/blog" className="text-sm text-neon-cyan hover:underline">
               ← Back to all posts
             </Link>
