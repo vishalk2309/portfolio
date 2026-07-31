@@ -18,6 +18,8 @@ FUNCTIONS=(
   submit-comment
   verify-otp
   notify-blog-status
+  subscribe-blog
+  notify-subscribers
 )
 
 for fn in "${FUNCTIONS[@]}"; do

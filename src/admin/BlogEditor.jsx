@@ -81,6 +81,17 @@ export default function BlogEditor() {
     }
   };
 
+  // Email all subscribers about a newly published post (once, guarded server-side).
+  const notifySubscribers = async (id) => {
+    try {
+      await supabase.functions.invoke("notify-subscribers", {
+        body: { blog_id: id },
+      });
+    } catch {
+      /* best-effort */
+    }
+  };
+
   const save = async () => {
     if (!form.title.trim()) {
       setMsg("Title is required.");
@@ -104,10 +115,20 @@ export default function BlogEditor() {
       author_date: form.author_date || null,
       author_linkedin: form.author_linkedin || null,
     };
-    const { error } =
-      editing === "new"
-        ? await supabase.from("blogs").insert(payload)
-        : await supabase.from("blogs").update(payload).eq("id", editing);
+    let savedId = editing;
+    let error;
+    if (editing === "new") {
+      const res = await supabase
+        .from("blogs")
+        .insert(payload)
+        .select("id")
+        .single();
+      error = res.error;
+      savedId = res.data?.id;
+    } else {
+      const res = await supabase.from("blogs").update(payload).eq("id", editing);
+      error = res.error;
+    }
     setSaving(false);
     if (error) {
       setMsg("Error: " + error.message);
@@ -117,10 +138,15 @@ export default function BlogEditor() {
     const notify = ["in_review", "published", "rejected"];
     if (
       editing !== "new" &&
+      savedId &&
       payload.status !== prevStatus &&
       notify.includes(payload.status)
     ) {
-      await notifyStatus(editing);
+      await notifyStatus(savedId);
+    }
+    // Email subscribers when a post is published (idempotent per post).
+    if (savedId && payload.status === "published") {
+      await notifySubscribers(savedId);
     }
     await load();
     cancel();
@@ -142,6 +168,7 @@ export default function BlogEditor() {
       })
       .eq("id", p.id);
     await notifyStatus(p.id);
+    if (nowPublish) await notifySubscribers(p.id);
     await load();
   };
 

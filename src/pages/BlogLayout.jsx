@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import Background from "../components/Background";
 import Footer from "../components/Footer";
+import SubscribePopup from "../components/SubscribePopup";
 import { useContent } from "../lib/ContentContext";
 
 /** Shared chrome for the /blog pages: background, a slim header, and footer. */
@@ -43,6 +44,7 @@ export default function BlogLayout({ children }) {
       </main>
 
       <Footer />
+      <SubscribePopup />
     </div>
   );
 }

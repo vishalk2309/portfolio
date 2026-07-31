@@ -200,6 +200,19 @@ create policy "auth delete comments" on blog_comments
   for delete to authenticated using (true);
 
 
+-- Blog subscribers (newsletter)
+create table if not exists blog_subscribers (
+  id         uuid primary key default gen_random_uuid(),
+  email      text unique not null,
+  created_at timestamptz not null default now()
+);
+alter table blog_subscribers enable row level security;
+drop policy if exists "auth read blog_subscribers" on blog_subscribers;
+create policy "auth read blog_subscribers" on blog_subscribers
+  for select to authenticated using (true);
+alter table blogs add column if not exists subscribers_notified boolean not null default false;
+
+
 -- ------------------------------------------------------------
 -- 4) Request-a-Project — submissions + email OTP codes
 -- ------------------------------------------------------------
