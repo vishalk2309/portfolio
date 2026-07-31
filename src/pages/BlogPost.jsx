@@ -8,8 +8,9 @@ export default function BlogPost() {
   const { slug } = useParams();
   const { post, status } = useBlogPost(slug);
 
-  const date = post?.created_at
-    ? new Date(post.created_at).toLocaleDateString(undefined, {
+  const stamp = post?.author_date || post?.created_at;
+  const date = stamp
+    ? new Date(stamp).toLocaleDateString(undefined, {
         year: "numeric",
         month: "long",
         day: "numeric",
@@ -61,7 +62,11 @@ export default function BlogPost() {
           <h1 className="font-serif text-4xl font-bold leading-tight text-white sm:text-5xl">
             {post.title}
           </h1>
-          {date && <p className="mt-3 text-sm text-white/40">{date}</p>}
+          <p className="mt-3 text-sm text-white/40">
+            {post.author_name ? `By ${post.author_name}` : ""}
+            {post.author_name && date ? " · " : ""}
+            {date}
+          </p>
 
           <div className="mt-8 blog-content">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>

@@ -2,8 +2,9 @@ import { Link } from "react-router-dom";
 
 /** A single post preview card, used on the home section and the /blog index. */
 export default function BlogCard({ post }) {
-  const date = post.created_at
-    ? new Date(post.created_at).toLocaleDateString(undefined, {
+  const stamp = post.author_date || post.created_at;
+  const date = stamp
+    ? new Date(stamp).toLocaleDateString(undefined, {
         year: "numeric",
         month: "short",
         day: "numeric",
@@ -43,7 +44,10 @@ export default function BlogCard({ post }) {
           </p>
         )}
         <div className="mt-4 flex items-center justify-between pt-2 text-xs text-white/40">
-          <span>{date}</span>
+          <span>
+            {post.author_name ? `${post.author_name} · ` : ""}
+            {date}
+          </span>
           <span className="text-neon-cyan transition-all group-hover:underline">
             Read →
           </span>

@@ -18,6 +18,9 @@ const EMPTY = {
   cover_image: "",
   tags: [],
   published: false,
+  author_name: "",
+  author_email: "",
+  author_date: "",
 };
 
 const inputCls =
@@ -80,6 +83,9 @@ export default function BlogEditor() {
       cover_image: form.cover_image || null,
       tags: form.tags,
       published: form.published,
+      author_name: form.author_name || null,
+      author_email: form.author_email || null,
+      author_date: form.author_date || null,
     };
     const { error } =
       editing === "new"
@@ -171,7 +177,10 @@ export default function BlogEditor() {
                       {p.published ? "Published" : "Draft"}
                     </span>
                   </div>
-                  <div className="truncate text-xs text-white/40">/{p.slug}</div>
+                  <div className="truncate text-xs text-white/40">
+                    /{p.slug}
+                    {p.author_name ? ` · by ${p.author_name}` : ""}
+                  </div>
                 </div>
                 <button
                   onClick={() => togglePublish(p)}
@@ -285,6 +294,34 @@ export default function BlogEditor() {
                 )
               }
             />
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div>
+              <label className="mb-1 block text-sm text-white/70">Author name</label>
+              <input
+                className={inputCls}
+                value={form.author_name}
+                onChange={(e) => set("author_name", e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-sm text-white/70">Author email</label>
+              <input
+                className={inputCls}
+                value={form.author_email}
+                onChange={(e) => set("author_email", e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-sm text-white/70">Author date</label>
+              <input
+                type="date"
+                className={inputCls}
+                value={form.author_date || ""}
+                onChange={(e) => set("author_date", e.target.value)}
+              />
+            </div>
           </div>
 
           <div>

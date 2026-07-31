@@ -11,6 +11,7 @@ const AdminApp = lazy(() => import("./admin/AdminApp.jsx"));
 // Blog pages are lazy so react-markdown only loads when a post is opened.
 const BlogIndex = lazy(() => import("./pages/BlogIndex.jsx"));
 const BlogPost = lazy(() => import("./pages/BlogPost.jsx"));
+const BlogWrite = lazy(() => import("./pages/BlogWrite.jsx"));
 
 // apply the saved light/dark mode + accent before first paint
 applyMode(getMode());
@@ -36,6 +37,16 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <ContentProvider>
               <Suspense fallback={null}>
                 <BlogIndex />
+              </Suspense>
+            </ContentProvider>
+          }
+        />
+        <Route
+          path="/blog/write"
+          element={
+            <ContentProvider>
+              <Suspense fallback={null}>
+                <BlogWrite />
               </Suspense>
             </ContentProvider>
           }

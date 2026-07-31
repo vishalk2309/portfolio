@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import BlogLayout from "./BlogLayout";
 import BlogCard from "../components/BlogCard";
 import { useBlogs } from "../hooks/useBlogs";
@@ -7,12 +8,22 @@ export default function BlogIndex() {
 
   return (
     <BlogLayout>
-      <h1 className="font-serif text-4xl font-bold text-white sm:text-5xl">
-        Blog
-      </h1>
-      <p className="mb-10 mt-2 text-white/55">
-        Thoughts, notes, and things I&rsquo;m building.
-      </p>
+      <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="font-serif text-4xl font-bold text-white sm:text-5xl">
+            Blog
+          </h1>
+          <p className="mt-2 text-white/55">
+            Thoughts, notes, and things I&rsquo;m building.
+          </p>
+        </div>
+        <Link
+          to="/blog/write"
+          className="inline-block rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-[rgb(var(--c-base))] transition-transform hover:scale-105"
+        >
+          ✍️ Write a post
+        </Link>
+      </div>
 
       {status === "loading" && <p className="text-white/40">Loading…</p>}
 
