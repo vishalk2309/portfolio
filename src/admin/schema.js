@@ -19,6 +19,8 @@ export const TABLES = [
       { name: "email", label: "Email", type: "text" },
       { name: "resume_url", label: "Resume URL", type: "text" },
       { name: "photo", label: "Photo", type: "image" },
+      { name: "quote", label: "Home quote", type: "textarea", full: true },
+      { name: "quote_author", label: "Quote author (optional)", type: "text" },
     ],
   },
   {

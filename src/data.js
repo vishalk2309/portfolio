@@ -26,6 +26,9 @@ export const profile = {
   resumeUrl: "/Vishal_Resume.pdf",
   // Your photo lives in /public. Served at the site root.
   photo: "/profile1.png",
+  // Short line shown under the role on the home page. Editable from admin.
+  quote: "First, solve the problem. Then, write the code.",
+  quoteAuthor: "John Johnson",
 };
 
 export const navLinks = [

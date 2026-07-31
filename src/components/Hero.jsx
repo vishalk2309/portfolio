@@ -52,6 +52,25 @@ export default function Hero() {
           {profile.role}
         </motion.p>
 
+        {/* Quote */}
+        {profile.quote && (
+          <motion.p
+            {...fade({
+              initial: { opacity: 0, y: 20 },
+              animate: { opacity: 1, y: 0 },
+              transition: { duration: 0.7, delay: 0.45, ease: "easeOut" },
+            })}
+            className="mx-auto mt-6 max-w-2xl font-serif text-base italic text-white/55 sm:text-lg"
+          >
+            &ldquo;{profile.quote}&rdquo;
+            {profile.quoteAuthor && (
+              <span className="mt-1 block text-sm not-italic text-white/35">
+                — {profile.quoteAuthor}
+              </span>
+            )}
+          </motion.p>
+        )}
+
         {/* CTA buttons */}
         <motion.div
           {...fade({
