@@ -18,7 +18,7 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative flex min-h-screen min-h-[100svh] flex-col items-center justify-center overflow-hidden px-6 pt-24"
+      className="relative flex min-h-screen min-h-[100svh] flex-col items-center justify-center overflow-hidden px-6 pt-24 sm:pb-24"
     >
       {/* 3D floating cube behind the name */}
       <div className="pointer-events-none absolute left-1/2 top-[14%] h-[55vh] w-[55vh] -translate-x-1/2 opacity-90">
