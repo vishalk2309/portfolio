@@ -14,7 +14,9 @@ export default function Hero() {
   // When the user prefers reduced motion, render everything in its final
   // state instead of animating it in.
   const fade = ({ initial, animate, transition }) =>
-    reduceMotion ? { initial: false, animate } : { initial, animate, transition };
+    reduceMotion
+      ? { initial: false, animate }
+      : { initial, animate, transition };
   return (
     <section
       id="home"
@@ -123,14 +125,15 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* Live viewers badge — pinned to the bottom-left of the home hero. */}
+      {/* Live viewers badge — fixed to the bottom-left so it stays visible
+          on screen while scrolling. */}
       <motion.div
         {...fade({
           initial: { opacity: 0, y: 10 },
           animate: { opacity: 1, y: 0 },
           transition: { delay: 1, duration: 0.6 },
         })}
-        className="absolute bottom-6 left-4 z-10 sm:bottom-8 sm:left-6"
+        className="fixed bottom-12 left-4 z-40 sm:bottom-14 sm:left-6"
       >
         <LiveVisitors />
       </motion.div>
