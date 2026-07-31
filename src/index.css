@@ -152,6 +152,65 @@ html.lenis body {
   width: 100%;
 }
 
+/* Rendered markdown inside a blog post */
+.blog-content {
+  color: rgb(var(--c-fg) / 0.82);
+  line-height: 1.75;
+  font-size: 1.05rem;
+}
+.blog-content h1,
+.blog-content h2,
+.blog-content h3,
+.blog-content h4 {
+  color: rgb(var(--c-fg));
+  font-weight: 700;
+  line-height: 1.25;
+  margin: 1.6em 0 0.6em;
+}
+.blog-content h1 { font-size: 1.9rem; }
+.blog-content h2 { font-size: 1.5rem; }
+.blog-content h3 { font-size: 1.25rem; }
+.blog-content p { margin: 1em 0; }
+.blog-content a {
+  color: var(--accent-from);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.blog-content ul,
+.blog-content ol { margin: 1em 0; padding-left: 1.5em; }
+.blog-content ul { list-style: disc; }
+.blog-content ol { list-style: decimal; }
+.blog-content li { margin: 0.4em 0; }
+.blog-content blockquote {
+  border-left: 3px solid var(--accent-from);
+  padding-left: 1em;
+  margin: 1.2em 0;
+  color: rgb(var(--c-fg) / 0.6);
+  font-style: italic;
+}
+.blog-content code {
+  background: rgb(var(--c-fg) / 0.08);
+  padding: 0.15em 0.4em;
+  border-radius: 0.3em;
+  font-size: 0.9em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.blog-content pre {
+  background: rgb(var(--c-fg) / 0.06);
+  border: 1px solid rgb(var(--c-fg) / 0.1);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  margin: 1.2em 0;
+}
+.blog-content pre code { background: none; padding: 0; }
+.blog-content img { border-radius: 0.75rem; margin: 1.2em 0; max-width: 100%; }
+.blog-content hr {
+  border: 0;
+  border-top: 1px solid rgb(var(--c-fg) / 0.12);
+  margin: 2em 0;
+}
+
 /* Respect users who prefer reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *,

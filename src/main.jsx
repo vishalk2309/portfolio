@@ -8,6 +8,9 @@ import { ContentProvider } from "./lib/ContentContext";
 
 // Admin ships as its own chunk — portfolio visitors never download it.
 const AdminApp = lazy(() => import("./admin/AdminApp.jsx"));
+// Blog pages are lazy so react-markdown only loads when a post is opened.
+const BlogIndex = lazy(() => import("./pages/BlogIndex.jsx"));
+const BlogPost = lazy(() => import("./pages/BlogPost.jsx"));
 
 // apply the saved light/dark mode + accent before first paint
 applyMode(getMode());
@@ -23,6 +26,27 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           element={
             <ContentProvider>
               <App />
+            </ContentProvider>
+          }
+        />
+        {/* Blog */}
+        <Route
+          path="/blog"
+          element={
+            <ContentProvider>
+              <Suspense fallback={null}>
+                <BlogIndex />
+              </Suspense>
+            </ContentProvider>
+          }
+        />
+        <Route
+          path="/blog/:slug"
+          element={
+            <ContentProvider>
+              <Suspense fallback={null}>
+                <BlogPost />
+              </Suspense>
             </ContentProvider>
           }
         />
