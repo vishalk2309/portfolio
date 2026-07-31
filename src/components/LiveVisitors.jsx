@@ -22,7 +22,6 @@ export default function LiveVisitors({ className = "" }) {
             <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
           </span>
           <span className="font-semibold text-white">{live}</span>
-          online
         </span>
       )}
 
@@ -36,7 +35,7 @@ export default function LiveVisitors({ className = "" }) {
           <span className="font-semibold text-white">
             {Number(total).toLocaleString()}
           </span>
-          visits
+          
         </span>
       )}
     </div>

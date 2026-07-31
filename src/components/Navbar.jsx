@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowRight, FiSearch } from "react-icons/fi";
 import { useContent } from "../lib/ContentContext";
@@ -17,10 +18,13 @@ export default function Navbar() {
   // nav_links table — deduped so it never doubles up.
   const links = useMemo(() => {
     const hasBlog = navLinks.some(
-      (l) => l.href === "#blog" || l.label.toLowerCase() === "blog"
+      (l) =>
+        l.href === "#blog" ||
+        l.href === "/blog" ||
+        l.label.toLowerCase() === "blog"
     );
     if (hasBlog) return navLinks;
-    const blog = { label: "Blog", href: "#blog" };
+    const blog = { label: "Blog", href: "/blog" };
     const ci = navLinks.findIndex((l) => l.href === "#contact");
     if (ci === -1) return [...navLinks, blog];
     const copy = [...navLinks];
@@ -72,16 +76,20 @@ export default function Navbar() {
         <ul className="hidden items-center gap-8 md:flex">
           {links.map((link) => {
             const isActive = activeId === link.href.slice(1);
+            const cls = `nav-link text-sm font-medium transition-colors hover:text-white ${
+              isActive ? "nav-link-active text-white" : "text-white/75"
+            }`;
             return (
               <li key={link.href}>
-                <a
-                  href={link.href}
-                  className={`nav-link text-sm font-medium transition-colors hover:text-white ${
-                    isActive ? "nav-link-active text-white" : "text-white/75"
-                  }`}
-                >
-                  {link.label}
-                </a>
+                {link.href.startsWith("/") ? (
+                  <Link to={link.href} className={cls}>
+                    {link.label}
+                  </Link>
+                ) : (
+                  <a href={link.href} className={cls}>
+                    {link.label}
+                  </a>
+                )}
               </li>
             );
           })}
@@ -146,13 +154,23 @@ export default function Navbar() {
         >
           {links.map((link) => (
             <li key={link.href}>
-              <a
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className="block py-2 text-white/80 hover:text-white"
-              >
-                {link.label}
-              </a>
+              {link.href.startsWith("/") ? (
+                <Link
+                  to={link.href}
+                  onClick={() => setOpen(false)}
+                  className="block py-2 text-white/80 hover:text-white"
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <a
+                  href={link.href}
+                  onClick={() => setOpen(false)}
+                  className="block py-2 text-white/80 hover:text-white"
+                >
+                  {link.label}
+                </a>
+              )}
             </li>
           ))}
         </motion.ul>
