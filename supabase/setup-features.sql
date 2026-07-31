@@ -210,6 +210,9 @@ alter table blog_subscribers enable row level security;
 drop policy if exists "auth read blog_subscribers" on blog_subscribers;
 create policy "auth read blog_subscribers" on blog_subscribers
   for select to authenticated using (true);
+drop policy if exists "auth delete blog_subscribers" on blog_subscribers;
+create policy "auth delete blog_subscribers" on blog_subscribers
+  for delete to authenticated using (true);
 alter table blogs add column if not exists subscribers_notified boolean not null default false;
 
 
