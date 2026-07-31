@@ -38,6 +38,7 @@ npx supabase functions deploy send-contact             --no-verify-jwt --project
 npx supabase functions deploy send-otp                 --no-verify-jwt --project-ref lvglryvlvfixwueujbxr
 npx supabase functions deploy submit-project-request   --no-verify-jwt --project-ref lvglryvlvfixwueujbxr
 npx supabase functions deploy submit-blog              --no-verify-jwt --project-ref lvglryvlvfixwueujbxr
+npx supabase functions deploy upload-blog-image        --no-verify-jwt --project-ref lvglryvlvfixwueujbxr
 ```
 
 | Function | Used by | File |
@@ -46,6 +47,7 @@ npx supabase functions deploy submit-blog              --no-verify-jwt --project
 | `send-otp` | OTP for project + blog forms (shared) | `supabase/functions/send-otp/index.ts` |
 | `submit-project-request` | Request-a-Project form | `supabase/functions/submit-project-request/index.ts` |
 | `submit-blog` | Public blog submissions | `supabase/functions/submit-blog/index.ts` |
+| `upload-blog-image` | Image uploads from the public blog editor | `supabase/functions/upload-blog-image/index.ts` |
 
 ---
 

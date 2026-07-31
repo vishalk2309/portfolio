@@ -22,6 +22,30 @@ export default function BlogWrite() {
   const [state, setState] = useState({ status: "idle", msg: "" }); // idle|sending|success|error
   const [otp, setOtp] = useState({ status: "idle", msg: "" }); // idle|sending|sent|error
 
+  // Upload an editor image via the edge function (visitors can't write storage directly).
+  const uploadImage = async (file) => {
+    if (!file || !supabase) return null;
+    if (file.size > 5 * 1024 * 1024) {
+      setState({ status: "error", msg: "Images must be under 5 MB." });
+      return null;
+    }
+    const dataUrl = await new Promise((res, rej) => {
+      const r = new FileReader();
+      r.onload = () => res(String(r.result));
+      r.onerror = rej;
+      r.readAsDataURL(file);
+    });
+    const base64 = dataUrl.split(",")[1];
+    const { data, error } = await supabase.functions.invoke("upload-blog-image", {
+      body: { filename: file.name, contentType: file.type, data: base64 },
+    });
+    if (error || !data?.success) {
+      setState({ status: "error", msg: data?.error || "Image upload failed." });
+      return null;
+    }
+    return data.url;
+  };
+
   const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.author_email);
   const verified = otp.status === "sent";
 
@@ -207,6 +231,7 @@ export default function BlogWrite() {
           <RichTextEditor
             value={f.content}
             onChange={(html) => set("content", html)}
+            onImageUpload={uploadImage}
             placeholder="Write your post — format with the toolbar above…"
           />
         </div>
