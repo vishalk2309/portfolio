@@ -63,9 +63,9 @@ export const socials = [
 // Manage these from the admin dashboard (Testimonials).
 export const testimonials = [
   {
-    name: "A. Sharma",
+    name: "Abhishek Kumar Ojha",
     message:
-      "Vishal is a sharp, reliable developer — he turned our rough idea into a polished product faster than we expected.",
+      "Bro, what an awesome portfolio you've made. Seriously, I loved it. Keep it up, buddy.",
     date: "2025",
   },
   {

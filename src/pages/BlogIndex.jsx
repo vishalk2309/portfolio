@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import BlogLayout from "./BlogLayout";
 import BlogCard from "../components/BlogCard";
+import SubscribeBox from "../components/SubscribeBox";
 import { useBlogs } from "../hooks/useBlogs";
 
 export default function BlogIndex() {
@@ -35,6 +36,10 @@ export default function BlogIndex() {
         {posts.map((post) => (
           <BlogCard key={post.id} post={post} />
         ))}
+      </div>
+
+      <div className="mt-12">
+        <SubscribeBox />
       </div>
     </BlogLayout>
   );

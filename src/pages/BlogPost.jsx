@@ -5,6 +5,7 @@ import BlogContent from "../components/BlogContent";
 import ShareButtons from "../components/ShareButtons";
 import LikeButton from "../components/LikeButton";
 import Comments from "../components/Comments";
+import SubscribeBox from "../components/SubscribeBox";
 import { useBlogPost } from "../hooks/useBlogs";
 
 export default function BlogPost() {
@@ -100,6 +101,10 @@ export default function BlogPost() {
           </div>
 
           <Comments blogId={post.id} />
+
+          <div className="mt-12">
+            <SubscribeBox />
+          </div>
 
           <div className="mt-8">
             <Link to="/blog" className="text-sm text-neon-cyan hover:underline">
