@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { FiArrowRight, FiSearch } from "react-icons/fi";
 import { useContent } from "../lib/ContentContext";
 import AccentDots from "./AccentDots";
-import LiveVisitors from "./LiveVisitors";
 
 const openPalette = () =>
   window.dispatchEvent(new Event("open-command-palette"));
@@ -74,9 +73,6 @@ export default function Navbar() {
         </ul>
 
         <div className="flex items-center gap-3">
-          {/* Live viewers + visits — compact on mobile, full on desktop */}
-          <LiveVisitors />
-
           {/* Accent theme dots (desktop) */}
           <div className="hidden sm:block">
             <AccentDots size={16} />

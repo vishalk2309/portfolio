@@ -22,16 +22,16 @@ export default function LiveVisitors({ className = "" }) {
             <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
           </span>
           <span className="font-semibold text-white">{live}</span>
-          <span className="hidden sm:inline">online</span>
+          online
         </span>
       )}
 
       {live != null && total != null && (
-        <span className="hidden h-3 w-px bg-white/15 sm:block" aria-hidden="true" />
+        <span className="h-3 w-px bg-white/15" aria-hidden="true" />
       )}
 
       {total != null && (
-        <span className="hidden items-center gap-1.5 sm:flex">
+        <span className="flex items-center gap-1.5">
           <FaEye className="text-white/40" />
           <span className="font-semibold text-white">
             {Number(total).toLocaleString()}
