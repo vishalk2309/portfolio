@@ -48,7 +48,13 @@ Deno.serve(async (req) => {
   if (req.method !== "POST")
     return json({ success: false, error: "Method not allowed" }, 405);
 
-  let b: { blog_id?: string; name?: string; body?: string; botcheck?: unknown };
+  let b: {
+    blog_id?: string;
+    name?: string;
+    body?: string;
+    parent_id?: string;
+    botcheck?: unknown;
+  };
   try {
     b = await req.json();
   } catch {
@@ -60,6 +66,7 @@ Deno.serve(async (req) => {
   const blogId = String(b.blog_id || "").trim();
   const name = String(b.name || "").trim().slice(0, 80);
   const body = String(b.body || "").trim();
+  const parentId = String(b.parent_id || "").trim() || null;
 
   if (!blogId) return json({ success: false, error: "Missing post." }, 400);
   if (!name) return json({ success: false, error: "Please add your name." }, 400);
@@ -82,8 +89,8 @@ Deno.serve(async (req) => {
 
   const { data: inserted, error } = await supabase
     .from("blog_comments")
-    .insert({ blog_id: blogId, name, body })
-    .select("id,name,body,created_at")
+    .insert({ blog_id: blogId, name, body, parent_id: parentId })
+    .select("id,name,body,created_at,parent_id")
     .single();
 
   if (error) return json({ success: false, error: "Could not post comment." }, 500);
