@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { FiArrowRight, FiSearch } from "react-icons/fi";
 import { useContent } from "../lib/ContentContext";
@@ -13,6 +13,21 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [activeId, setActiveId] = useState("home");
 
+  // Always surface a "Blog" link (before Contact) even if it's not in the
+  // nav_links table — deduped so it never doubles up.
+  const links = useMemo(() => {
+    const hasBlog = navLinks.some(
+      (l) => l.href === "#blog" || l.label.toLowerCase() === "blog"
+    );
+    if (hasBlog) return navLinks;
+    const blog = { label: "Blog", href: "#blog" };
+    const ci = navLinks.findIndex((l) => l.href === "#contact");
+    if (ci === -1) return [...navLinks, blog];
+    const copy = [...navLinks];
+    copy.splice(ci, 0, blog);
+    return copy;
+  }, [navLinks]);
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     onScroll();
@@ -22,7 +37,7 @@ export default function Navbar() {
 
   // Highlight the nav link for the section currently in view
   useEffect(() => {
-    const ids = ["home", ...navLinks.map((l) => l.href.slice(1))];
+    const ids = ["home", ...links.map((l) => l.href.slice(1))];
     const sections = ids
       .map((id) => document.getElementById(id))
       .filter(Boolean);
@@ -36,7 +51,7 @@ export default function Navbar() {
     );
     sections.forEach((s) => obs.observe(s));
     return () => obs.disconnect();
-  }, [navLinks]);
+  }, [links]);
 
   return (
     <motion.header
@@ -55,7 +70,7 @@ export default function Navbar() {
         </a>
 
         <ul className="hidden items-center gap-8 md:flex">
-          {navLinks.map((link) => {
+          {links.map((link) => {
             const isActive = activeId === link.href.slice(1);
             return (
               <li key={link.href}>
@@ -129,7 +144,7 @@ export default function Navbar() {
           animate={{ height: "auto", opacity: 1 }}
           className="glass flex flex-col gap-1 px-6 pb-4 md:hidden"
         >
-          {navLinks.map((link) => (
+          {links.map((link) => (
             <li key={link.href}>
               <a
                 href={link.href}
