@@ -70,6 +70,17 @@ export default function BlogEditor() {
     setMsg("");
   };
 
+  // Email the author when the status changes to a notifiable state.
+  const notifyStatus = async (id) => {
+    try {
+      await supabase.functions.invoke("notify-blog-status", {
+        body: { blog_id: id },
+      });
+    } catch {
+      /* best-effort */
+    }
+  };
+
   const save = async () => {
     if (!form.title.trim()) {
       setMsg("Title is required.");
@@ -77,6 +88,8 @@ export default function BlogEditor() {
     }
     setSaving(true);
     setMsg("");
+    const prevStatus =
+      editing !== "new" ? posts.find((p) => p.id === editing)?.status : null;
     const payload = {
       title: form.title.trim(),
       slug: (form.slug || slugify(form.title)).trim(),
@@ -100,6 +113,15 @@ export default function BlogEditor() {
       setMsg("Error: " + error.message);
       return;
     }
+    // Notify the author if their submission's status changed to a notifiable state.
+    const notify = ["in_review", "published", "rejected"];
+    if (
+      editing !== "new" &&
+      payload.status !== prevStatus &&
+      notify.includes(payload.status)
+    ) {
+      await notifyStatus(editing);
+    }
     await load();
     cancel();
   };
@@ -119,6 +141,7 @@ export default function BlogEditor() {
         status: nowPublish ? "published" : "in_review",
       })
       .eq("id", p.id);
+    await notifyStatus(p.id);
     await load();
   };
 

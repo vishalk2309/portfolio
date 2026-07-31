@@ -21,7 +21,9 @@ export default function BlogWrite() {
   });
   const set = (k, v) => setF((p) => ({ ...p, [k]: v }));
   const [state, setState] = useState({ status: "idle", msg: "" }); // idle|sending|success|error
-  const [otp, setOtp] = useState({ status: "idle", msg: "" }); // idle|sending|sent|error
+  const [otp, setOtp] = useState({ status: "idle", msg: "" }); // idle|sending|sent|verifying|error
+  const [validated, setValidated] = useState(false);
+  const [codeSent, setCodeSent] = useState(false);
   const [submissionId, setSubmissionId] = useState("");
 
   // Upload an editor image via the edge function (visitors can't write storage directly).
@@ -49,13 +51,14 @@ export default function BlogWrite() {
   };
 
   const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.author_email);
-  const verified = otp.status === "sent";
+  const verified = validated; // submit is gated on the code being VALIDATED
 
   const sendCode = async () => {
     if (!emailValid) {
       setOtp({ status: "error", msg: "Enter a valid email first." });
       return;
     }
+    setValidated(false);
     setOtp({ status: "sending", msg: "" });
     try {
       if (!supabase) throw new Error("Service not configured.");
@@ -64,9 +67,30 @@ export default function BlogWrite() {
       });
       if (error || !data?.success)
         throw new Error(data?.error || "Could not send code.");
-      setOtp({ status: "sent", msg: "Code sent — check your inbox (and spam)." });
+      setCodeSent(true);
+      setOtp({ status: "ok", msg: "Code sent — check your inbox (and spam)." });
     } catch (err) {
       setOtp({ status: "error", msg: err.message || "Could not send code." });
+    }
+  };
+
+  const validateCode = async () => {
+    if (!f.code || f.code.length < 4) {
+      setOtp({ status: "sent", msg: "Enter the 6-digit code first." });
+      return;
+    }
+    setOtp({ status: "verifying", msg: "" });
+    try {
+      if (!supabase) throw new Error("Service not configured.");
+      const { data, error } = await supabase.functions.invoke("verify-otp", {
+        body: { email: f.author_email, code: f.code },
+      });
+      if (error || !data?.valid) throw new Error(data?.error || "Invalid code.");
+      setValidated(true);
+      setOtp({ status: "ok", msg: "" });
+    } catch (err) {
+      setValidated(false);
+      setOtp({ status: "error", msg: err.message || "Invalid code." });
     }
   };
 
@@ -186,39 +210,57 @@ export default function BlogWrite() {
 
         {/* Email verification */}
         <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-          <div className="flex flex-wrap items-center gap-3">
-            <button
-              type="button"
-              onClick={sendCode}
-              disabled={otp.status === "sending"}
-              className="rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:border-neon-purple disabled:opacity-60"
-            >
-              {otp.status === "sending"
-                ? "Sending…"
-                : verified
-                ? "Resend code"
-                : "Send verification code"}
-            </button>
-            {(verified || otp.status === "sending") && (
-              <input
-                className="w-40 rounded-xl border border-white/15 bg-white/[0.04] px-4 py-2.5 text-center tracking-[0.3em] text-white outline-none focus:border-neon-purple"
-                placeholder="000000"
-                inputMode="numeric"
-                value={f.code}
-                onChange={(e) =>
-                  set("code", e.target.value.replace(/\D/g, "").slice(0, 6))
-                }
-              />
-            )}
-          </div>
-          {otp.msg && (
-            <p
-              className={`mt-2 text-xs ${
-                otp.status === "error" ? "text-red-400" : "text-emerald-400"
-              }`}
-            >
-              {otp.msg}
+          {validated ? (
+            <p className="flex items-center gap-2 text-sm font-semibold text-emerald-400">
+              ✓ Email verified
             </p>
+          ) : (
+            <>
+              <div className="flex flex-wrap items-center gap-3">
+                <button
+                  type="button"
+                  onClick={sendCode}
+                  disabled={otp.status === "sending"}
+                  className="rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:border-neon-purple disabled:opacity-60"
+                >
+                  {otp.status === "sending"
+                    ? "Sending…"
+                    : codeSent
+                    ? "Resend code"
+                    : "Send verification code"}
+                </button>
+                {codeSent && (
+                  <>
+                    <input
+                      className="w-40 rounded-xl border border-white/15 bg-white/[0.04] px-4 py-2.5 text-center tracking-[0.3em] text-white outline-none focus:border-neon-purple"
+                      placeholder="000000"
+                      inputMode="numeric"
+                      value={f.code}
+                      onChange={(e) =>
+                        set("code", e.target.value.replace(/\D/g, "").slice(0, 6))
+                      }
+                    />
+                    <button
+                      type="button"
+                      onClick={validateCode}
+                      disabled={otp.status === "verifying"}
+                      className="rounded-xl bg-gradient-btn px-4 py-2.5 text-sm font-semibold text-base disabled:opacity-60"
+                    >
+                      {otp.status === "verifying" ? "Validating…" : "Validate"}
+                    </button>
+                  </>
+                )}
+              </div>
+              {otp.msg && (
+                <p
+                  className={`mt-2 text-xs ${
+                    otp.status === "error" ? "text-red-400" : "text-emerald-400"
+                  }`}
+                >
+                  {otp.msg}
+                </p>
+              )}
+            </>
           )}
         </div>
 

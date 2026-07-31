@@ -41,7 +41,10 @@ export default function BlogCard({ post }) {
         <h3 className="text-lg font-bold text-white">{post.title}</h3>
         {post.excerpt && (
           <p className="mt-2 line-clamp-3 text-sm text-white/60">
-            {post.excerpt}
+            {post.excerpt
+              .replace(/&nbsp;/gi, " ")
+              .replace(/&amp;/gi, "&")
+              .replace(/&[a-z0-9#]+;/gi, " ")}
           </p>
         )}
         <div className="mt-4 flex items-center justify-between pt-2 text-xs text-white/40">

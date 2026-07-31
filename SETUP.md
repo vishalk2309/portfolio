@@ -40,6 +40,8 @@ npx supabase functions deploy submit-project-request   --no-verify-jwt --project
 npx supabase functions deploy submit-blog              --no-verify-jwt --project-ref lvglryvlvfixwueujbxr
 npx supabase functions deploy upload-blog-image        --no-verify-jwt --project-ref lvglryvlvfixwueujbxr
 npx supabase functions deploy submit-comment           --no-verify-jwt --project-ref lvglryvlvfixwueujbxr
+npx supabase functions deploy verify-otp               --no-verify-jwt --project-ref lvglryvlvfixwueujbxr
+npx supabase functions deploy notify-blog-status       --no-verify-jwt --project-ref lvglryvlvfixwueujbxr
 ```
 
 | Function | Used by | File |
@@ -50,6 +52,8 @@ npx supabase functions deploy submit-comment           --no-verify-jwt --project
 | `submit-blog` | Public blog submissions | `supabase/functions/submit-blog/index.ts` |
 | `upload-blog-image` | Image uploads from the public blog editor | `supabase/functions/upload-blog-image/index.ts` |
 | `submit-comment` | Blog post comments | `supabase/functions/submit-comment/index.ts` |
+| `verify-otp` | Validate the OTP before blog submit | `supabase/functions/verify-otp/index.ts` |
+| `notify-blog-status` | Email the author when you change status | `supabase/functions/notify-blog-status/index.ts` |
 
 ---
 

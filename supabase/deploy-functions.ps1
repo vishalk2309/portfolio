@@ -13,7 +13,9 @@ $functions = @(
   "submit-project-request",
   "submit-blog",
   "upload-blog-image",
-  "submit-comment"
+  "submit-comment",
+  "verify-otp",
+  "notify-blog-status"
 )
 
 foreach ($fn in $functions) {

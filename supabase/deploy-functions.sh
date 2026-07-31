@@ -16,6 +16,8 @@ FUNCTIONS=(
   submit-blog
   upload-blog-image
   submit-comment
+  verify-otp
+  notify-blog-status
 )
 
 for fn in "${FUNCTIONS[@]}"; do
