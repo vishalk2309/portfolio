@@ -15,7 +15,7 @@ export default function Skills() {
     const container = sceneRef.current;
     if (!container) return;
 
-    const { Engine, World, Bodies, Body, Mouse, MouseConstraint, Composite } =
+    const { Engine, World, Bodies, Body, Mouse, MouseConstraint, Composite, Query } =
       Matter;
 
     // Container may not be measured on the very first tick — fall back sanely.
@@ -63,6 +63,9 @@ export default function Skills() {
       (window.matchMedia && window.matchMedia("(pointer: coarse)").matches) ||
       "ontouchstart" in window;
 
+    // Touch handlers we may need to detach on cleanup.
+    let onTouchStart, onTouchEnd;
+
     if (!isTouch) {
       const mouse = Mouse.create(container);
       const mouseConstraint = MouseConstraint.create(engine, {
@@ -75,6 +78,33 @@ export default function Skills() {
         mouse.element.removeEventListener("wheel", mouse.mousewheel);
         mouse.element.removeEventListener("DOMMouseScroll", mouse.mousewheel);
       }
+    } else {
+      // Touch: a TAP on a card pops it up (bounce), while swipes still scroll.
+      // Passive listeners → we never block the page's native scroll.
+      let sx = 0,
+        sy = 0,
+        st = 0;
+      onTouchStart = (e) => {
+        const t = e.changedTouches[0];
+        sx = t.clientX;
+        sy = t.clientY;
+        st = performance.now();
+      };
+      onTouchEnd = (e) => {
+        const t = e.changedTouches[0];
+        const moved = Math.hypot(t.clientX - sx, t.clientY - sy);
+        // Only treat quick, near-stationary touches as taps (not scroll swipes).
+        if (moved > 12 || performance.now() - st > 500) return;
+        const rect = container.getBoundingClientRect();
+        const point = { x: t.clientX - rect.left, y: t.clientY - rect.top };
+        const hit = Query.point(bodies, point)[0];
+        if (hit) {
+          Body.setVelocity(hit, { x: (Math.random() - 0.5) * 6, y: -11 });
+          Body.setAngularVelocity(hit, (Math.random() - 0.5) * 0.4);
+        }
+      };
+      container.addEventListener("touchstart", onTouchStart, { passive: true });
+      container.addEventListener("touchend", onTouchEnd, { passive: true });
     }
 
     // Position DOM cards from physics bodies.
@@ -137,6 +167,8 @@ export default function Skills() {
       clearTimeout(fallback);
       cancelAnimationFrame(rafId);
       window.removeEventListener("resize", onResize);
+      if (onTouchStart) container.removeEventListener("touchstart", onTouchStart);
+      if (onTouchEnd) container.removeEventListener("touchend", onTouchEnd);
       Composite.clear(world, false);
       Engine.clear(engine);
     };
