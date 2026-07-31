@@ -3,12 +3,15 @@ import { supabase } from "../lib/supabase";
 import { TABLES } from "./schema";
 import TableEditor from "./TableEditor";
 import BlogEditor from "./BlogEditor";
+import CommentsAdmin from "./CommentsAdmin";
 
 const BLOG_KEY = "__blog";
+const COMMENTS_KEY = "__comments";
 
 export default function Dashboard({ session }) {
   const [activeKey, setActiveKey] = useState(TABLES[0].key);
   const isBlog = activeKey === BLOG_KEY;
+  const isComments = activeKey === COMMENTS_KEY;
   const active = TABLES.find((t) => t.key === activeKey);
 
   const logout = () => supabase.auth.signOut();
@@ -50,6 +53,15 @@ export default function Dashboard({ session }) {
                 <span>📝</span>
                 Blog
               </button>
+              <button
+                onClick={() => setActiveKey(COMMENTS_KEY)}
+                className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
+                  isComments ? "bg-white/10 text-white" : "text-white/60 hover:text-white"
+                }`}
+              >
+                <span>💬</span>
+                Comments
+              </button>
             </nav>
 
             <div className="mt-4 border-t border-white/10 pt-4">
@@ -73,6 +85,8 @@ export default function Dashboard({ session }) {
         <main className="min-w-0 flex-1">
           {isBlog ? (
             <BlogEditor />
+          ) : isComments ? (
+            <CommentsAdmin />
           ) : (
             <TableEditor key={active.key} table={active} />
           )}
