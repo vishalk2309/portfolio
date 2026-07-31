@@ -16,11 +16,35 @@ export default function BlogWrite() {
     title: "",
     tags: "",
     content: "",
+    code: "",
     botcheck: false,
   });
   const set = (k, v) => setF((p) => ({ ...p, [k]: v }));
   const [preview, setPreview] = useState(false);
   const [state, setState] = useState({ status: "idle", msg: "" }); // idle|sending|success|error
+  const [otp, setOtp] = useState({ status: "idle", msg: "" }); // idle|sending|sent|error
+
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.author_email);
+  const verified = otp.status === "sent";
+
+  const sendCode = async () => {
+    if (!emailValid) {
+      setOtp({ status: "error", msg: "Enter a valid email first." });
+      return;
+    }
+    setOtp({ status: "sending", msg: "" });
+    try {
+      if (!supabase) throw new Error("Service not configured.");
+      const { data, error } = await supabase.functions.invoke("send-otp", {
+        body: { email: f.author_email },
+      });
+      if (error || !data?.success)
+        throw new Error(data?.error || "Could not send code.");
+      setOtp({ status: "sent", msg: "Code sent — check your inbox (and spam)." });
+    } catch (err) {
+      setOtp({ status: "error", msg: err.message || "Could not send code." });
+    }
+  };
 
   const submit = async (e) => {
     e.preventDefault();
@@ -28,6 +52,13 @@ export default function BlogWrite() {
       setState({
         status: "error",
         msg: "Add your name, a title, and a bit more content.",
+      });
+      return;
+    }
+    if (!verified || !f.code.trim()) {
+      setState({
+        status: "error",
+        msg: "Verify your email — send and enter the code.",
       });
       return;
     }
@@ -96,10 +127,49 @@ export default function BlogWrite() {
           <input
             className={field}
             type="email"
-            placeholder="Your email (optional)"
+            placeholder="Your email"
             value={f.author_email}
             onChange={(e) => set("author_email", e.target.value)}
+            required
           />
+        </div>
+
+        {/* Email verification */}
+        <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              onClick={sendCode}
+              disabled={otp.status === "sending"}
+              className="rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:border-neon-purple disabled:opacity-60"
+            >
+              {otp.status === "sending"
+                ? "Sending…"
+                : verified
+                ? "Resend code"
+                : "Send verification code"}
+            </button>
+            {(verified || otp.status === "sending") && (
+              <input
+                className="w-40 rounded-xl border border-white/15 bg-white/[0.04] px-4 py-2.5 text-center tracking-[0.3em] text-white outline-none focus:border-neon-purple"
+                placeholder="000000"
+                inputMode="numeric"
+                value={f.code}
+                onChange={(e) =>
+                  set("code", e.target.value.replace(/\D/g, "").slice(0, 6))
+                }
+              />
+            )}
+          </div>
+          {otp.msg && (
+            <p
+              className={`mt-2 text-xs ${
+                otp.status === "error" ? "text-red-400" : "text-emerald-400"
+              }`}
+            >
+              {otp.msg}
+            </p>
+          )}
         </div>
 
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -174,12 +244,17 @@ export default function BlogWrite() {
 
         <button
           type="submit"
-          disabled={state.status === "sending"}
+          disabled={state.status === "sending" || !verified}
           className="mt-6 w-full rounded-2xl bg-gradient-btn py-4 font-semibold text-base transition-all duration-300 hover:scale-[1.02] disabled:opacity-60"
         >
           {state.status === "sending" ? "Submitting…" : "Submit for review"}
         </button>
 
+        {!verified && (
+          <p className="mt-3 text-center text-xs text-white/40">
+            Verify your email above to enable submission.
+          </p>
+        )}
         {state.status === "error" && (
           <p className="mt-3 text-center text-sm text-red-400">{state.msg}</p>
         )}

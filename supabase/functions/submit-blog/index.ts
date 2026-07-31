@@ -79,6 +79,7 @@ Deno.serve(async (req) => {
   const title = String(b.title || "").trim();
   const content = String(b.content || "").trim();
   const authorDate = String(b.author_date || "").trim(); // yyyy-mm-dd or ""
+  const code = String(b.code || "").trim();
   const tags = Array.isArray(b.tags)
     ? b.tags.map((t) => String(t).trim()).filter(Boolean).slice(0, 6)
     : [];
@@ -88,8 +89,16 @@ Deno.serve(async (req) => {
       { success: false, error: "Please add your name, a title, and a bit more content." },
       400
     );
-  if (authorEmail && !isEmail(authorEmail))
-    return json({ success: false, error: "That email doesn't look valid." }, 400);
+  if (!isEmail(authorEmail))
+    return json(
+      { success: false, error: "A valid email is required to verify your submission." },
+      400
+    );
+  if (!code)
+    return json(
+      { success: false, error: "Enter the verification code sent to your email." },
+      400
+    );
   if (title.length > 160)
     return json({ success: false, error: "Title is too long." }, 400);
   if (content.length > 40000)
@@ -99,6 +108,32 @@ Deno.serve(async (req) => {
     Deno.env.get("SUPABASE_URL")!,
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
   );
+
+  // Verify the emailed OTP (reuses the email_otps table from project-requests.sql).
+  const { data: otps } = await supabase
+    .from("email_otps")
+    .select("*")
+    .eq("email", authorEmail)
+    .eq("consumed", false)
+    .gt("expires_at", new Date().toISOString())
+    .order("created_at", { ascending: false })
+    .limit(1);
+  const otp = otps?.[0];
+  if (!otp)
+    return json({ success: false, error: "Code expired. Request a new one." }, 400);
+  if (otp.attempts >= 5)
+    return json(
+      { success: false, error: "Too many attempts. Request a new code." },
+      429
+    );
+  if (code !== otp.code) {
+    await supabase
+      .from("email_otps")
+      .update({ attempts: otp.attempts + 1 })
+      .eq("id", otp.id);
+    return json({ success: false, error: "Incorrect code." }, 400);
+  }
+  await supabase.from("email_otps").update({ consumed: true }).eq("id", otp.id);
 
   // Build a unique slug.
   const base = slugify(title) || "post";
