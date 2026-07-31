@@ -18,6 +18,16 @@ services:
       - type: rewrite
         source: /*
         destination: /index.html
+    # Never cache the HTML entry point, so browsers/proxies always fetch the
+    # newest build's hashed asset references. The hashed /assets/* files keep
+    # Render's default long-term caching (their names change every build).
+    headers:
+      - path: /
+        name: Cache-Control
+        value: "no-store, no-cache, must-revalidate, max-age=0"
+      - path: /index.html
+        name: Cache-Control
+        value: "no-store, no-cache, must-revalidate, max-age=0"
     envVars:
       # These are Supabase's PUBLIC keys (read-only via Row Level Security),
       # so they are safe to commit and expose in the browser bundle.
