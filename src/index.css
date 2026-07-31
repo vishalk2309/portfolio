@@ -251,6 +251,20 @@ html.lenis body {
   min-height: 260px;
 }
 
+/* Testimonials marquee — the track holds two copies, so -50% loops seamlessly */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+  width: max-content;
+}
+
 /* Respect users who prefer reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *,

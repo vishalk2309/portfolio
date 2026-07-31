@@ -14,20 +14,19 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [activeId, setActiveId] = useState("home");
 
-  // Always surface a "Blog" link (before Contact) even if it's not in the
-  // nav_links table — deduped so it never doubles up.
+  // Blog is its own page now: point any "Blog" nav link at /blog (route), and
+  // ensure one exists (before Contact) even if it's not in the nav_links table.
   const links = useMemo(() => {
-    const hasBlog = navLinks.some(
-      (l) =>
-        l.href === "#blog" ||
-        l.href === "/blog" ||
-        l.label.toLowerCase() === "blog"
+    const mapped = navLinks.map((l) =>
+      l.href === "#blog" || l.label.toLowerCase() === "blog"
+        ? { ...l, href: "/blog" }
+        : l
     );
-    if (hasBlog) return navLinks;
+    if (mapped.some((l) => l.href === "/blog")) return mapped;
     const blog = { label: "Blog", href: "/blog" };
-    const ci = navLinks.findIndex((l) => l.href === "#contact");
-    if (ci === -1) return [...navLinks, blog];
-    const copy = [...navLinks];
+    const ci = mapped.findIndex((l) => l.href === "#contact");
+    if (ci === -1) return [...mapped, blog];
+    const copy = [...mapped];
     copy.splice(ci, 0, blog);
     return copy;
   }, [navLinks]);

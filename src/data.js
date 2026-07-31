@@ -39,7 +39,7 @@ export const navLinks = [
   { label: "Projects", href: "#projects" },
   { label: "Experience", href: "#experience" },
   { label: "Skills", href: "#skills" },
-  { label: "Blog", href: "#blog" },
+  { label: "Blog", href: "/blog" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -55,6 +55,30 @@ export const socials = [
     Icon: FaEnvelope,
     href: "mailto:kushwahavishal296@gmail.com",
     label: "Email",
+  },
+];
+
+/* --------------------------- Testimonials --------------------------- */
+// "What people say" — shown as a scrolling marquee on the home page.
+// Manage these from the admin dashboard (Testimonials).
+export const testimonials = [
+  {
+    name: "A. Sharma",
+    message:
+      "Vishal is a sharp, reliable developer — he turned our rough idea into a polished product faster than we expected.",
+    date: "2025",
+  },
+  {
+    name: "R. Verma",
+    message:
+      "Great attention to detail and genuinely easy to work with. The final result looked exactly how we imagined.",
+    date: "2025",
+  },
+  {
+    name: "P. Singh",
+    message:
+      "Clean code, clear communication, and delivered on time. Would happily work with him again.",
+    date: "2024",
   },
 ];
 

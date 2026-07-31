@@ -37,6 +37,9 @@ const shapeProfile = (row) =>
 
 const shapeNav = (rows) => rows.map((r) => ({ label: r.label, href: r.href }));
 
+const shapeTestimonials = (rows) =>
+  rows.map((r) => ({ name: r.name, message: r.message, date: r.date }));
+
 const shapeSocials = (rows) =>
   rows.map((r) => ({ Icon: resolveIcon(r.icon_name), href: r.href, label: r.label }));
 
@@ -101,6 +104,7 @@ export function ContentProvider({ children }) {
     certificates: fallback.certificates,
     education: fallback.education,
     achievements: fallback.achievements,
+    testimonials: fallback.testimonials,
   });
 
   useEffect(() => {
@@ -109,7 +113,7 @@ export function ContentProvider({ children }) {
 
     (async () => {
       try {
-        const [profileRes, nav, soc, skills, proj, certs, edu, ach] =
+        const [profileRes, nav, soc, skills, proj, certs, edu, ach, testi] =
           await Promise.all([
             supabase.from("profile").select("*").limit(1).maybeSingle(),
             supabase.from("nav_links").select("*").order("sort_order"),
@@ -119,6 +123,7 @@ export function ContentProvider({ children }) {
             supabase.from("certificates").select("*").order("sort_order"),
             supabase.from("education").select("*").order("sort_order"),
             supabase.from("achievements").select("*").order("sort_order"),
+            supabase.from("testimonials").select("*").order("sort_order"),
           ]);
         if (cancelled) return;
 
@@ -136,6 +141,7 @@ export function ContentProvider({ children }) {
         if (certs.data?.length) next.certificates = shapeCerts(certs.data);
         if (edu.data?.length) next.education = shapeTimeline(edu.data);
         if (ach.data?.length) next.achievements = shapeTimeline(ach.data);
+        if (testi.data?.length) next.testimonials = shapeTestimonials(testi.data);
 
         setContent((c) => ({ ...c, ...next }));
       } catch (err) {

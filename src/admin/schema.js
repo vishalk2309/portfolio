@@ -120,6 +120,19 @@ export const TABLES = [
     ],
   },
   {
+    key: "testimonials",
+    label: "Testimonials",
+    icon: "🗣️",
+    listColumns: ["name", "date"],
+    orderBy: "sort_order",
+    fields: [
+      { name: "name", label: "Person's name", type: "text" },
+      { name: "message", label: "What they said", type: "textarea", full: true },
+      { name: "date", label: "Date label (e.g. Jun 2025)", type: "text" },
+      { name: "sort_order", label: "Sort order", type: "number" },
+    ],
+  },
+  {
     key: "socials",
     label: "Socials",
     icon: "🔗",
