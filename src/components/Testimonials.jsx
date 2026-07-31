@@ -13,20 +13,37 @@ function Card({ t }) {
   );
 }
 
-/** "What people say" — an auto-scrolling marquee of testimonials. */
+/** "What people say" — auto-scrolling marquee (3+), or a static row for 1–2. */
 export default function Testimonials() {
   const { testimonials } = useContent();
   if (!testimonials || testimonials.length === 0) return null;
+
+  const header = (
+    <div className="mx-auto mb-14 max-w-6xl px-6">
+      <SectionHeading eyebrow="Testimonials" title="What People Say" />
+    </div>
+  );
+
+  // Too few to scroll meaningfully → show them centered and static.
+  if (testimonials.length < 3) {
+    return (
+      <section id="testimonials" className="relative overflow-hidden py-24">
+        {header}
+        <div className="mx-auto flex max-w-6xl flex-wrap justify-center gap-6 px-6">
+          {testimonials.map((t, i) => (
+            <Card key={i} t={t} />
+          ))}
+        </div>
+      </section>
+    );
+  }
 
   // Duplicate the list so the scroll can loop seamlessly.
   const loop = [...testimonials, ...testimonials];
 
   return (
     <section id="testimonials" className="relative overflow-hidden py-24">
-      <div className="mx-auto mb-14 max-w-6xl px-6">
-        <SectionHeading eyebrow="Testimonials" title="What People Say" />
-      </div>
-
+      {header}
       {/* Marquee — pauses on hover; edges fade out. */}
       <div className="group relative flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
         <div className="flex animate-marquee group-hover:[animation-play-state:paused]">
