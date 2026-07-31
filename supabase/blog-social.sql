@@ -8,6 +8,9 @@ alter table blog_comments
   add column if not exists parent_id uuid references blog_comments(id) on delete cascade;
 create index if not exists blog_comments_parent_idx on blog_comments (parent_id);
 
+-- Optional commenter email (not shown publicly) so we can notify them of replies.
+alter table blog_comments add column if not exists email text;
+
 -- 2) Likes tied to a name + email so one person likes a post only once.
 create table if not exists blog_likes (
   id         uuid primary key default gen_random_uuid(),
@@ -57,3 +60,15 @@ begin
 end; $$;
 
 grant execute on function like_blog(uuid, text, text) to anon, authenticated;
+
+-- Removes a like (unlike) for an email and returns the new total.
+create or replace function unlike_blog(p_blog_id uuid, p_email text)
+returns bigint language plpgsql security definer set search_path = public as $$
+declare v_count bigint;
+begin
+  delete from blog_likes where blog_id = p_blog_id and email = lower(trim(p_email));
+  select count(*) into v_count from blog_likes where blog_id = p_blog_id;
+  update blogs set likes = v_count where id = p_blog_id;
+  return v_count;
+end; $$;
+grant execute on function unlike_blog(uuid, text) to anon, authenticated;

@@ -51,6 +51,7 @@ Deno.serve(async (req) => {
   let b: {
     blog_id?: string;
     name?: string;
+    email?: string;
     body?: string;
     parent_id?: string;
     botcheck?: unknown;
@@ -67,6 +68,8 @@ Deno.serve(async (req) => {
   const name = String(b.name || "").trim().slice(0, 80);
   const body = String(b.body || "").trim();
   const parentId = String(b.parent_id || "").trim() || null;
+  const emailRaw = String(b.email || "").trim().toLowerCase();
+  const email = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(emailRaw) ? emailRaw : null;
 
   if (!blogId) return json({ success: false, error: "Missing post." }, 400);
   if (!name) return json({ success: false, error: "Please add your name." }, 400);
@@ -89,36 +92,67 @@ Deno.serve(async (req) => {
 
   const { data: inserted, error } = await supabase
     .from("blog_comments")
-    .insert({ blog_id: blogId, name, body, parent_id: parentId })
+    .insert({ blog_id: blogId, name, email, body, parent_id: parentId })
     .select("id,name,body,created_at,parent_id")
     .single();
 
   if (error) return json({ success: false, error: "Could not post comment." }, 500);
 
-  // Notify the author (or the owner for owner-written posts) — best-effort.
+  // Notifications — best-effort (never fail the comment on email error).
   const apiKey = Deno.env.get("BREVO_API_KEY");
   const sender = Deno.env.get("BREVO_SENDER_EMAIL");
   const owner = Deno.env.get("CONTACT_TO_EMAIL") || sender;
-  const recipient = post.author_email || owner;
+  const senderName = Deno.env.get("BREVO_SENDER_NAME") || "Vishal Kushwaha";
   const site = (Deno.env.get("SITE_URL") || "https://vishalworks.co.in").replace(/\/$/, "");
-  if (apiKey && sender && recipient) {
+  const postLink = `${site}/blog/${post.slug}`;
+
+  if (apiKey && sender) {
     try {
-      await sendBrevo(
-        {
-          sender: { name: "Blog Comments", email: sender },
-          to: [{ email: recipient, name: post.author_name || undefined }],
-          subject: `New comment on "${post.title}"`,
-          htmlContent: `<div style="font-family:system-ui,Segoe UI,Arial,sans-serif;font-size:15px;line-height:1.6;color:#111">
-            <p>${post.author_name ? `Hi ${esc(post.author_name)},` : "Hi,"}</p>
-            <p><b>${esc(name)}</b> just commented on your post <b>“${esc(post.title)}”</b>:</p>
-            <p style="padding:12px 16px;border-left:3px solid #6EE7F9;background:#f6feff;color:#333">${esc(body).replace(/\n/g, "<br>")}</p>
-            <p><a href="${site}/blog/${post.slug}">View the post →</a></p>
-          </div>`,
-        },
-        apiKey
-      );
+      if (parentId) {
+        // Reply → notify the parent commenter (if they left an email).
+        const { data: parent } = await supabase
+          .from("blog_comments")
+          .select("name,email")
+          .eq("id", parentId)
+          .maybeSingle();
+        if (parent?.email) {
+          await sendBrevo(
+            {
+              sender: { name: senderName, email: sender },
+              to: [{ email: parent.email, name: parent.name || undefined }],
+              subject: `${name} replied to your comment`,
+              htmlContent: `<div style="font-family:system-ui,Segoe UI,Arial,sans-serif;font-size:15px;line-height:1.6;color:#111">
+                <p>${parent.name ? `Hi ${esc(parent.name)},` : "Hi,"}</p>
+                <p><b>${esc(name)}</b> replied to your comment on <b>“${esc(post.title)}”</b>:</p>
+                <p style="padding:12px 16px;border-left:3px solid #6EE7F9;background:#f6feff;color:#333">${esc(body).replace(/\n/g, "<br>")}</p>
+                <p><a href="${postLink}">View the conversation →</a></p>
+              </div>`,
+            },
+            apiKey
+          );
+        }
+      } else {
+        // Top-level comment → notify the post's author (or the owner).
+        const recipient = post.author_email || owner;
+        if (recipient) {
+          await sendBrevo(
+            {
+              sender: { name: "Blog Comments", email: sender },
+              to: [{ email: recipient, name: post.author_name || undefined }],
+              subject: `New comment on "${post.title}"`,
+              htmlContent: `<div style="font-family:system-ui,Segoe UI,Arial,sans-serif;font-size:15px;line-height:1.6;color:#111">
+                <p>${post.author_name ? `Hi ${esc(post.author_name)},` : "Hi,"}</p>
+                <p><b>${esc(name)}</b> just commented on your post <b>“${esc(post.title)}”</b>:</p>
+                <p style="padding:12px 16px;border-left:3px solid #6EE7F9;background:#f6feff;color:#333">${esc(body).replace(/\n/g, "<br>")}</p>
+                <p><a href="${postLink}">View the post →</a></p>
+              </div>`,
+            },
+            apiKey
+          );
+        }
+      }
     } catch {
-      // email failure shouldn't fail the comment
+      // ignore email failures
     }
   }
 

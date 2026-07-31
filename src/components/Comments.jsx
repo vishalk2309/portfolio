@@ -18,13 +18,13 @@ export default function Comments({ blogId }) {
   const [loading, setLoading] = useState(true);
 
   // top-level composer
-  const [f, setF] = useState({ name: "", body: "", botcheck: false });
+  const [f, setF] = useState({ name: "", email: "", body: "", botcheck: false });
   const [status, setStatus] = useState("idle"); // idle | sending | error
   const [msg, setMsg] = useState("");
 
   // reply composer: which comment's form is open + where the reply attaches
   const [replyTo, setReplyTo] = useState(null); // { id, parentId } | null
-  const [rf, setRf] = useState({ name: "", body: "" });
+  const [rf, setRf] = useState({ name: "", email: "", body: "" });
   const [rStatus, setRStatus] = useState("idle");
 
   useEffect(() => {
@@ -50,9 +50,15 @@ export default function Comments({ blogId }) {
     };
   }, [blogId]);
 
-  const post = async ({ name, body, parentId }) => {
+  const post = async ({ name, email, body, parentId }) => {
     const { data, error } = await supabase.functions.invoke("submit-comment", {
-      body: { blog_id: blogId, name, body, parent_id: parentId || null },
+      body: {
+        blog_id: blogId,
+        name,
+        email: email || null,
+        body,
+        parent_id: parentId || null,
+      },
     });
     if (error || !data?.success)
       throw new Error(data?.error || "Could not post comment.");
@@ -70,8 +76,8 @@ export default function Comments({ blogId }) {
     setMsg("");
     try {
       if (!supabase) throw new Error("Service not configured.");
-      await post({ name: f.name, body: f.body });
-      setF({ name: "", body: "", botcheck: false });
+      await post({ name: f.name, email: f.email, body: f.body });
+      setF({ name: "", email: "", body: "", botcheck: false });
       setStatus("idle");
     } catch (err) {
       setStatus("error");
@@ -87,8 +93,13 @@ export default function Comments({ blogId }) {
     }
     setRStatus("sending");
     try {
-      await post({ name: rf.name, body: rf.body, parentId: replyTo.parentId });
-      setRf({ name: "", body: "" });
+      await post({
+        name: rf.name,
+        email: rf.email,
+        body: rf.body,
+        parentId: replyTo.parentId,
+      });
+      setRf({ name: "", email: "", body: "" });
       setReplyTo(null);
       setRStatus("idle");
     } catch {
@@ -107,12 +118,21 @@ export default function Comments({ blogId }) {
 
   const renderReplyForm = () => (
     <form onSubmit={submitReply} className="mt-3">
-      <input
-        className={field}
-        placeholder="Your name"
-        value={rf.name}
-        onChange={(e) => setRf((p) => ({ ...p, name: e.target.value }))}
-      />
+      <div className="grid gap-2 sm:grid-cols-2">
+        <input
+          className={field}
+          placeholder="Your name"
+          value={rf.name}
+          onChange={(e) => setRf((p) => ({ ...p, name: e.target.value }))}
+        />
+        <input
+          className={field}
+          type="email"
+          placeholder="Email (optional — to hear about replies)"
+          value={rf.email}
+          onChange={(e) => setRf((p) => ({ ...p, email: e.target.value }))}
+        />
+      </div>
       <textarea
         className={`${field} mt-2 resize-none`}
         rows={2}
@@ -210,13 +230,22 @@ export default function Comments({ blogId }) {
         <h3 className="mb-3 text-sm font-semibold text-white/70">
           Leave a comment
         </h3>
-        <input
-          className={field}
-          placeholder="Your name"
-          value={f.name}
-          onChange={(e) => setF((p) => ({ ...p, name: e.target.value }))}
-          required
-        />
+        <div className="grid gap-3 sm:grid-cols-2">
+          <input
+            className={field}
+            placeholder="Your name"
+            value={f.name}
+            onChange={(e) => setF((p) => ({ ...p, name: e.target.value }))}
+            required
+          />
+          <input
+            className={field}
+            type="email"
+            placeholder="Email (optional — to hear about replies)"
+            value={f.email}
+            onChange={(e) => setF((p) => ({ ...p, email: e.target.value }))}
+          />
+        </div>
         <textarea
           className={`${field} mt-3 resize-none`}
           rows={4}

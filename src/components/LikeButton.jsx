@@ -13,7 +13,7 @@ export default function LikeButton({ postId, initial = 0 }) {
   const [count, setCount] = useState(initial || 0);
   const [liked, setLiked] = useState(() => {
     try {
-      return localStorage.getItem(key(postId)) === "1";
+      return !!localStorage.getItem(key(postId));
     } catch {
       return false;
     }
@@ -44,7 +44,7 @@ export default function LikeButton({ postId, initial = 0 }) {
       if (row?.likes != null) setCount(Number(row.likes));
       setLiked(true);
       try {
-        localStorage.setItem(key(postId), "1");
+        localStorage.setItem(key(postId), email.trim().toLowerCase());
       } catch {
         /* ignore */
       }
@@ -56,13 +56,46 @@ export default function LikeButton({ postId, initial = 0 }) {
     }
   };
 
+  const unlike = async () => {
+    if (!supabase || busy) return;
+    let em = null;
+    try {
+      em = localStorage.getItem(key(postId));
+    } catch {
+      /* ignore */
+    }
+    if (!em) {
+      setLiked(false);
+      return;
+    }
+    setBusy(true);
+    try {
+      const { data, error } = await supabase.rpc("unlike_blog", {
+        p_blog_id: postId,
+        p_email: em,
+      });
+      if (!error && data != null) setCount(Number(data));
+      else setCount((c) => Math.max(0, c - 1));
+      setLiked(false);
+      try {
+        localStorage.removeItem(key(postId));
+      } catch {
+        /* ignore */
+      }
+    } finally {
+      setBusy(false);
+    }
+  };
+
   return (
     <div className="relative inline-block">
       <button
         type="button"
-        onClick={() => !liked && setOpen((o) => !o)}
+        onClick={() => (liked ? unlike() : setOpen((o) => !o))}
+        disabled={busy}
         aria-pressed={liked}
-        aria-label={liked ? "You liked this" : "Like this post"}
+        aria-label={liked ? "Unlike this post" : "Like this post"}
+        title={liked ? "Click to unlike" : "Like this post"}
         className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition-all hover:scale-105 ${
           liked
             ? "border-rose-400/40 bg-rose-500/10 text-rose-400"

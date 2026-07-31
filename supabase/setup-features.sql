@@ -132,6 +132,7 @@ create table if not exists blog_comments (
 );
 alter table blog_comments
   add column if not exists parent_id uuid references blog_comments(id) on delete cascade;
+alter table blog_comments add column if not exists email text;
 create index if not exists blog_comments_blog_idx on blog_comments (blog_id, created_at);
 create index if not exists blog_comments_parent_idx on blog_comments (parent_id);
 
@@ -173,6 +174,17 @@ begin
   return query select v_count, (v_existing > 0);
 end; $$;
 grant execute on function like_blog(uuid, text, text) to anon, authenticated;
+
+create or replace function unlike_blog(p_blog_id uuid, p_email text)
+returns bigint language plpgsql security definer set search_path = public as $$
+declare v_count bigint;
+begin
+  delete from blog_likes where blog_id = p_blog_id and email = lower(trim(p_email));
+  select count(*) into v_count from blog_likes where blog_id = p_blog_id;
+  update blogs set likes = v_count where id = p_blog_id;
+  return v_count;
+end; $$;
+grant execute on function unlike_blog(uuid, text) to anon, authenticated;
 alter table blog_comments enable row level security;
 drop policy if exists "public read approved comments" on blog_comments;
 create policy "public read approved comments" on blog_comments
