@@ -21,6 +21,7 @@ const EMPTY = {
   author_name: "",
   author_email: "",
   author_date: "",
+  author_linkedin: "",
 };
 
 const inputCls =
@@ -86,6 +87,7 @@ export default function BlogEditor() {
       author_name: form.author_name || null,
       author_email: form.author_email || null,
       author_date: form.author_date || null,
+      author_linkedin: form.author_linkedin || null,
     };
     const { error } =
       editing === "new"
@@ -324,6 +326,18 @@ export default function BlogEditor() {
                 onChange={(e) => set("author_date", e.target.value)}
               />
             </div>
+          </div>
+
+          <div>
+            <label className="mb-1 block text-sm text-white/70">
+              Author LinkedIn (optional)
+            </label>
+            <input
+              className={inputCls}
+              placeholder="LinkedIn URL or username"
+              value={form.author_linkedin}
+              onChange={(e) => set("author_linkedin", e.target.value)}
+            />
           </div>
 
           <div>

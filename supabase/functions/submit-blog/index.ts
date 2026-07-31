@@ -82,6 +82,7 @@ Deno.serve(async (req) => {
   const title = String(b.title || "").trim();
   const content = String(b.content || "").trim();
   const authorDate = String(b.author_date || "").trim(); // yyyy-mm-dd or ""
+  const authorLinkedin = String(b.author_linkedin || "").trim().slice(0, 300);
   const code = String(b.code || "").trim();
   const tags = Array.isArray(b.tags)
     ? b.tags.map((t) => String(t).trim()).filter(Boolean).slice(0, 6)
@@ -161,6 +162,7 @@ Deno.serve(async (req) => {
     author_name: authorName,
     author_email: authorEmail || null,
     author_date: authorDate || null,
+    author_linkedin: authorLinkedin || null,
     published: false, // always a draft — owner reviews/publishes
   });
 

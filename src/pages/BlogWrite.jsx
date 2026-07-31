@@ -12,6 +12,7 @@ export default function BlogWrite() {
     author_name: "",
     author_email: "",
     author_date: new Date().toISOString().slice(0, 10), // today, yyyy-mm-dd
+    author_linkedin: "",
     title: "",
     tags: "",
     content: "",
@@ -216,6 +217,18 @@ export default function BlogWrite() {
               onChange={(e) => set("tags", e.target.value)}
             />
           </div>
+        </div>
+
+        <div className="mt-4">
+          <label className="mb-1 block text-sm text-white/60">
+            LinkedIn (optional)
+          </label>
+          <input
+            className={field}
+            placeholder="Your LinkedIn URL or username"
+            value={f.author_linkedin}
+            onChange={(e) => set("author_linkedin", e.target.value)}
+          />
         </div>
 
         <input

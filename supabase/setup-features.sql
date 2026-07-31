@@ -59,10 +59,11 @@ create table if not exists blogs (
   created_at  timestamptz not null default now(),
   updated_at  timestamptz not null default now()
 );
-alter table blogs add column if not exists author_name  text;
-alter table blogs add column if not exists author_email text;
-alter table blogs add column if not exists author_date  date;
-alter table blogs add column if not exists likes        bigint not null default 0;
+alter table blogs add column if not exists author_name     text;
+alter table blogs add column if not exists author_email    text;
+alter table blogs add column if not exists author_date     date;
+alter table blogs add column if not exists author_linkedin text;
+alter table blogs add column if not exists likes           bigint not null default 0;
 
 -- Public like counter — ±1 on published posts only.
 create or replace function bump_blog_likes(p_id uuid, p_delta int)

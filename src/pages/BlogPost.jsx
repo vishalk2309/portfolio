@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import { FaLinkedin } from "react-icons/fa";
 import BlogLayout from "./BlogLayout";
 import BlogContent from "../components/BlogContent";
 import ShareButtons from "../components/ShareButtons";
@@ -18,6 +19,12 @@ export default function BlogPost() {
         day: "numeric",
       })
     : "";
+
+  const linkedin = post?.author_linkedin
+    ? /^https?:\/\//i.test(post.author_linkedin)
+      ? post.author_linkedin
+      : `https://www.linkedin.com/in/${post.author_linkedin.replace(/^@/, "")}`
+    : null;
 
   return (
     <BlogLayout>
@@ -64,10 +71,22 @@ export default function BlogPost() {
           <h1 className="font-serif text-4xl font-bold leading-tight text-white sm:text-5xl">
             {post.title}
           </h1>
-          <p className="mt-3 text-sm text-white/40">
-            {post.author_name ? `By ${post.author_name}` : ""}
-            {post.author_name && date ? " · " : ""}
-            {date}
+          <p className="mt-3 flex flex-wrap items-center gap-x-2 text-sm text-white/40">
+            <span>
+              {post.author_name ? `By ${post.author_name}` : ""}
+              {post.author_name && date ? " · " : ""}
+              {date}
+            </span>
+            {linkedin && (
+              <a
+                href={linkedin}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1 text-neon-cyan hover:underline"
+              >
+                <FaLinkedin /> LinkedIn
+              </a>
+            )}
           </p>
 
           <BlogContent content={post.content || ""} className="mt-8" />
