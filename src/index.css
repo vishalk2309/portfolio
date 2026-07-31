@@ -30,17 +30,16 @@ html.theme-dark {
 html.theme-light {
   color-scheme: light;
   --c-fg: 30 30 30; /* deep black text */
-  /* TRIAL: soft blue light theme (revert to cream 250 247 242 / gold accents). */
-  --c-base: 233 240 251; /* #E9F0FB soft light blue page bg */
+  --c-base: 250 247 242; /* #FAF7F2 cream page bg */
   --c-ink: 30 30 30;
   --c-paper: 255 255 255;
-  --c-neon-cyan: 37 99 235; /* blue accents (was warm gold) */
-  --c-neon-purple: 79 70 229;
-  --c-neon-blue: 59 130 246;
-  --body-bg: #e9f0fb;
-  --scrollbar-track: #e9f0fb;
-  --particle: 120 150 200;
-  --spotlight: 59 130 246;
+  --c-neon-cyan: 217 164 65; /* warm gold accents */
+  --c-neon-purple: 199 154 62;
+  --c-neon-blue: 190 138 58;
+  --body-bg: #faf7f2;
+  --scrollbar-track: #faf7f2;
+  --particle: 180 150 90;
+  --spotlight: 217 164 65;
   --spotlight-blend: multiply;
 }
 
