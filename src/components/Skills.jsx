@@ -55,17 +55,26 @@ export default function Skills() {
     });
     World.add(world, bodies);
 
-    // Drag + throw
-    const mouse = Mouse.create(container);
-    const mouseConstraint = MouseConstraint.create(engine, {
-      mouse,
-      constraint: { stiffness: 0.2, render: { visible: false } },
-    });
-    World.add(world, mouseConstraint);
-    // keep page scroll working while hovering the arena
-    if (mouse.mousewheel) {
-      mouse.element.removeEventListener("wheel", mouse.mousewheel);
-      mouse.element.removeEventListener("DOMMouseScroll", mouse.mousewheel);
+    // Drag + throw — DESKTOP ONLY. On touch devices matter-js would
+    // preventDefault on touchmove (to enable dragging), which traps the page
+    // scroll over this tall arena. Skipping it lets phones scroll normally;
+    // the cards still fall, pile and bounce.
+    const isTouch =
+      (window.matchMedia && window.matchMedia("(pointer: coarse)").matches) ||
+      "ontouchstart" in window;
+
+    if (!isTouch) {
+      const mouse = Mouse.create(container);
+      const mouseConstraint = MouseConstraint.create(engine, {
+        mouse,
+        constraint: { stiffness: 0.2, render: { visible: false } },
+      });
+      World.add(world, mouseConstraint);
+      // keep page scroll working while hovering the arena
+      if (mouse.mousewheel) {
+        mouse.element.removeEventListener("wheel", mouse.mousewheel);
+        mouse.element.removeEventListener("DOMMouseScroll", mouse.mousewheel);
+      }
     }
 
     // Position DOM cards from physics bodies.
