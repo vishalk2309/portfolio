@@ -2,9 +2,13 @@ import { useState } from "react";
 import { supabase } from "../lib/supabase";
 import { TABLES } from "./schema";
 import TableEditor from "./TableEditor";
+import BlogEditor from "./BlogEditor";
+
+const BLOG_KEY = "__blog";
 
 export default function Dashboard({ session }) {
   const [activeKey, setActiveKey] = useState(TABLES[0].key);
+  const isBlog = activeKey === BLOG_KEY;
   const active = TABLES.find((t) => t.key === activeKey);
 
   const logout = () => supabase.auth.signOut();
@@ -37,6 +41,15 @@ export default function Dashboard({ session }) {
                   {t.label}
                 </button>
               ))}
+              <button
+                onClick={() => setActiveKey(BLOG_KEY)}
+                className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
+                  isBlog ? "bg-white/10 text-white" : "text-white/60 hover:text-white"
+                }`}
+              >
+                <span>📝</span>
+                Blog
+              </button>
             </nav>
 
             <div className="mt-4 border-t border-white/10 pt-4">
@@ -58,7 +71,11 @@ export default function Dashboard({ session }) {
 
         {/* Main editor */}
         <main className="min-w-0 flex-1">
-          <TableEditor key={active.key} table={active} />
+          {isBlog ? (
+            <BlogEditor />
+          ) : (
+            <TableEditor key={active.key} table={active} />
+          )}
         </main>
       </div>
     </div>
