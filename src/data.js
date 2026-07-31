@@ -66,20 +66,20 @@ export const testimonials = [
     name: "Abhishek Kumar Ojha",
     message:
       "Bro, what an awesome portfolio you've made. Seriously, I loved it. Keep it up, buddy.",
-    date: "2025",
+    date: "2026",
   },
-  {
-    name: "R. Verma",
-    message:
-      "Great attention to detail and genuinely easy to work with. The final result looked exactly how we imagined.",
-    date: "2025",
-  },
-  {
-    name: "P. Singh",
-    message:
-      "Clean code, clear communication, and delivered on time. Would happily work with him again.",
-    date: "2024",
-  },
+  // {
+  //   name: "R. Verma",
+  //   message:
+  //     "Great attention to detail and genuinely easy to work with. The final result looked exactly how we imagined.",
+  //   date: "2025",
+  // },
+  // {
+  //   name: "P. Singh",
+  //   message:
+  //     "Clean code, clear communication, and delivered on time. Would happily work with him again.",
+  //   date: "2024",
+  // },
 ];
 
 /* --------------------- About: orbiting tech icons -------------------- */
