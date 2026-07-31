@@ -32,6 +32,7 @@ const shapeProfile = (row) =>
         // Fall back to the static default if the column isn't set/created yet.
         quote: row.quote ?? fallback.profile.quote,
         quoteAuthor: row.quote_author ?? fallback.profile.quoteAuthor,
+        summary: row.summary ?? fallback.profile.summary,
       };
 
 const shapeNav = (rows) => rows.map((r) => ({ label: r.label, href: r.href }));

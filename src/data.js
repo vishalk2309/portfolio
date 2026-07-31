@@ -21,7 +21,7 @@ import { FaXTwitter } from "react-icons/fa6";
 export const profile = {
   name: "Vishal Kumar Kushwaha",
   shortName: "VK",
-  role: "Software Developer & Web Developer",
+  role: "Aspiring Software Engineer & Gen AI Enthusiast",
   email: "kushwahavishal296@gmail.com",
   resumeUrl: "/Vishal_Resume.pdf",
   // Your photo lives in /public. Served at the site root.
@@ -29,6 +29,9 @@ export const profile = {
   // Short line shown under the role on the home page. Editable from admin.
   quote: "First, solve the problem. Then, write the code.",
   quoteAuthor: "John Johnson",
+  // Professional summary shown in the About section. Editable from admin.
+  summary:
+    "I'm a Programmer Analyst at Cognizant Technology Solutions and a Computer Science student with hands-on experience across a range of technologies — including JavaScript, React, Python, Java, MongoDB, and MySQL. I love turning ideas into clean, functional products, from full-stack web applications to interactive, data-driven interfaces. Right now I'm building projects that pair thoughtful design with solid engineering — including this portfolio, powered by a live content dashboard and real-time coding stats.",
 };
 
 export const navLinks = [
