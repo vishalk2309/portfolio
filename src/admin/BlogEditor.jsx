@@ -114,8 +114,9 @@ export default function BlogEditor() {
     await load();
   };
 
-  const uploadImage = async (file, toContent) => {
-    if (!file) return;
+  // Uploads a file to the media bucket and returns its public URL (or null).
+  const uploadToStorage = async (file) => {
+    if (!file) return null;
     setUploading(true);
     setMsg("");
     const safe = file.name.replace(/[^a-zA-Z0-9.\-]/g, "_");
@@ -123,16 +124,17 @@ export default function BlogEditor() {
     const { error } = await supabase.storage
       .from("media")
       .upload(path, file, { upsert: false });
+    setUploading(false);
     if (error) {
       setMsg("Upload failed: " + error.message);
-      setUploading(false);
-      return;
+      return null;
     }
-    const { data } = supabase.storage.from("media").getPublicUrl(path);
-    const url = data.publicUrl;
-    if (toContent) set("content", `${form.content || ""}\n\n![](${url})\n`);
-    else set("cover_image", url);
-    setUploading(false);
+    return supabase.storage.from("media").getPublicUrl(path).data.publicUrl;
+  };
+
+  const uploadCover = async (file) => {
+    const url = await uploadToStorage(file);
+    if (url) set("cover_image", url);
   };
 
   // ---- list view ----------------------------------------------------------
@@ -338,7 +340,7 @@ export default function BlogEditor() {
                 type="file"
                 accept="image/*"
                 className="hidden"
-                onChange={(e) => uploadImage(e.target.files?.[0], false)}
+                onChange={(e) => uploadCover(e.target.files?.[0])}
               />
             </label>
           </div>
@@ -348,6 +350,7 @@ export default function BlogEditor() {
             <RichTextEditor
               value={form.content}
               onChange={(html) => set("content", html)}
+              onImageUpload={uploadToStorage}
               placeholder="Write your post — format with the toolbar…"
             />
           </div>
