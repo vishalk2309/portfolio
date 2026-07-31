@@ -13,15 +13,31 @@ export default function About() {
         <SectionHeading eyebrow="Get to know me" title="About Me" />
 
         {profile.summary && (
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="mx-auto mb-16 max-w-3xl text-center text-base leading-relaxed text-white/70 sm:text-lg"
-          >
-            {profile.summary}
-          </motion.p>
+          <div className="mb-16">
+            {/* Cognizant logo — drop the file at public/cognizant.png.
+                Hides itself gracefully if the image is missing. */}
+            <motion.img
+              src="/cognizant.png"
+              alt="Cognizant Technology Solutions"
+              onError={(e) => {
+                e.currentTarget.style.display = "none";
+              }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="mx-auto mb-6 h-10 w-auto sm:h-12"
+            />
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="mx-auto max-w-3xl text-center text-base leading-relaxed text-white/70 sm:text-lg"
+            >
+              {profile.summary}
+            </motion.p>
+          </div>
         )}
 
         <div className="grid items-start gap-12 lg:grid-cols-2">
