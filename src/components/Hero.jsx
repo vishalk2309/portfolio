@@ -28,6 +28,19 @@ export default function Hero() {
       </div>
 
       <div className="relative z-10 mx-auto max-w-4xl text-center">
+        {/* Live viewers badge — kept at the top so it's always visible in the
+            first hero view on every device. */}
+        <motion.div
+          {...fade({
+            initial: { opacity: 0, y: -10 },
+            animate: { opacity: 1, y: 0 },
+            transition: { duration: 0.6 },
+          })}
+          className="mb-6 flex justify-center"
+        >
+          <LiveVisitors />
+        </motion.div>
+
         {/* Name — fade in + scale 0.8 -> 1, 1s ease out */}
         <motion.h1
           {...fade({
@@ -123,20 +136,7 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* Live viewers badge — in-flow under the content on mobile,
-          pinned bottom-left on desktop. */}
-      <motion.div
-        {...fade({
-          initial: { opacity: 0, y: 10 },
-          animate: { opacity: 1, y: 0 },
-          transition: { delay: 1, duration: 0.6 },
-        })}
-        className="z-10 mt-8 sm:absolute sm:bottom-8 sm:left-6 sm:mt-0"
-      >
-        <LiveVisitors />
-      </motion.div>
-
-      {/* Scroll cue — in-flow under the badge on mobile, pinned bottom-center on desktop. */}
+      {/* Scroll cue — in-flow under the content on mobile, pinned bottom-center on desktop. */}
       <motion.div
         {...fade({
           initial: { opacity: 0 },
