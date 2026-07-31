@@ -36,9 +36,10 @@ const slugify = (s = "") =>
     .replace(/^-+|-+$/g, "")
     .slice(0, 60);
 
-// crude excerpt: strip common markdown, collapse whitespace, clamp length
+// crude excerpt: strip HTML tags + common markdown, collapse whitespace, clamp
 const makeExcerpt = (md = "") =>
   md
+    .replace(/<[^>]*>/g, " ")
     .replace(/```[\s\S]*?```/g, " ")
     .replace(/[#>*_`~\-]/g, " ")
     .replace(/!\[[^\]]*\]\([^)]*\)/g, " ")
@@ -46,6 +47,8 @@ const makeExcerpt = (md = "") =>
     .replace(/\s+/g, " ")
     .trim()
     .slice(0, 180);
+
+const plainText = (s = "") => s.replace(/<[^>]*>/g, "").trim();
 
 async function sendBrevo(payload: Record<string, unknown>, apiKey: string) {
   await fetch("https://api.brevo.com/v3/smtp/email", {
@@ -84,7 +87,7 @@ Deno.serve(async (req) => {
     ? b.tags.map((t) => String(t).trim()).filter(Boolean).slice(0, 6)
     : [];
 
-  if (!authorName || !title || content.length < 30)
+  if (!authorName || !title || plainText(content).length < 20)
     return json(
       { success: false, error: "Please add your name, a title, and a bit more content." },
       400

@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import BlogLayout from "./BlogLayout";
+import RichTextEditor from "../components/RichTextEditor";
 import { supabase } from "../lib/supabase";
 
 const field =
@@ -20,7 +19,6 @@ export default function BlogWrite() {
     botcheck: false,
   });
   const set = (k, v) => setF((p) => ({ ...p, [k]: v }));
-  const [preview, setPreview] = useState(false);
   const [state, setState] = useState({ status: "idle", msg: "" }); // idle|sending|success|error
   const [otp, setOtp] = useState({ status: "idle", msg: "" }); // idle|sending|sent|error
 
@@ -48,7 +46,8 @@ export default function BlogWrite() {
 
   const submit = async (e) => {
     e.preventDefault();
-    if (!f.author_name.trim() || !f.title.trim() || f.content.trim().length < 30) {
+    const plainLen = f.content.replace(/<[^>]*>/g, "").trim().length;
+    if (!f.author_name.trim() || !f.title.trim() || plainLen < 20) {
       setState({
         status: "error",
         msg: "Add your name, a title, and a bit more content.",
@@ -204,31 +203,12 @@ export default function BlogWrite() {
         />
 
         <div className="mt-4">
-          <div className="mb-1 flex items-center justify-between">
-            <label className="text-sm text-white/60">Content (Markdown)</label>
-            <button
-              type="button"
-              onClick={() => setPreview((p) => !p)}
-              className="text-xs text-neon-cyan hover:underline"
-            >
-              {preview ? "← Edit" : "Preview →"}
-            </button>
-          </div>
-          {preview ? (
-            <div className="min-h-[280px] rounded-2xl border border-white/10 bg-white/[0.03] p-5 blog-content">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {f.content || "_Nothing to preview yet._"}
-              </ReactMarkdown>
-            </div>
-          ) : (
-            <textarea
-              className={`${field} resize-none font-mono text-sm`}
-              rows={14}
-              placeholder={"# My heading\n\nWrite your post in **markdown**…"}
-              value={f.content}
-              onChange={(e) => set("content", e.target.value)}
-            />
-          )}
+          <label className="mb-1 block text-sm text-white/60">Content</label>
+          <RichTextEditor
+            value={f.content}
+            onChange={(html) => set("content", html)}
+            placeholder="Write your post — format with the toolbar above…"
+          />
         </div>
 
         {/* honeypot */}

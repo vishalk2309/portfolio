@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import { supabase } from "../lib/supabase";
+import RichTextEditor from "../components/RichTextEditor";
+import BlogContent from "../components/BlogContent";
 
 const slugify = (s = "") =>
   s
@@ -344,24 +344,11 @@ export default function BlogEditor() {
           </div>
 
           <div>
-            <div className="mb-1 flex items-center justify-between">
-              <label className="text-sm text-white/70">Content (Markdown)</label>
-              <label className="cursor-pointer text-xs text-neon-cyan hover:underline">
-                {uploading ? "Uploading…" : "↑ Insert image"}
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(e) => uploadImage(e.target.files?.[0], true)}
-                />
-              </label>
-            </div>
-            <textarea
-              rows={18}
-              className={`${inputCls} font-mono text-sm`}
+            <label className="mb-1 block text-sm text-white/70">Content</label>
+            <RichTextEditor
               value={form.content}
-              onChange={(e) => set("content", e.target.value)}
-              placeholder={"# Heading\n\nWrite your post in **markdown**…"}
+              onChange={(html) => set("content", html)}
+              placeholder="Write your post — format with the toolbar…"
             />
           </div>
 
@@ -382,11 +369,7 @@ export default function BlogEditor() {
             <h1 className="mb-2 font-serif text-2xl font-bold text-white">
               {form.title || "Untitled"}
             </h1>
-            <div className="blog-content">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {form.content || "_Nothing to preview yet._"}
-              </ReactMarkdown>
-            </div>
+            <BlogContent content={form.content || ""} />
           </div>
         </div>
       </div>

@@ -211,6 +211,46 @@ html.lenis body {
   margin: 2em 0;
 }
 
+/* Rendered rich-text (Quill HTML) blog body */
+.blog-html.ql-editor {
+  padding: 0;
+  color: rgb(var(--c-fg) / 0.85);
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+.blog-html.ql-editor a {
+  color: var(--accent-from);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.blog-html.ql-editor img {
+  max-width: 100%;
+  border-radius: 0.75rem;
+}
+.blog-html.ql-editor blockquote {
+  border-left: 3px solid var(--accent-from);
+}
+
+/* Quill editor chrome — keep the writing surface readable in both themes */
+.rte .ql-toolbar {
+  border-color: rgb(30 30 30 / 0.15);
+  border-top-left-radius: 0.75rem;
+  border-top-right-radius: 0.75rem;
+  background: #ffffff;
+}
+.rte .ql-container {
+  border-color: rgb(30 30 30 / 0.15);
+  border-bottom-left-radius: 0.75rem;
+  border-bottom-right-radius: 0.75rem;
+  min-height: 260px;
+  background: #ffffff;
+  color: #1e1e1e;
+  font-size: 1rem;
+}
+.rte .ql-editor {
+  min-height: 260px;
+}
+
 /* Respect users who prefer reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *,

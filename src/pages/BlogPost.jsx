@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import BlogLayout from "./BlogLayout";
+import BlogContent from "../components/BlogContent";
+import ShareButtons from "../components/ShareButtons";
 import { useBlogPost } from "../hooks/useBlogs";
 
 export default function BlogPost() {
@@ -68,17 +68,17 @@ export default function BlogPost() {
             {date}
           </p>
 
-          <div className="mt-8 blog-content">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {post.content || ""}
-            </ReactMarkdown>
-          </div>
+          <BlogContent content={post.content || ""} className="mt-8" />
 
           <div className="mt-12 border-t border-white/10 pt-6">
-            <Link
-              to="/blog"
-              className="text-sm text-neon-cyan hover:underline"
-            >
+            <ShareButtons
+              url={typeof window !== "undefined" ? window.location.href : ""}
+              title={post.title}
+            />
+          </div>
+
+          <div className="mt-6">
+            <Link to="/blog" className="text-sm text-neon-cyan hover:underline">
               ← Back to all posts
             </Link>
           </div>
