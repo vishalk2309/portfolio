@@ -99,10 +99,12 @@ export function GfgCard() {
   );
 }
 
-function Stat({ value, label }) {
+function Stat({ value, label, valueClass = "text-xl sm:text-2xl" }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 px-2 py-4 text-center sm:px-3">
-      <div className="text-xl font-bold text-white sm:text-2xl">{value}</div>
+    <div className="min-w-0 rounded-2xl border border-white/10 bg-white/5 px-2 py-4 text-center sm:px-3">
+      <div className={`${valueClass} font-bold tabular-nums text-white`}>
+        {value}
+      </div>
       <div className="text-xs text-white/45">{label}</div>
     </div>
   );
@@ -148,6 +150,7 @@ export function LeetCodeCard() {
           <Stat
             value={data.ranking ? data.ranking.toLocaleString() : "—"}
             label="Rank"
+            valueClass="text-sm sm:text-base"
           />
           <Stat value={data.reputation} label="Reputation" />
           <Stat value={data.contribution} label="Contribution" />
