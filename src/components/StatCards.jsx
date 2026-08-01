@@ -99,18 +99,21 @@ export function GfgCard() {
   );
 }
 
-// Shorten large numbers so they never overflow a narrow stat box (1543206 → 1.5M).
-function compactNum(n) {
-  if (typeof n !== "number" || !isFinite(n)) return n;
-  if (n >= 1_000_000) return (n / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
-  if (n >= 10_000) return Math.round(n / 1000) + "K";
-  return n.toLocaleString();
-}
-
 function Stat({ value, label }) {
+  // Keep the full number but shrink the font for long values so all digits
+  // stay inside the box (e.g. a 7-figure LeetCode rank like "1,543,206").
+  const len = String(value).length;
+  const size =
+    len > 8
+      ? "text-sm sm:text-base"
+      : len > 6
+      ? "text-base sm:text-lg"
+      : "text-xl sm:text-2xl";
   return (
     <div className="min-w-0 rounded-2xl border border-white/10 bg-white/5 px-2 py-4 text-center sm:px-3">
-      <div className="truncate text-xl font-bold tabular-nums text-white sm:text-2xl">
+      <div
+        className={`${size} font-bold tabular-nums leading-tight text-white`}
+      >
         {value}
       </div>
       <div className="text-xs text-white/45">{label}</div>
@@ -156,7 +159,7 @@ export function LeetCodeCard() {
 
         <div className="grid flex-1 grid-cols-3 gap-2 min-w-[200px] sm:gap-3">
           <Stat
-            value={data.ranking ? compactNum(data.ranking) : "—"}
+            value={data.ranking ? data.ranking.toLocaleString() : "—"}
             label="Rank"
           />
           <Stat value={data.reputation} label="Reputation" />
