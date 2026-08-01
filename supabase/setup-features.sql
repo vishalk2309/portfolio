@@ -271,3 +271,15 @@ create table if not exists email_otps (
 create index if not exists email_otps_email_idx on email_otps (email, created_at desc);
 alter table email_otps enable row level security;
 -- No policies: only the Edge Functions (service role) touch this table.
+
+-- Email lockout — after 5 wrong OTP entries, block the email for 30 minutes.
+-- Survives "Resend code": send-otp / verify-otp / submit-* all check locked_until
+-- before doing anything, so a fresh code can't reset the block.
+create table if not exists otp_lockouts (
+  email        text primary key,
+  fail_count   int not null default 0,
+  locked_until timestamptz,
+  updated_at   timestamptz not null default now()
+);
+alter table otp_lockouts enable row level security;
+-- No policies: only the Edge Functions (service role) touch this table.

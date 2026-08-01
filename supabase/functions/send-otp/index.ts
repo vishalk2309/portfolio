@@ -67,6 +67,27 @@ Deno.serve(async (req) => {
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
   );
 
+  // Lockout: 5 wrong code entries blocks the email for 30 min — including
+  // requesting a NEW code, so "Resend" can't reset the block.
+  const { data: lock } = await supabase
+    .from("otp_lockouts")
+    .select("locked_until")
+    .eq("email", email)
+    .maybeSingle();
+  if (lock?.locked_until) {
+    const leftMs = new Date(lock.locked_until).getTime() - Date.now();
+    if (leftMs > 0)
+      return json(
+        {
+          success: false,
+          error: `Too many failed attempts. Try again in ${Math.ceil(
+            leftMs / 60000
+          )} minute(s).`,
+        },
+        429
+      );
+  }
+
   // Rate limit: min 45s between codes, max 5 per hour per email.
   const nowMs = Date.now();
   const { data: recent } = await supabase
