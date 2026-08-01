@@ -99,10 +99,20 @@ export function GfgCard() {
   );
 }
 
+// Shorten large numbers so they never overflow a narrow stat box (1543206 → 1.5M).
+function compactNum(n) {
+  if (typeof n !== "number" || !isFinite(n)) return n;
+  if (n >= 1_000_000) return (n / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
+  if (n >= 10_000) return Math.round(n / 1000) + "K";
+  return n.toLocaleString();
+}
+
 function Stat({ value, label }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 px-2 py-4 text-center sm:px-3">
-      <div className="text-xl font-bold text-white sm:text-2xl">{value}</div>
+    <div className="min-w-0 rounded-2xl border border-white/10 bg-white/5 px-2 py-4 text-center sm:px-3">
+      <div className="truncate text-xl font-bold tabular-nums text-white sm:text-2xl">
+        {value}
+      </div>
       <div className="text-xs text-white/45">{label}</div>
     </div>
   );
@@ -146,7 +156,7 @@ export function LeetCodeCard() {
 
         <div className="grid flex-1 grid-cols-3 gap-2 min-w-[200px] sm:gap-3">
           <Stat
-            value={data.ranking ? data.ranking.toLocaleString() : "—"}
+            value={data.ranking ? compactNum(data.ranking) : "—"}
             label="Rank"
           />
           <Stat value={data.reputation} label="Reputation" />
