@@ -120,23 +120,21 @@ export const gfg = {
 
 /* ----------------------------- LeetCode ----------------------------- */
 // Live data via a CORS-enabled community proxy of LeetCode's GraphQL API.
-// The hook hits `${apiBase}/userProfile/${username}`. `fallback` shows if
-// the proxy is down or cold-starting. (First request can take ~30s while the
-// free host wakes up — the live value replaces the fallback once it lands.)
+// Set your LeetCode username; `fallback` shows if the proxy is down.
 export const leetcode = {
   username: "kushwahavishal296",
   profileUrl: "https://leetcode.com/u/kushwahavishal296/",
-  apiBase: "https://alfa-leetcode-api.onrender.com",
+  apiBase: "https://leetcode-api-faisalshohag.vercel.app",
   fallback: {
-    totalSolved: 149,
-    totalQuestions: 4005,
-    ranking: 1131232,
+    totalSolved: 350,
+    totalQuestions: 3500,
+    ranking: 200000,
     reputation: 0,
-    contribution: 947,
+    contribution: 0,
     breakdown: [
-      { label: "Easy", solved: 71, total: 956, color: "#22D3EE" },
-      { label: "Medium", solved: 66, total: 2091, color: "#34D399" },
-      { label: "Hard", solved: 12, total: 958, color: "#F87171" },
+      { label: "Easy", solved: 150, total: 900, color: "#22D3EE" },
+      { label: "Medium", solved: 160, total: 1900, color: "#34D399" },
+      { label: "Hard", solved: 40, total: 800, color: "#F87171" },
     ],
   },
 };

@@ -283,17 +283,3 @@ create table if not exists otp_lockouts (
 );
 alter table otp_lockouts enable row level security;
 -- No policies: only the Edge Functions (service role) touch this table.
-
-
--- ------------------------------------------------------------
--- 5) LeetCode stats cache (optional) — 1-hour cache for the
---    leetcode-stats edge function. The function still works
---    without this table; it just fetches live every time.
--- ------------------------------------------------------------
-create table if not exists leetcode_cache (
-  username   text primary key,
-  data       jsonb not null,
-  updated_at timestamptz not null default now()
-);
-alter table leetcode_cache enable row level security;
--- No policies: only the Edge Function (service role) touches this table.

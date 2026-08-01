@@ -100,22 +100,9 @@ export function GfgCard() {
 }
 
 function Stat({ value, label }) {
-  // Keep the full number but shrink the font for long values so all digits
-  // stay inside the box (e.g. a 7-figure LeetCode rank like "1,543,206").
-  const len = String(value).length;
-  const size =
-    len > 8
-      ? "text-sm sm:text-base"
-      : len > 6
-      ? "text-base sm:text-lg"
-      : "text-xl sm:text-2xl";
   return (
-    <div className="min-w-0 rounded-2xl border border-white/10 bg-white/5 px-2 py-4 text-center sm:px-3">
-      <div
-        className={`${size} font-bold tabular-nums leading-tight text-white`}
-      >
-        {value}
-      </div>
+    <div className="rounded-2xl border border-white/10 bg-white/5 px-2 py-4 text-center sm:px-3">
+      <div className="text-xl font-bold text-white sm:text-2xl">{value}</div>
       <div className="text-xs text-white/45">{label}</div>
     </div>
   );
