@@ -102,7 +102,7 @@ export function GfgCard() {
 function Stat({ value, label }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/5 px-2 py-4 text-center sm:px-3">
-      <div className="text-xl font-bold text-white sm:text-2xl">{value}</div>
+      <div className="text-xl font-bold text-white sm:text-xl">{value}</div>
       <div className="text-xs text-white/45">{label}</div>
     </div>
   );
