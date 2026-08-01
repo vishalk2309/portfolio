@@ -52,7 +52,7 @@ export default function useLeetcodeStats({ username, apiBase, fallback }) {
     (async () => {
       try {
         const res = await fetch(
-          `${apiBase}/${encodeURIComponent(username)}`
+          `${apiBase}/userProfile/${encodeURIComponent(username)}`
         );
         if (!res.ok) throw new Error("leetcode " + res.status);
         const json = await res.json();
