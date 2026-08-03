@@ -6,11 +6,13 @@ import BlogEditor from "./BlogEditor";
 import CommentsAdmin from "./CommentsAdmin";
 import SubscribersAdmin from "./SubscribersAdmin";
 import FolderUpload from "./FolderUpload";
+import ChangePassword from "./ChangePassword";
 
 const BLOG_KEY = "__blog";
 const COMMENTS_KEY = "__comments";
 const SUBS_KEY = "__subs";
 const FOLDER_KEY = "__folder";
+const PASSWORD_KEY = "__password";
 
 export default function Dashboard({ session }) {
   const [activeKey, setActiveKey] = useState(TABLES[0].key);
@@ -18,6 +20,7 @@ export default function Dashboard({ session }) {
   const isComments = activeKey === COMMENTS_KEY;
   const isSubs = activeKey === SUBS_KEY;
   const isFolder = activeKey === FOLDER_KEY;
+  const isPassword = activeKey === PASSWORD_KEY;
   const active = TABLES.find((t) => t.key === activeKey);
 
   const logout = () => supabase.auth.signOut();
@@ -86,6 +89,15 @@ export default function Dashboard({ session }) {
                 <span>📁</span>
                 Folder Upload
               </button>
+              <button
+                onClick={() => setActiveKey(PASSWORD_KEY)}
+                className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
+                  isPassword ? "bg-white/10 text-white" : "text-white/60 hover:text-white"
+                }`}
+              >
+                <span>🔑</span>
+                Change Password
+              </button>
             </nav>
 
             <div className="mt-4 border-t border-white/10 pt-4">
@@ -115,6 +127,8 @@ export default function Dashboard({ session }) {
             <SubscribersAdmin />
           ) : isFolder ? (
             <FolderUpload />
+          ) : isPassword ? (
+            <ChangePassword />
           ) : (
             <TableEditor key={active.key} table={active} />
           )}
