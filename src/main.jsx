@@ -5,6 +5,7 @@ import App from "./App.jsx";
 import "./index.css";
 import { applyAccent, getAccent, applyMode, getMode } from "./theme";
 import { ContentProvider } from "./lib/ContentContext";
+import { AuthProvider } from "./lib/AuthContext";
 
 // Admin ships as its own chunk — portfolio visitors never download it.
 const AdminApp = lazy(() => import("./admin/AdminApp.jsx"));
@@ -13,6 +14,8 @@ const BlogIndex = lazy(() => import("./pages/BlogIndex.jsx"));
 const BlogPost = lazy(() => import("./pages/BlogPost.jsx"));
 const BlogWrite = lazy(() => import("./pages/BlogWrite.jsx"));
 const BlogStatus = lazy(() => import("./pages/BlogStatus.jsx"));
+const ResourcesPage = lazy(() => import("./pages/ResourcesPage.jsx"));
+const AccountPage = lazy(() => import("./pages/AccountPage.jsx"));
 
 // apply the saved light/dark mode + accent before first paint
 applyMode(getMode());
@@ -21,6 +24,7 @@ applyAccent(getAccent());
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
+      <AuthProvider>
       <Routes>
         {/* Public portfolio */}
         <Route
@@ -72,6 +76,28 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             </ContentProvider>
           }
         />
+        {/* Resources */}
+        <Route
+          path="/resources"
+          element={
+            <ContentProvider>
+              <Suspense fallback={null}>
+                <ResourcesPage />
+              </Suspense>
+            </ContentProvider>
+          }
+        />
+        {/* Buyer library */}
+        <Route
+          path="/account"
+          element={
+            <ContentProvider>
+              <Suspense fallback={null}>
+                <AccountPage />
+              </Suspense>
+            </ContentProvider>
+          }
+        />
         {/* Private dashboard */}
         <Route
           path="/admin/*"
@@ -82,6 +108,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           }
         />
       </Routes>
+      </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

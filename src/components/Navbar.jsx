@@ -14,21 +14,40 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [activeId, setActiveId] = useState("home");
 
-  // Blog is its own page now: point any "Blog" nav link at /blog (route), and
-  // ensure one exists (before Contact) even if it's not in the nav_links table.
+  // Blog is its own page now: point any "Blog" nav link at /blog (route).
+  // We also guarantee the Resources and Blog links exist (before Contact)
+  // even if they're not in the nav_links table yet — this stops them from
+  // flashing in from data.js and then disappearing once Supabase responds.
   const links = useMemo(() => {
-    const mapped = navLinks.map((l) =>
+    let mapped = navLinks.map((l) =>
       l.href === "#blog" || l.label.toLowerCase() === "blog"
         ? { ...l, href: "/blog" }
         : l
     );
-    if (mapped.some((l) => l.href === "/blog")) return mapped;
-    const blog = { label: "Blog", href: "/blog" };
-    const ci = mapped.findIndex((l) => l.href === "#contact");
-    if (ci === -1) return [...mapped, blog];
-    const copy = [...mapped];
-    copy.splice(ci, 0, blog);
-    return copy;
+
+    // Resources — its own page (route). Inject before Blog/Contact if missing.
+    if (!mapped.some((l) => l.href === "/resources")) {
+      const res = { label: "Resources", href: "/resources" };
+      const at = mapped.findIndex(
+        (l) => l.href === "/blog" || l.href === "#contact"
+      );
+      mapped =
+        at === -1
+          ? [...mapped, res]
+          : [...mapped.slice(0, at), res, ...mapped.slice(at)];
+    }
+
+    // Blog — inject before Contact if missing.
+    if (!mapped.some((l) => l.href === "/blog")) {
+      const blog = { label: "Blog", href: "/blog" };
+      const ci = mapped.findIndex((l) => l.href === "#contact");
+      mapped =
+        ci === -1
+          ? [...mapped, blog]
+          : [...mapped.slice(0, ci), blog, ...mapped.slice(ci)];
+    }
+
+    return mapped;
   }, [navLinks]);
 
   useEffect(() => {

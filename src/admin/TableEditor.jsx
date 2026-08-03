@@ -38,6 +38,7 @@ export default function TableEditor({ table }) {
     for (const field of table.fields) {
       const v = row ? row[field.name] : undefined;
       if (field.type === "array") f[field.name] = (v || []).join(", ");
+      else if (field.type === "boolean") f[field.name] = !!v;
       else f[field.name] = v == null ? "" : String(v);
     }
     return f;
@@ -72,6 +73,8 @@ export default function TableEditor({ table }) {
           .filter(Boolean);
       } else if (field.type === "number") {
         payload[field.name] = raw === "" ? null : Number(raw);
+      } else if (field.type === "boolean") {
+        payload[field.name] = raw === true || raw === "true";
       } else {
         const t = (raw ?? "").trim();
         payload[field.name] = t === "" ? null : t;
@@ -239,16 +242,23 @@ function Field({ field, value, onChange }) {
     // unique, URL-safe filename
     const safe = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
     const path = `${Date.now()}-${safe}`;
+    const bucket = field.bucket || BUCKET;
     const { error } = await supabase.storage
-      .from(BUCKET)
+      .from(bucket)
       .upload(path, file, { cacheControl: "3600", upsert: false });
     if (error) {
       setUpErr(error.message);
       setUploading(false);
       return;
     }
-    const { data } = supabase.storage.from(BUCKET).getPublicUrl(path);
-    onChange(data.publicUrl);
+    // Private buckets (storePath) have no public URL — store the object path,
+    // which the server-side function turns into a signed URL after payment.
+    if (field.storePath) {
+      onChange(path);
+    } else {
+      const { data } = supabase.storage.from(bucket).getPublicUrl(path);
+      onChange(data.publicUrl);
+    }
     setUploading(false);
     e.target.value = ""; // allow re-selecting the same file later
   };
@@ -264,6 +274,16 @@ function Field({ field, value, onChange }) {
           onChange={(e) => onChange(e.target.value)}
           className={base + " resize-y"}
         />
+      ) : field.type === "boolean" ? (
+        <label className="flex cursor-pointer items-center gap-2 py-1.5 text-sm text-white/80">
+          <input
+            type="checkbox"
+            checked={value === true || value === "true"}
+            onChange={(e) => onChange(e.target.checked)}
+            className="h-4 w-4"
+          />
+          {value === true || value === "true" ? "Yes" : "No"}
+        </label>
       ) : field.type === "select" ? (
         <select
           value={value}
@@ -331,6 +351,29 @@ function Field({ field, value, onChange }) {
               onError={(e) => (e.currentTarget.style.display = "none")}
             />
           )}
+        </div>
+      ) : field.type === "file" ? (
+        <div>
+          <input
+            type="text"
+            value={value}
+            placeholder="https://…  (or upload a file below)"
+            onChange={(e) => onChange(e.target.value)}
+            className={base}
+          />
+          <div className="mt-2 flex items-center gap-3">
+            <label className="cursor-pointer rounded-lg border border-white/15 px-3 py-1.5 text-xs text-white/70 hover:text-white">
+              {uploading ? "Uploading…" : "⬆ Upload file"}
+              <input
+                type="file"
+                disabled={uploading}
+                onChange={handleFile}
+                className="hidden"
+              />
+            </label>
+            {value && <span className="text-xs text-white/40">file set ✓</span>}
+          </div>
+          {upErr && <p className="mt-1 text-xs text-red-400">{upErr}</p>}
         </div>
       ) : (
         <input

@@ -92,6 +92,20 @@ const shapeTimeline = (rows) =>
     ...(r.longest_streak != null ? { longest_streak: r.longest_streak } : {}),
   }));
 
+const shapeResources = (rows) =>
+  rows.map((r) => ({
+    id: r.id,
+    title: r.title,
+    description: r.description,
+    category: r.category,
+    coverImage: r.cover_image || "",
+    fileUrl: r.file_url || "#",
+    fileName: r.file_name || "",
+    isPaid: !!r.is_paid,
+    price: r.price,
+    currency: r.currency || "INR",
+  }));
+
 // ---------------------------------------------------------------------------
 export function ContentProvider({ children }) {
   const [content, setContent] = useState({
@@ -105,6 +119,7 @@ export function ContentProvider({ children }) {
     education: fallback.education,
     achievements: fallback.achievements,
     testimonials: fallback.testimonials,
+    resources: fallback.resources,
   });
 
   useEffect(() => {
@@ -113,7 +128,7 @@ export function ContentProvider({ children }) {
 
     (async () => {
       try {
-        const [profileRes, nav, soc, skills, proj, certs, edu, ach, testi] =
+        const [profileRes, nav, soc, skills, proj, certs, edu, ach, testi, res] =
           await Promise.all([
             supabase.from("profile").select("*").limit(1).maybeSingle(),
             supabase.from("nav_links").select("*").order("sort_order"),
@@ -124,6 +139,7 @@ export function ContentProvider({ children }) {
             supabase.from("education").select("*").order("sort_order"),
             supabase.from("achievements").select("*").order("sort_order"),
             supabase.from("testimonials").select("*").order("sort_order"),
+            supabase.from("resources").select("*").order("sort_order"),
           ]);
         if (cancelled) return;
 
@@ -142,6 +158,7 @@ export function ContentProvider({ children }) {
         if (edu.data?.length) next.education = shapeTimeline(edu.data);
         if (ach.data?.length) next.achievements = shapeTimeline(ach.data);
         if (testi.data?.length) next.testimonials = shapeTestimonials(testi.data);
+        if (res.data?.length) next.resources = shapeResources(res.data);
 
         setContent((c) => ({ ...c, ...next }));
       } catch (err) {

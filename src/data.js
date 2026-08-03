@@ -39,6 +39,7 @@ export const navLinks = [
   { label: "Projects", href: "#projects" },
   { label: "Experience", href: "#experience" },
   { label: "Skills", href: "#skills" },
+  { label: "Resources", href: "/resources" },
   { label: "Blog", href: "/blog" },
   { label: "Contact", href: "#contact" },
 ];
@@ -80,6 +81,25 @@ export const testimonials = [
   //     "Clean code, clear communication, and delivered on time. Would happily work with him again.",
   //   date: "2024",
   // },
+];
+
+/* ----------------------------- Resources ----------------------------- */
+// Downloadable resources you share with visitors. Free files download
+// directly; paid ones (is_paid: true) will use the Razorpay flow in Phase 2.
+// Edit these from the admin dashboard once the `resources` table is set up.
+export const resources = [
+  {
+    title: "React Interview Cheat Sheet",
+    description:
+      "The concepts and questions I revised before my interviews — hooks, rendering, and gotchas in one PDF.",
+    category: "Cheat Sheet",
+    coverImage: "",
+    fileUrl: "#",
+    fileName: "react-cheat-sheet.pdf",
+    isPaid: false,
+    price: null,
+    currency: "INR",
+  },
 ];
 
 /* --------------------- About: orbiting tech icons -------------------- */

@@ -46,7 +46,35 @@ export default function AdminApp() {
     );
   }
 
-  return session ? <Dashboard session={session} /> : <Login />;
+  if (!session) return <Login />;
+
+  // Now that visitors can sign up as buyers, a valid session is NOT enough to
+  // reach the dashboard — only the owner's email may. Anything the UI misses is
+  // still blocked by the owner-only RLS write policies (buyer-accounts.sql).
+  const owner = (
+    import.meta.env.VITE_OWNER_EMAIL || "kushwahavishal296@gmail.com"
+  ).toLowerCase();
+  const email = (session.user?.email || "").toLowerCase();
+  if (email !== owner) {
+    return (
+      <Shell>
+        <div className="text-center">
+          <p className="text-white/80">
+            You&rsquo;re signed in as <b>{email || "a visitor"}</b>, which
+            isn&rsquo;t the owner account.
+          </p>
+          <button
+            onClick={() => supabase.auth.signOut()}
+            className="mt-4 rounded-lg bg-gradient-btn px-5 py-2.5 text-sm font-semibold text-base"
+          >
+            Sign out
+          </button>
+        </div>
+      </Shell>
+    );
+  }
+
+  return <Dashboard session={session} />;
 }
 
 function Shell({ children }) {
