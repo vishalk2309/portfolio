@@ -103,34 +103,41 @@ Deno.serve(async (req) => {
     .eq("id", resourceId)
     .maybeSingle();
 
-  if (error || !resource || !resource.is_paid || !resource.file_path)
+  if (error || !resource || !resource.is_paid)
     return json({ success: false, error: "Resource not available" }, 404);
 
-  // Signed URL to the PRIVATE file — expires quickly, forces a download.
-  const { data: signed, error: signErr } = await supabase.storage
-    .from("paid-resources")
-    .createSignedUrl(resource.file_path, SIGNED_URL_SECONDS, {
-      download: resource.file_name || true,
-    });
-
-  if (signErr || !signed?.signedUrl)
-    return json({ success: false, error: "Could not prepare download" }, 500);
-
-  // Best-effort purchase log (never block the download if this fails).
+  // Best-effort purchase log. Upsert on the payment id so this and the webhook
+  // can't create duplicate rows for the same payment.
   try {
-    await supabase.from("purchases").insert({
-      resource_id: resource.id,
-      user_id: user?.id || null,
-      email: b.email || user?.email || null,
-      name: b.name || null,
-      amount: resource.price,
-      currency: resource.currency || "INR",
-      razorpay_order_id,
-      razorpay_payment_id,
-    });
+    await supabase.from("purchases").upsert(
+      {
+        resource_id: resource.id,
+        user_id: user?.id || null,
+        email: b.email || user?.email || null,
+        name: b.name || null,
+        amount: resource.price,
+        currency: resource.currency || "INR",
+        razorpay_order_id,
+        razorpay_payment_id,
+      },
+      { onConflict: "razorpay_payment_id", ignoreDuplicates: true }
+    );
   } catch {
     // ignore
   }
 
-  return json({ success: true, url: signed.signedUrl });
+  // A single-file resource can return a direct link. A folder resource has its
+  // files in resource_files, so the buyer downloads them from their library
+  // (per file) — url stays null in that case.
+  let url: string | null = null;
+  if (resource.file_path) {
+    const { data: signed } = await supabase.storage
+      .from("paid-resources")
+      .createSignedUrl(resource.file_path, SIGNED_URL_SECONDS, {
+        download: resource.file_name || true,
+      });
+    url = signed?.signedUrl || null;
+  }
+
+  return json({ success: true, url });
 });

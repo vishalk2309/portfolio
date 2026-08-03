@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useContent } from "../lib/ContentContext";
 
 export default function Footer() {
@@ -18,6 +19,17 @@ export default function Footer() {
           <a href="/admin" aria-label="Admin dashboard" title="Admin" className="cursor-text transition-colors hover:text-neon-cyan">©</a>{" "}
           {new Date().getFullYear()} {profile.name}. All rights reserved.
         </p>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+          <Link to="/terms" className="transition-colors hover:text-neon-cyan">
+            Terms
+          </Link>
+          <Link to="/privacy" className="transition-colors hover:text-neon-cyan">
+            Privacy
+          </Link>
+          <Link to="/refund" className="transition-colors hover:text-neon-cyan">
+            Refund
+          </Link>
+        </div>
         <p>
           Built with <span className="text-neon-cyan">React</span>,{" "}
           <span className="text-neon-purple">Tailwind</span> &{" "}

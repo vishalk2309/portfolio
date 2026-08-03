@@ -75,6 +75,8 @@ export default function TableEditor({ table }) {
         payload[field.name] = raw === "" ? null : Number(raw);
       } else if (field.type === "boolean") {
         payload[field.name] = raw === true || raw === "true";
+      } else if (field.type === "reftable") {
+        payload[field.name] = raw === "" || raw == null ? null : Number(raw);
       } else {
         const t = (raw ?? "").trim();
         payload[field.name] = t === "" ? null : t;
@@ -234,6 +236,23 @@ function Field({ field, value, onChange }) {
   const [uploading, setUploading] = useState(false);
   const [upErr, setUpErr] = useState("");
 
+  // options for a "reftable" field — loaded from another table
+  const [refOptions, setRefOptions] = useState([]);
+  useEffect(() => {
+    if (field.type !== "reftable") return;
+    let cancelled = false;
+    supabase
+      .from(field.refTable)
+      .select(`id, ${field.refLabel}`)
+      .order(field.refLabel)
+      .then(({ data }) => {
+        if (!cancelled) setRefOptions(data || []);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [field]);
+
   const handleFile = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -294,6 +313,19 @@ function Field({ field, value, onChange }) {
           {field.options.map((o) => (
             <option key={o} value={o}>
               {o}
+            </option>
+          ))}
+        </select>
+      ) : field.type === "reftable" ? (
+        <select
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className={base}
+        >
+          <option value="">— choose —</option>
+          {refOptions.map((o) => (
+            <option key={o.id} value={o.id}>
+              {o[field.refLabel] || "(untitled)"} (#{o.id})
             </option>
           ))}
         </select>

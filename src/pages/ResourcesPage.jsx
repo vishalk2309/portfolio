@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiDownload, FiFileText, FiLock, FiUser } from "react-icons/fi";
@@ -11,14 +11,15 @@ import { supabase } from "../lib/supabase";
 
 // Free files live in the public "media" bucket. For Supabase public URLs we
 // append ?download so the browser saves the file instead of previewing it.
-function downloadHref(r) {
-  if (!r.fileUrl || r.fileUrl === "#") return "#";
-  if (r.fileUrl.includes("/storage/v1/object/public/")) {
-    const sep = r.fileUrl.includes("?") ? "&" : "?";
-    return `${r.fileUrl}${sep}download=${encodeURIComponent(r.fileName || "")}`;
+function hrefFor(url, name) {
+  if (!url || url === "#") return "#";
+  if (url.includes("/storage/v1/object/public/")) {
+    const sep = url.includes("?") ? "&" : "?";
+    return `${url}${sep}download=${encodeURIComponent(name || "")}`;
   }
-  return r.fileUrl;
+  return url;
 }
+const downloadHref = (r) => hrefFor(r.fileUrl, r.fileName);
 
 // Load Razorpay's checkout script once, on demand.
 function loadRazorpay() {
@@ -41,10 +42,55 @@ export default function ResourcesPage() {
   const [err, setErr] = useState("");
   const [authOpen, setAuthOpen] = useState(false);
   const [pending, setPending] = useState(null); // resource awaiting login
+  const [ownedIds, setOwnedIds] = useState(() => new Set()); // resources the user bought
+
+  // Load which resources the logged-in user already owns (RLS returns only
+  // their own purchases), so we can show Download instead of Buy.
+  useEffect(() => {
+    if (!supabase || !user) {
+      setOwnedIds(new Set());
+      return;
+    }
+    let cancelled = false;
+    supabase
+      .from("purchases")
+      .select("resource_id")
+      .then(({ data }) => {
+        if (!cancelled)
+          setOwnedIds(new Set((data || []).map((p) => p.resource_id)));
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [user]);
 
   const goBack = () => {
     if (window.history.length > 1) navigate(-1);
     else navigate("/");
+  };
+
+  // Download a resource the user already owns.
+  const downloadOwned = async (r) => {
+    if (busyId) return;
+    // A folder has many files → send them to their library to pick each one.
+    if (r.files && r.files.length > 0) {
+      navigate("/account");
+      return;
+    }
+    setErr("");
+    setBusyId(r.id);
+    try {
+      const { data, error } = await supabase.functions.invoke("get-download", {
+        body: { resourceId: r.id },
+      });
+      if (error || !data?.success)
+        throw new Error(data?.error || "Could not prepare the download.");
+      window.open(data.url, "_blank", "noopener,noreferrer");
+    } catch (e) {
+      setErr(e.message || "Something went wrong.");
+    } finally {
+      setBusyId(null);
+    }
   };
 
   // Paid flow: (login) → create order → Razorpay checkout → verify → download.
@@ -95,14 +141,22 @@ export default function ResourcesPage() {
             );
             if (vErr || !verify?.success)
               throw new Error(verify?.error || "Payment verification failed.");
-            // Open the short-lived signed download URL.
-            window.open(verify.url, "_blank", "noopener,noreferrer");
+            // Payment done — send them to their library, which lists every
+            // file of the resource (works for single files and folders).
+            navigate("/account");
           } catch (e) {
             setErr(e.message || "Something went wrong after payment.");
           } finally {
             setBusyId(null);
           }
         },
+      });
+      // Surface a real failure (declined card, etc.) to the user.
+      rzp.on("payment.failed", (resp) => {
+        setErr(
+          resp?.error?.description || "Payment failed. Please try again."
+        );
+        setBusyId(null);
       });
       rzp.open();
     } catch (e) {
@@ -183,7 +237,9 @@ export default function ResourcesPage() {
               resource={r}
               index={i}
               busy={busyId === r.id}
+              owned={ownedIds.has(r.id)}
               onBuy={buyResource}
+              onDownloadOwned={downloadOwned}
             />
           ))}
         </div>
@@ -209,10 +265,14 @@ export default function ResourcesPage() {
   );
 }
 
-function ResourceCard({ resource, index, busy, onBuy }) {
+function ResourceCard({ resource, index, busy, owned, onBuy, onDownloadOwned }) {
   const r = resource;
   const href = downloadHref(r);
   const disabled = href === "#";
+  // A paid item is only buyable if it actually has a positive price.
+  const priceValid = r.price != null && Number(r.price) > 0;
+  // Free "folder" files (each has a public URL).
+  const freeFiles = (r.files || []).filter((f) => f.fileUrl);
 
   return (
     <motion.div
@@ -248,7 +308,16 @@ function ResourceCard({ resource, index, busy, onBuy }) {
         </p>
       )}
 
-      {r.isPaid ? (
+      {r.isPaid && owned ? (
+        // Already purchased → let them download instead of buying again.
+        <button
+          onClick={() => onDownloadOwned(r)}
+          disabled={busy}
+          className="mt-5 inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-btn py-3 text-sm font-semibold text-base shadow-[0_0_25px_rgba(110,231,249,0.35)] transition-transform hover:scale-[1.02] disabled:opacity-60"
+        >
+          <FiDownload /> {busy ? "Preparing…" : "Download (Owned)"}
+        </button>
+      ) : r.isPaid && priceValid ? (
         <button
           onClick={() => onBuy(r)}
           disabled={busy}
@@ -256,6 +325,29 @@ function ResourceCard({ resource, index, busy, onBuy }) {
         >
           <FiLock /> {busy ? "Processing…" : `Buy ₹${r.price}`}
         </button>
+      ) : r.isPaid && !priceValid ? (
+        // Marked paid but no valid price set → don't render a broken "₹null".
+        <button
+          disabled
+          className="mt-5 inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 py-3 text-sm font-semibold text-white/50"
+        >
+          <FiLock /> Unavailable
+        </button>
+      ) : freeFiles.length > 0 ? (
+        // Free "folder" — list every file to download.
+        <div className="mt-5 flex flex-col gap-2">
+          {freeFiles.map((f) => (
+            <a
+              key={f.id}
+              href={hrefFor(f.fileUrl, f.label)}
+              download={f.label || true}
+              className="inline-flex items-center justify-between gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/10"
+            >
+              <span className="truncate">{f.label || "File"}</span>
+              <FiDownload className="shrink-0 text-neon-cyan" />
+            </a>
+          ))}
+        </div>
       ) : (
         <a
           href={href}

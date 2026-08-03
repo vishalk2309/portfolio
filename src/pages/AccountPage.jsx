@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FiDownload, FiLogOut } from "react-icons/fi";
 import Background from "../components/Background";
@@ -10,9 +10,18 @@ import { supabase } from "../lib/supabase";
 
 /** /account — a buyer's library of purchased resources with re-download. */
 export default function AccountPage() {
-  const { profile } = useContent();
+  const { profile, resources } = useContent();
   const { user, ready, signOut } = useAuth();
   const navigate = useNavigate();
+
+  // Map resource id → resource (so we can list a purchased resource's files).
+  const resMap = useMemo(() => {
+    const m = {};
+    (resources || []).forEach((r) => {
+      if (r.id != null) m[r.id] = r;
+    });
+    return m;
+  }, [resources]);
 
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -52,12 +61,14 @@ export default function AccountPage() {
     };
   }, [user, ready]);
 
-  const download = async (resourceId) => {
+  // `body` is either { resourceId } (single-file) or { fileId } (one file of a
+  // folder). `key` uniquely identifies the clicked button for the busy state.
+  const download = async (body, key) => {
     setErr("");
-    setBusyId(resourceId);
+    setBusyId(key);
     try {
       const { data, error } = await supabase.functions.invoke("get-download", {
-        body: { resourceId },
+        body,
       });
       if (error || !data?.success)
         throw new Error(data?.error || "Could not prepare the download.");
@@ -136,29 +147,54 @@ export default function AccountPage() {
 
         {user && !loading && items.length > 0 && (
           <div className="mt-10 grid gap-4">
-            {items.map((p) => (
-              <div
-                key={p.id}
-                className="glass flex flex-wrap items-center justify-between gap-4 rounded-2xl p-5"
-              >
-                <div className="min-w-0">
-                  <p className="font-semibold text-white">
-                    {p.resources?.title || "Resource"}
-                  </p>
-                  {p.resources?.category && (
-                    <p className="text-sm text-white/40">{p.resources.category}</p>
+            {items.map((p) => {
+              const res = resMap[p.resource_id];
+              const files = res?.files || [];
+              return (
+                <div key={p.id} className="glass rounded-2xl p-5">
+                  <div className="mb-1">
+                    <p className="font-semibold text-white">
+                      {p.resources?.title || res?.title || "Resource"}
+                    </p>
+                    {(p.resources?.category || res?.category) && (
+                      <p className="text-sm text-white/40">
+                        {p.resources?.category || res?.category}
+                      </p>
+                    )}
+                  </div>
+
+                  {files.length > 0 ? (
+                    // Folder — one download per file.
+                    <div className="mt-3 flex flex-col gap-2">
+                      {files.map((f) => {
+                        const key = `f${f.id}`;
+                        return (
+                          <button
+                            key={f.id}
+                            onClick={() => download({ fileId: f.id }, key)}
+                            disabled={busyId === key}
+                            className="inline-flex items-center justify-between gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/10 disabled:opacity-60"
+                          >
+                            <span className="truncate">{f.label || "File"}</span>
+                            <FiDownload className="shrink-0 text-neon-cyan" />
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    // Single-file resource.
+                    <button
+                      onClick={() => download({ resourceId: p.resource_id }, `r${p.resource_id}`)}
+                      disabled={busyId === `r${p.resource_id}`}
+                      className="mt-2 inline-flex items-center gap-2 rounded-xl bg-gradient-btn px-5 py-2.5 text-sm font-semibold text-base disabled:opacity-60"
+                    >
+                      <FiDownload />
+                      {busyId === `r${p.resource_id}` ? "Preparing…" : "Download"}
+                    </button>
                   )}
                 </div>
-                <button
-                  onClick={() => download(p.resource_id)}
-                  disabled={busyId === p.resource_id}
-                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-btn px-5 py-2.5 text-sm font-semibold text-base disabled:opacity-60"
-                >
-                  <FiDownload />
-                  {busyId === p.resource_id ? "Preparing…" : "Download"}
-                </button>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </main>

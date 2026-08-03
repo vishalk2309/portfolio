@@ -92,7 +92,16 @@ const shapeTimeline = (rows) =>
     ...(r.longest_streak != null ? { longest_streak: r.longest_streak } : {}),
   }));
 
-const shapeResources = (rows) =>
+const shapeResourceFile = (r) => ({
+  id: r.id,
+  resourceId: r.resource_id,
+  label: r.label || "",
+  fileUrl: r.file_url || "",
+  filePath: r.file_path || "",
+});
+
+// `filesByResource` maps resource_id → shaped file rows (may be undefined).
+const shapeResources = (rows, filesByResource = {}) =>
   rows.map((r) => ({
     id: r.id,
     title: r.title,
@@ -104,6 +113,7 @@ const shapeResources = (rows) =>
     isPaid: !!r.is_paid,
     price: r.price,
     currency: r.currency || "INR",
+    files: filesByResource[r.id] || [],
   }));
 
 // ---------------------------------------------------------------------------
@@ -128,7 +138,7 @@ export function ContentProvider({ children }) {
 
     (async () => {
       try {
-        const [profileRes, nav, soc, skills, proj, certs, edu, ach, testi, res] =
+        const [profileRes, nav, soc, skills, proj, certs, edu, ach, testi, res, rfiles] =
           await Promise.all([
             supabase.from("profile").select("*").limit(1).maybeSingle(),
             supabase.from("nav_links").select("*").order("sort_order"),
@@ -140,6 +150,7 @@ export function ContentProvider({ children }) {
             supabase.from("achievements").select("*").order("sort_order"),
             supabase.from("testimonials").select("*").order("sort_order"),
             supabase.from("resources").select("*").order("sort_order"),
+            supabase.from("resource_files").select("*").order("sort_order"),
           ]);
         if (cancelled) return;
 
@@ -158,7 +169,15 @@ export function ContentProvider({ children }) {
         if (edu.data?.length) next.education = shapeTimeline(edu.data);
         if (ach.data?.length) next.achievements = shapeTimeline(ach.data);
         if (testi.data?.length) next.testimonials = shapeTestimonials(testi.data);
-        if (res.data?.length) next.resources = shapeResources(res.data);
+        if (res.data?.length) {
+          // Group files under their resource so each resource carries a
+          // `files` array (a "folder" can hold many files).
+          const filesByResource = {};
+          for (const f of rfiles.data || []) {
+            (filesByResource[f.resource_id] ||= []).push(shapeResourceFile(f));
+          }
+          next.resources = shapeResources(res.data, filesByResource);
+        }
 
         setContent((c) => ({ ...c, ...next }));
       } catch (err) {

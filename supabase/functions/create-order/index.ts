@@ -60,6 +60,7 @@ Deno.serve(async (req) => {
   const { data: userData } = await supabase.auth.getUser(token);
   if (!userData?.user)
     return json({ success: false, error: "Please log in to buy this." }, 401);
+  const buyer = userData.user;
 
   // Read the resource server-side — the price comes from the DB, not the client.
   const { data: resource, error } = await supabase
@@ -77,6 +78,8 @@ Deno.serve(async (req) => {
 
   const currency = resource.currency || "INR";
   const amount = Math.round(Number(resource.price) * 100); // paise
+  if (amount < 100)
+    return json({ success: false, error: "Amount must be at least ₹1" }, 400);
 
   // Create the Razorpay order.
   const auth = "Basic " + btoa(`${keyId}:${keySecret}`);
@@ -86,7 +89,14 @@ Deno.serve(async (req) => {
     body: JSON.stringify({
       amount,
       currency,
-      notes: { resourceId: String(resource.id), title: resource.title },
+      // notes travel back on the webhook → we can record the purchase
+      // server-side even if the buyer's browser never calls verify-payment.
+      notes: {
+        resourceId: String(resource.id),
+        title: resource.title,
+        userId: buyer.id,
+        email: buyer.email || "",
+      },
     }),
   });
 

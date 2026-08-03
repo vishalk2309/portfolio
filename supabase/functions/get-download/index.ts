@@ -31,14 +31,15 @@ Deno.serve(async (req) => {
   if (req.method !== "POST")
     return json({ success: false, error: "Method not allowed" }, 405);
 
-  let body: { resourceId?: number | string };
+  let body: { resourceId?: number | string; fileId?: number | string };
   try {
     body = await req.json();
   } catch {
     return json({ success: false, error: "Invalid JSON" }, 400);
   }
-  const resourceId = body.resourceId;
-  if (!resourceId) return json({ success: false, error: "Missing resourceId" }, 400);
+  const { resourceId, fileId } = body;
+  if (!resourceId && !fileId)
+    return json({ success: false, error: "Missing resourceId or fileId" }, 400);
 
   const supabase = createClient(
     Deno.env.get("SUPABASE_URL")!,
@@ -51,30 +52,49 @@ Deno.serve(async (req) => {
   const user = userData?.user;
   if (!user) return json({ success: false, error: "Please log in." }, 401);
 
-  // Did THIS user buy THIS resource?
+  // Resolve the file to serve + which resource it belongs to. A fileId points
+  // at one file inside a folder; otherwise fall back to the resource's own file.
+  let ownerResourceId: number | string | undefined = resourceId;
+  let filePath: string | null = null;
+  let fileName: string | boolean = true;
+
+  if (fileId) {
+    const { data: file } = await supabase
+      .from("resource_files")
+      .select("resource_id, file_path, label")
+      .eq("id", fileId)
+      .maybeSingle();
+    if (!file?.file_path)
+      return json({ success: false, error: "File unavailable." }, 404);
+    ownerResourceId = file.resource_id;
+    filePath = file.file_path;
+    fileName = file.label || true;
+  } else {
+    const { data: resource } = await supabase
+      .from("resources")
+      .select("file_path, file_name")
+      .eq("id", resourceId)
+      .maybeSingle();
+    if (!resource?.file_path)
+      return json({ success: false, error: "File unavailable." }, 404);
+    filePath = resource.file_path;
+    fileName = resource.file_name || true;
+  }
+
+  // Did THIS user buy the resource this file belongs to?
   const { data: purchase } = await supabase
     .from("purchases")
     .select("id")
     .eq("user_id", user.id)
-    .eq("resource_id", resourceId)
+    .eq("resource_id", ownerResourceId)
     .limit(1)
     .maybeSingle();
   if (!purchase)
     return json({ success: false, error: "You haven't purchased this." }, 403);
 
-  const { data: resource } = await supabase
-    .from("resources")
-    .select("file_path, file_name")
-    .eq("id", resourceId)
-    .maybeSingle();
-  if (!resource?.file_path)
-    return json({ success: false, error: "File unavailable." }, 404);
-
   const { data: signed, error: signErr } = await supabase.storage
     .from("paid-resources")
-    .createSignedUrl(resource.file_path, SIGNED_URL_SECONDS, {
-      download: resource.file_name || true,
-    });
+    .createSignedUrl(filePath, SIGNED_URL_SECONDS, { download: fileName });
   if (signErr || !signed?.signedUrl)
     return json({ success: false, error: "Could not prepare download." }, 500);
 

@@ -16,6 +16,15 @@ const BlogWrite = lazy(() => import("./pages/BlogWrite.jsx"));
 const BlogStatus = lazy(() => import("./pages/BlogStatus.jsx"));
 const ResourcesPage = lazy(() => import("./pages/ResourcesPage.jsx"));
 const AccountPage = lazy(() => import("./pages/AccountPage.jsx"));
+const Terms = lazy(() =>
+  import("./pages/LegalPages.jsx").then((m) => ({ default: m.Terms }))
+);
+const Privacy = lazy(() =>
+  import("./pages/LegalPages.jsx").then((m) => ({ default: m.Privacy }))
+);
+const Refund = lazy(() =>
+  import("./pages/LegalPages.jsx").then((m) => ({ default: m.Refund }))
+);
 
 // apply the saved light/dark mode + accent before first paint
 applyMode(getMode());
@@ -94,6 +103,37 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <ContentProvider>
               <Suspense fallback={null}>
                 <AccountPage />
+              </Suspense>
+            </ContentProvider>
+          }
+        />
+        {/* Legal / policy pages (required for Razorpay activation) */}
+        <Route
+          path="/terms"
+          element={
+            <ContentProvider>
+              <Suspense fallback={null}>
+                <Terms />
+              </Suspense>
+            </ContentProvider>
+          }
+        />
+        <Route
+          path="/privacy"
+          element={
+            <ContentProvider>
+              <Suspense fallback={null}>
+                <Privacy />
+              </Suspense>
+            </ContentProvider>
+          }
+        />
+        <Route
+          path="/refund"
+          element={
+            <ContentProvider>
+              <Suspense fallback={null}>
+                <Refund />
               </Suspense>
             </ContentProvider>
           }
