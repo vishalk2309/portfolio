@@ -73,8 +73,20 @@ Deno.serve(async (req) => {
     return json({ success: false, error: "Resource not found" }, 404);
   if (!resource.is_paid || !resource.price || resource.price <= 0)
     return json({ success: false, error: "This resource is not for sale" }, 400);
-  if (!resource.file_path)
-    return json({ success: false, error: "Resource file missing" }, 400);
+
+  // The resource must have SOMETHING to deliver: either its own single file
+  // (file_path) or at least one file in resource_files (a "folder").
+  if (!resource.file_path) {
+    const { count } = await supabase
+      .from("resource_files")
+      .select("id", { count: "exact", head: true })
+      .eq("resource_id", resource.id);
+    if (!count)
+      return json(
+        { success: false, error: "This resource has no files yet" },
+        400
+      );
+  }
 
   const currency = resource.currency || "INR";
   const amount = Math.round(Number(resource.price) * 100); // paise

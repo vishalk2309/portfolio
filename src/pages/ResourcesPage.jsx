@@ -110,8 +110,18 @@ export default function ResourcesPage() {
       const { data: order, error } = await supabase.functions.invoke("create-order", {
         body: { resourceId: r.id },
       });
-      if (error || !order?.success)
-        throw new Error(order?.error || "Could not start the payment.");
+      if (error || !order?.success) {
+        // Surface the real reason from the function's response when possible.
+        let m = order?.error;
+        if (!m && error?.context?.json) {
+          try {
+            m = (await error.context.json())?.error;
+          } catch {
+            /* ignore */
+          }
+        }
+        throw new Error(m || "Could not start the payment.");
+      }
 
       const ok = await loadRazorpay();
       if (!ok) throw new Error("Could not load the payment gateway.");
