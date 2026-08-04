@@ -50,8 +50,8 @@ export function Terms() {
     <LegalShell title="Terms & Conditions">
       <p>
         These terms govern your use of this website and any digital resources
-        purchased or downloaded from it, operated by {profile.name} ("we", "us").
-        By using the site or buying a resource, you agree to these terms.
+        purchased or downloaded from it, operated by {profile.name} ("we",
+        "us"). By using the site or buying a resource, you agree to these terms.
       </p>
       <h2>Digital products</h2>
       <p>
@@ -80,11 +80,12 @@ export function Terms() {
       <h2>Governing law</h2>
       <p>
         These terms are governed by the laws of India, with jurisdiction in
-        [your city/state].
+        [Siwan/Bihar].
       </p>
       <h2>Contact</h2>
       <p>
-        Questions? Email <a href={`mailto:${profile.email}`}>{profile.email}</a>.
+        Questions? Email <a href={`mailto:${profile.email}`}>{profile.email}</a>
+        .
       </p>
     </LegalShell>
   );
@@ -100,10 +101,9 @@ export function Privacy() {
       </p>
       <h2>What we collect</h2>
       <p>
-        Your email address (to create your account and send sign-in codes),
-        your purchase records, and basic usage data. We collect payment
-        confirmation details from Razorpay but never your full card or bank
-        information.
+        Your email address (to create your account and send sign-in codes), your
+        purchase records, and basic usage data. We collect payment confirmation
+        details from Razorpay but never your full card or bank information.
       </p>
       <h2>How we use it</h2>
       <p>
@@ -136,9 +136,7 @@ export function Refund() {
   const { profile } = useContent();
   return (
     <LegalShell title="Refund & Cancellation Policy">
-      <p>
-        This policy applies to digital resources purchased on this website.
-      </p>
+      <p>This policy applies to digital resources purchased on this website.</p>
       <h2>Digital goods</h2>
       <p>
         Because resources are digital and delivered instantly (downloadable
@@ -149,9 +147,9 @@ export function Refund() {
       <h2>When we will help</h2>
       <p>
         If you were charged but did not receive access, the file is corrupted,
-        or you were charged more than once, contact us within{" "}
-        <b>[7] days</b> of purchase and we'll investigate and issue a refund or
-        fresh access where appropriate.
+        or you were charged more than once, contact us within <b>[7] days</b> of
+        purchase and we'll investigate and issue a refund or fresh access where
+        appropriate.
       </p>
       <h2>How to request</h2>
       <p>

@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./App.jsx";
+import CursorTrail from "./components/CursorTrail.jsx";
 import "./index.css";
 import { applyAccent, getAccent, applyMode, getMode } from "./theme";
 import { ContentProvider } from "./lib/ContentContext";
@@ -34,6 +35,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
+      {/* Global cursor trail — one instance so the effect is on every page */}
+      <CursorTrail />
       <Routes>
         {/* Public portfolio */}
         <Route

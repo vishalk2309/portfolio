@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import Lenis from "lenis";
 import Background from "./components/Background";
-import CursorTrail from "./components/CursorTrail";
 import CommandPalette from "./components/CommandPalette";
 import FloatingThemeButton from "./components/FloatingThemeButton";
 import Loader from "./components/Loader";
@@ -78,7 +77,6 @@ export default function App() {
       <Loader />
       <ScrollProgress />
       <Background />
-      <CursorTrail />
       <CommandPalette />
       <FloatingThemeButton />
       <Navbar />
