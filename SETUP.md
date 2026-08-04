@@ -77,7 +77,8 @@ Edge Functions → **Secrets** (or `supabase secrets set …`). Should already b
 
 ## 4. Verify
 
-- **Visits/live** — the badge shows a count on the home page.
+- **Visits/live** — the badge shows a count at the bottom-left of every public
+  page (home, blog, resources, account, legal); it's hidden on `/admin`.
 - **Blog** — write a post in `/admin` → 📝 Blog → Publish → it appears at `/blog`.
 - **Blog submission** — `/blog/write` → send code → enter it → submit → the draft
   shows in `/admin` → Blog.

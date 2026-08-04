@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./App.jsx";
 import CursorTrail from "./components/CursorTrail.jsx";
 import TouchSpark from "./components/TouchSpark.jsx";
+import VisitorBadge from "./components/VisitorBadge.jsx";
 import "./index.css";
 import { applyAccent, getAccent, applyMode, getMode } from "./theme";
 import { ContentProvider } from "./lib/ContentContext";
@@ -40,6 +41,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           CursorTrail is desktop-only; TouchSpark is its touch-device counterpart. */}
       <CursorTrail />
       <TouchSpark />
+      {/* Live viewers + total visits — one instance for the whole site, so it
+          stays on screen across every public page and route change. */}
+      <VisitorBadge />
       <Routes>
         {/* Public portfolio */}
         <Route

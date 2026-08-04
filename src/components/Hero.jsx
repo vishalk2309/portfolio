@@ -2,7 +2,6 @@ import { Suspense, lazy } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useContent } from "../lib/ContentContext";
 import Magnetic from "./Magnetic";
-import LiveVisitors from "./LiveVisitors";
 
 // Lazy-load the WebGL cube so three.js ships as its own chunk.
 const HeroCube = lazy(() => import("./HeroCube"));
@@ -125,18 +124,8 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* Live viewers badge — fixed to the bottom-left so it stays visible
-          on screen while scrolling. */}
-      <motion.div
-        {...fade({
-          initial: { opacity: 0, y: 10 },
-          animate: { opacity: 1, y: 0 },
-          transition: { delay: 1, duration: 0.6 },
-        })}
-        className="fixed bottom-12 left-4 z-40 sm:bottom-14 sm:left-6"
-      >
-        <LiveVisitors />
-      </motion.div>
+      {/* The live-viewers / visits badge is mounted once in main.jsx so it
+          shows on every page, not just the hero. */}
 
       {/* Scroll cue — in-flow under the content on mobile, pinned bottom-center on desktop. */}
       <motion.div
