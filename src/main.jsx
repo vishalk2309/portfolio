@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./App.jsx";
 import CursorTrail from "./components/CursorTrail.jsx";
+import TouchSpark from "./components/TouchSpark.jsx";
 import "./index.css";
 import { applyAccent, getAccent, applyMode, getMode } from "./theme";
 import { ContentProvider } from "./lib/ContentContext";
@@ -35,8 +36,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
-      {/* Global cursor trail — one instance so the effect is on every page */}
+      {/* Global pointer effects — one instance each, on every page.
+          CursorTrail is desktop-only; TouchSpark is its touch-device counterpart. */}
       <CursorTrail />
+      <TouchSpark />
       <Routes>
         {/* Public portfolio */}
         <Route

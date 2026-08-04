@@ -54,7 +54,7 @@ export default function BlogPost() {
             <img
               src={post.cover_image}
               alt=""
-              className="mb-8 max-h-[380px] w-full rounded-3xl object-cover"
+              className="mb-8 w-full h-auto rounded-3xl"
             />
           )}
 

@@ -12,7 +12,7 @@ export default function BlogIndex() {
       <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="font-serif text-4xl font-bold text-white sm:text-5xl">
-            Blog
+            Blogs & Insights
           </h1>
           <p className="mt-2 text-white/55">
             Thoughts, notes, and things I&rsquo;m building.
