@@ -22,7 +22,7 @@ export default function BlogCard({ post }) {
           src={post.cover_image}
           alt=""
           loading="lazy"
-          className="h-44 w-full object-cover"
+          className="w-full h-auto"
         />
       )}
       <div className="flex flex-1 flex-col p-6">
