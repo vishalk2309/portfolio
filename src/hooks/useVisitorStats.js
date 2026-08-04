@@ -52,18 +52,38 @@ export default function useVisitorStats() {
       (crypto.randomUUID && crypto.randomUUID()) ||
       `${Date.now()}-${Math.random()}`;
 
+    // A previous mount (React StrictMode remounts effects in dev) can leave a
+    // channel on this topic still tearing down. Drop any leftovers first, or
+    // the new join can be dropped and `sync` never fires — leaving the badge
+    // stuck with no live count.
+    for (const c of supabase.getChannels()) {
+      if (c.topic === CHANNEL || c.topic === `realtime:${CHANNEL}`) {
+        supabase.removeChannel(c);
+      }
+    }
+
     const channel = supabase.channel(CHANNEL, {
       config: { presence: { key } },
     });
 
+    const readPresence = () => {
+      if (cancelled) return;
+      // Never report fewer than 1 — this tab is itself a viewer, so a 0 here
+      // means presence state hasn't propagated yet, not "nobody watching".
+      const count = Object.keys(channel.presenceState()).length;
+      setLive(Math.max(count, 1));
+    };
+
     channel
-      .on("presence", { event: "sync" }, () => {
-        const state = channel.presenceState();
-        setLive(Object.keys(state).length);
-      })
+      .on("presence", { event: "sync" }, readPresence)
+      .on("presence", { event: "join" }, readPresence)
+      .on("presence", { event: "leave" }, readPresence)
       .subscribe(async (status) => {
         if (status === "SUBSCRIBED") {
           await channel.track({ online_at: new Date().toISOString() });
+          // Don't rely solely on `sync` firing — once our own track lands we
+          // know the count is at least 1, so show the badge either way.
+          readPresence();
         }
       });
 

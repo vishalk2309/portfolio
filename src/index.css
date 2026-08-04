@@ -24,6 +24,7 @@ html.theme-dark {
   --particle: 174 200 255;
   --spotlight: 110 231 249;
   --spotlight-blend: screen;
+  --c-live: 52 211 153; /* emerald-400 — "live now" dot on dark bg */
 }
 
 /* ---------------------- LIGHT theme (new) -------------------------- */
@@ -41,6 +42,7 @@ html.theme-light {
   --particle: 180 150 90;
   --spotlight: 217 164 65;
   --spotlight-blend: multiply;
+  --c-live: 5 150 105; /* emerald-600 — darker so the dot reads on cream */
 }
 
 * {
@@ -125,6 +127,12 @@ html.lenis body {
     box-shadow: 0 6px 28px -12px rgba(30, 30, 30, 0.12);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
+  }
+
+  /* "Live viewers" dot. Defined here rather than as a Tailwind color so the
+     visitor badge can never lose its color to a stale/regenerated config. */
+  .live-dot {
+    background-color: rgb(var(--c-live, 52 211 153));
   }
 
   /* Hero name gets the editorial serif only in the light theme. */
