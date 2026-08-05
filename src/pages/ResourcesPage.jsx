@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -47,6 +47,10 @@ const tierOf = (r) => r.accessType || (r.isPaid ? "paid" : "free");
 const TIER_RANK = { free: 0, request: 1, paid: 2 };
 
 const VIEW_KEY = "resourcesView";
+
+// Spelled out rather than built as `line-clamp-${n}` so Tailwind's scanner can
+// actually find these class names in the source.
+const CLAMP = { 2: "line-clamp-2", 3: "line-clamp-3" };
 
 // Free files live in the public "media" bucket. For Supabase public URLs we
 // append ?download so the browser saves the file instead of previewing it.
@@ -551,6 +555,48 @@ export default function ResourcesPage() {
   );
 }
 
+/**
+ * Description text cut to `lines`, with a Read more / Show less toggle that
+ * only appears when the text is genuinely being cut off — so short blurbs don't
+ * get a pointless button. Overflow is re-measured on resize, since how many
+ * lines a description takes depends on the card's width.
+ */
+function ClampedText({ text, lines = 3, className = "" }) {
+  const ref = useRef(null);
+  const [expanded, setExpanded] = useState(false);
+  const [overflowing, setOverflowing] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    // While expanded the box fits its content by definition, so there's nothing
+    // to measure — keep the last known answer so the toggle doesn't vanish.
+    if (expanded) return;
+    const measure = () => setOverflowing(el.scrollHeight > el.clientHeight + 1);
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [text, lines, expanded]);
+
+  return (
+    <div className={className}>
+      <p ref={ref} className={expanded ? "" : CLAMP[lines] || CLAMP[3]}>
+        {text}
+      </p>
+      {overflowing && (
+        <button
+          onClick={() => setExpanded((e) => !e)}
+          aria-expanded={expanded}
+          className="mt-1 text-xs font-semibold text-neon-cyan transition-opacity hover:opacity-75"
+        >
+          {expanded ? "Show less" : "Read more"}
+        </button>
+      )}
+    </div>
+  );
+}
+
 /** Save/unsave toggle — a filled icon means saved. */
 function BookmarkButton({ bookmarked, onToggle, title }) {
   return (
@@ -766,9 +812,11 @@ function ResourceCard({
             </div>
           </div>
           {r.description && (
-            <p className="mt-1.5 text-sm leading-relaxed text-white/55">
-              {r.description}
-            </p>
+            <ClampedText
+              text={r.description}
+              lines={2}
+              className="mt-1.5 text-sm leading-relaxed text-white/55"
+            />
           )}
         </div>
 
@@ -809,12 +857,17 @@ function ResourceCard({
 
       <h3 className="text-xl font-bold text-white">{r.title}</h3>
       {r.description && (
-        <p className="mt-2 flex-1 text-sm leading-relaxed text-white/55">
-          {r.description}
-        </p>
+        <ClampedText
+          text={r.description}
+          lines={3}
+          className="mt-2 text-sm leading-relaxed text-white/55"
+        />
       )}
 
-      {actions}
+      {/* The description used to be flex-1 to push the buttons down, but a
+          stretched box breaks the clamp overflow measurement — mt-auto keeps
+          them pinned to the card's bottom edge instead. */}
+      <div className="mt-auto">{actions}</div>
     </motion.div>
   );
 }
