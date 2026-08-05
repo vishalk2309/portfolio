@@ -5,12 +5,14 @@ import TableEditor from "./TableEditor";
 import BlogEditor from "./BlogEditor";
 import CommentsAdmin from "./CommentsAdmin";
 import SubscribersAdmin from "./SubscribersAdmin";
+import AccessRequestsAdmin from "./AccessRequestsAdmin";
 import FolderUpload from "./FolderUpload";
 import ChangePassword from "./ChangePassword";
 
 const BLOG_KEY = "__blog";
 const COMMENTS_KEY = "__comments";
 const SUBS_KEY = "__subs";
+const ACCESS_KEY = "__access";
 const FOLDER_KEY = "__folder";
 const PASSWORD_KEY = "__password";
 
@@ -19,6 +21,7 @@ export default function Dashboard({ session }) {
   const isBlog = activeKey === BLOG_KEY;
   const isComments = activeKey === COMMENTS_KEY;
   const isSubs = activeKey === SUBS_KEY;
+  const isAccess = activeKey === ACCESS_KEY;
   const isFolder = activeKey === FOLDER_KEY;
   const isPassword = activeKey === PASSWORD_KEY;
   const active = TABLES.find((t) => t.key === activeKey);
@@ -81,6 +84,15 @@ export default function Dashboard({ session }) {
                 Subscribers
               </button>
               <button
+                onClick={() => setActiveKey(ACCESS_KEY)}
+                className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
+                  isAccess ? "bg-white/10 text-white" : "text-white/60 hover:text-white"
+                }`}
+              >
+                <span>🛂</span>
+                Access Requests
+              </button>
+              <button
                 onClick={() => setActiveKey(FOLDER_KEY)}
                 className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
                   isFolder ? "bg-white/10 text-white" : "text-white/60 hover:text-white"
@@ -125,6 +137,8 @@ export default function Dashboard({ session }) {
             <CommentsAdmin />
           ) : isSubs ? (
             <SubscribersAdmin />
+          ) : isAccess ? (
+            <AccessRequestsAdmin />
           ) : isFolder ? (
             <FolderUpload />
           ) : isPassword ? (

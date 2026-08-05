@@ -20,6 +20,10 @@ FUNCTIONS=(
   notify-blog-status
   subscribe-blog
   notify-subscribers
+  request-access
+  decide-access
+  get-download
+  create-order
 )
 
 for fn in "${FUNCTIONS[@]}"; do

@@ -97,9 +97,23 @@ export const resources = [
     fileUrl: "#",
     fileName: "react-cheat-sheet.pdf",
     isPaid: false,
+    // "free" | "paid" | "request" — request-only items are unlocked by the
+    // owner approving an access request (see supabase/request-access.sql).
+    accessType: "free",
     price: null,
     currency: "INR",
   },
+];
+
+// Short rules/notices scrolled across the banner at the top of /resources.
+// Keep each one a single short line — they run past on a marquee.
+export const resourceRules = [
+  "Every file is for personal learning only — please don't resell or re-upload it.",
+  "Paid downloads stay in My Library forever — sign in with the same email to get them back.",
+  "Some files are shared on request — tell me what you need it for and I'll reply by email.",
+  "Download links open in a new tab; if a file doesn't start, disable your pop-up blocker.",
+  "Bookmarks are saved in this browser only — clearing site data clears them.",
+  "Spotted a broken or outdated file? Reach out from the Contact section and I'll fix it.",
 ];
 
 /* --------------------- About: orbiting tech icons -------------------- */

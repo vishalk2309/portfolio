@@ -65,12 +65,19 @@ Deno.serve(async (req) => {
   // Read the resource server-side — the price comes from the DB, not the client.
   const { data: resource, error } = await supabase
     .from("resources")
-    .select("id, title, is_paid, price, currency, file_path")
+    .select("id, title, is_paid, price, currency, file_path, access_type")
     .eq("id", resourceId)
     .maybeSingle();
 
   if (error || !resource)
     return json({ success: false, error: "Resource not found" }, 404);
+  // Request-only resources are granted by approval, never sold — refuse here so
+  // nobody can buy their way past the gate.
+  if (resource.access_type === "request")
+    return json(
+      { success: false, error: "This resource is available by request only" },
+      400
+    );
   if (!resource.is_paid || !resource.price || resource.price <= 0)
     return json({ success: false, error: "This resource is not for sale" }, 400);
 

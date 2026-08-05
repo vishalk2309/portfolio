@@ -69,17 +69,26 @@ export const TABLES = [
       { name: "category", label: "Category (e.g. Cheat Sheet, Template)", type: "text" },
       { name: "cover_image", label: "Cover image (optional)", type: "image" },
       { name: "file_name", label: "Download filename (e.g. react-notes.pdf)", type: "text" },
-      { name: "is_paid", label: "Paid resource?", type: "boolean" },
+      {
+        name: "access_type",
+        label: "Access — free / paid / request (approve each person)",
+        type: "select",
+        options: ["free", "paid", "request"],
+        full: true,
+      },
+      // Legacy mirror of access_type — a DB trigger keeps the two in sync, so
+      // setting either one is enough (see supabase/request-access.sql).
+      { name: "is_paid", label: "Paid resource? (mirrors Access)", type: "boolean" },
       { name: "price", label: "Price in ₹ (paid only)", type: "number" },
       {
         name: "file_url",
-        label: "FREE file — public (leave blank if paid)",
+        label: "FREE file — public (leave blank if paid or request-only)",
         type: "file",
         full: true,
       },
       {
         name: "file_path",
-        label: "PAID file — private (leave blank if free)",
+        label: "PAID or REQUEST-ONLY file — private (leave blank if free)",
         type: "file",
         bucket: "paid-resources",
         storePath: true,

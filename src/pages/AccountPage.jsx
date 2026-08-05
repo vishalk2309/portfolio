@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FiDownload, FiLogOut } from "react-icons/fi";
+import { FiClock, FiDownload, FiLogOut, FiUnlock } from "react-icons/fi";
 import Background from "../components/Background";
 import Footer from "../components/Footer";
 import AuthModal from "../components/AuthModal";
+import { useAccessRequests } from "../hooks/useAccessRequests";
 import { useContent } from "../lib/ContentContext";
 import { useAuth } from "../lib/AuthContext";
 import { supabase } from "../lib/supabase";
@@ -25,6 +26,15 @@ export default function AccountPage() {
 
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Request-only resources this visitor has asked for. Approved ones behave
+  // exactly like a purchase; pending/declined are shown for transparency.
+  const { rows: requests, loading: reqLoading } = useAccessRequests(user);
+  const granted = requests.filter((q) => q.status === "approved");
+  const awaiting = requests.filter((q) => q.status === "pending");
+  // Both fetches gate the sections below, so the "nothing yet" message can't
+  // flash while the second one is still in flight.
+  const anyLoading = loading || reqLoading;
   const [authOpen, setAuthOpen] = useState(false);
   const [busyId, setBusyId] = useState(null);
   const [err, setErr] = useState("");
@@ -131,71 +141,110 @@ export default function AccountPage() {
           </div>
         )}
 
-        {user && loading && <p className="mt-10 text-white/40">Loading…</p>}
+        {user && anyLoading && <p className="mt-10 text-white/40">Loading…</p>}
 
-        {user && !loading && items.length === 0 && (
-          <div className="mt-10">
-            <p className="text-white/55">You haven&rsquo;t purchased anything yet.</p>
-            <Link
-              to="/resources"
-              className="mt-4 inline-block rounded-full border border-white/15 bg-white/5 px-6 py-2.5 text-sm font-semibold text-white hover:scale-105"
-            >
-              Browse resources
-            </Link>
-          </div>
+        {user &&
+          !anyLoading &&
+          items.length === 0 &&
+          granted.length === 0 &&
+          awaiting.length === 0 && (
+            <div className="mt-10">
+              <p className="text-white/55">
+                You haven&rsquo;t purchased or been granted anything yet.
+              </p>
+              <Link
+                to="/resources"
+                className="mt-4 inline-block rounded-full border border-white/15 bg-white/5 px-6 py-2.5 text-sm font-semibold text-white hover:scale-105"
+              >
+                Browse resources
+              </Link>
+            </div>
+          )}
+
+        {user && !anyLoading && items.length > 0 && (
+          <section className="mt-10">
+            {/* Only worth a heading once there's a second section below it. */}
+            {granted.length > 0 && (
+              <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-white/40">
+                Purchased
+              </h2>
+            )}
+            <div className="grid gap-4">
+              {items.map((p) => {
+                const res = resMap[p.resource_id];
+                return (
+                  <LibraryCard
+                    key={p.id}
+                    title={p.resources?.title || res?.title || "Resource"}
+                    category={p.resources?.category || res?.category}
+                    files={res?.files || []}
+                    resourceId={p.resource_id}
+                    busyId={busyId}
+                    download={download}
+                  />
+                );
+              })}
+            </div>
+          </section>
         )}
 
-        {user && !loading && items.length > 0 && (
-          <div className="mt-10 grid gap-4">
-            {items.map((p) => {
-              const res = resMap[p.resource_id];
-              const files = res?.files || [];
-              return (
-                <div key={p.id} className="glass rounded-2xl p-5">
-                  <div className="mb-1">
-                    <p className="font-semibold text-white">
-                      {p.resources?.title || res?.title || "Resource"}
-                    </p>
-                    {(p.resources?.category || res?.category) && (
-                      <p className="text-sm text-white/40">
-                        {p.resources?.category || res?.category}
-                      </p>
-                    )}
-                  </div>
+        {user && !anyLoading && granted.length > 0 && (
+          <section className="mt-10">
+            <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-white/40">
+              <FiUnlock className="text-neon-cyan" /> Granted on request
+            </h2>
+            <div className="grid gap-4">
+              {granted.map((q) => {
+                const res = resMap[q.resource_id];
+                return (
+                  <LibraryCard
+                    key={q.id}
+                    title={res?.title || "Resource"}
+                    category={res?.category}
+                    files={res?.files || []}
+                    resourceId={q.resource_id}
+                    note={q.note}
+                    busyId={busyId}
+                    download={download}
+                  />
+                );
+              })}
+            </div>
+          </section>
+        )}
 
-                  {files.length > 0 ? (
-                    // Folder — one download per file.
-                    <div className="mt-3 flex flex-col gap-2">
-                      {files.map((f) => {
-                        const key = `f${f.id}`;
-                        return (
-                          <button
-                            key={f.id}
-                            onClick={() => download({ fileId: f.id }, key)}
-                            disabled={busyId === key}
-                            className="inline-flex items-center justify-between gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/10 disabled:opacity-60"
-                          >
-                            <span className="truncate">{f.label || "File"}</span>
-                            <FiDownload className="shrink-0 text-neon-cyan" />
-                          </button>
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    // Single-file resource.
-                    <button
-                      onClick={() => download({ resourceId: p.resource_id }, `r${p.resource_id}`)}
-                      disabled={busyId === `r${p.resource_id}`}
-                      className="mt-2 inline-flex items-center gap-2 rounded-xl bg-gradient-btn px-5 py-2.5 text-sm font-semibold text-base disabled:opacity-60"
-                    >
-                      <FiDownload />
-                      {busyId === `r${p.resource_id}` ? "Preparing…" : "Download"}
-                    </button>
-                  )}
+        {user && !anyLoading && awaiting.length > 0 && (
+          <section className="mt-10">
+            <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-white/40">
+              <FiClock className="text-amber-300" /> Awaiting approval
+            </h2>
+            <div className="grid gap-3">
+              {awaiting.map((q) => (
+                <div
+                  key={q.id}
+                  className="glass flex items-center justify-between gap-4 rounded-2xl px-5 py-4"
+                >
+                  <div className="min-w-0">
+                    <p className="truncate font-semibold text-white">
+                      {resMap[q.resource_id]?.title || "Resource"}
+                    </p>
+                    <p className="text-sm text-white/40">
+                      Requested{" "}
+                      {q.created_at
+                        ? new Date(q.created_at).toLocaleDateString()
+                        : "recently"}
+                    </p>
+                  </div>
+                  <span className="shrink-0 rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1 text-xs font-medium text-amber-300">
+                    Pending
+                  </span>
                 </div>
-              );
-            })}
-          </div>
+              ))}
+            </div>
+            <p className="mt-3 text-sm text-white/40">
+              You&rsquo;ll get an email as soon as each one is reviewed.
+            </p>
+          </section>
         )}
       </main>
 
@@ -209,6 +258,66 @@ export default function AccountPage() {
         }}
         onSuccess={() => setAuthOpen(false)}
       />
+    </div>
+  );
+}
+
+/**
+ * One entitled resource with its download button(s) — shared by the purchased
+ * and the granted-on-request sections, since both deliver files identically
+ * (get-download authorizes either way).
+ */
+function LibraryCard({
+  title,
+  category,
+  files,
+  resourceId,
+  note,
+  busyId,
+  download,
+}) {
+  return (
+    <div className="glass rounded-2xl p-5">
+      <div className="mb-1">
+        <p className="font-semibold text-white">{title}</p>
+        {category && <p className="text-sm text-white/40">{category}</p>}
+      </div>
+
+      {note && (
+        <p className="mt-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm italic text-white/55">
+          “{note}”
+        </p>
+      )}
+
+      {files.length > 0 ? (
+        // Folder — one download per file.
+        <div className="mt-3 flex flex-col gap-2">
+          {files.map((f) => {
+            const key = `f${f.id}`;
+            return (
+              <button
+                key={f.id}
+                onClick={() => download({ fileId: f.id }, key)}
+                disabled={busyId === key}
+                className="inline-flex items-center justify-between gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/10 disabled:opacity-60"
+              >
+                <span className="truncate">{f.label || "File"}</span>
+                <FiDownload className="shrink-0 text-neon-cyan" />
+              </button>
+            );
+          })}
+        </div>
+      ) : (
+        // Single-file resource.
+        <button
+          onClick={() => download({ resourceId }, `r${resourceId}`)}
+          disabled={busyId === `r${resourceId}`}
+          className="mt-2 inline-flex items-center gap-2 rounded-xl bg-gradient-btn px-5 py-2.5 text-sm font-semibold text-base disabled:opacity-60"
+        >
+          <FiDownload />
+          {busyId === `r${resourceId}` ? "Preparing…" : "Download"}
+        </button>
+      )}
     </div>
   );
 }

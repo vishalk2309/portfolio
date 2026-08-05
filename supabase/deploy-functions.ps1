@@ -17,7 +17,11 @@ $functions = @(
   "verify-otp",
   "notify-blog-status",
   "subscribe-blog",
-  "notify-subscribers"
+  "notify-subscribers",
+  "request-access",
+  "decide-access",
+  "get-download",
+  "create-order"
 )
 
 foreach ($fn in $functions) {

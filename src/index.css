@@ -273,6 +273,17 @@ html.lenis body {
   width: max-content;
 }
 
+/* Resources rules banner — same two-copy trick, faster, and pausable so a
+   visitor can stop a rule mid-scroll to finish reading it. */
+.animate-marquee-banner {
+  animation: marquee 30s linear infinite;
+  width: max-content;
+}
+.marquee-paused .animate-marquee-banner,
+.animate-marquee-banner:hover {
+  animation-play-state: paused;
+}
+
 /* Respect users who prefer reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *,

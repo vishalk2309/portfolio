@@ -111,8 +111,14 @@ const shapeResources = (rows, filesByResource = {}) =>
     fileUrl: r.file_url || "#",
     fileName: r.file_name || "",
     isPaid: !!r.is_paid,
+    // 'free' | 'paid' | 'request'. Derived from the old boolean when the
+    // access_type column hasn't been added/backfilled yet.
+    accessType: r.access_type || (r.is_paid ? "paid" : "free"),
     price: r.price,
     currency: r.currency || "INR",
+    // Kept so /resources can offer "Newest" and "Default order" sorting.
+    sortOrder: r.sort_order,
+    createdAt: r.created_at,
     files: filesByResource[r.id] || [],
   }));
 

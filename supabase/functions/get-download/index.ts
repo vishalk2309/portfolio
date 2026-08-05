@@ -81,7 +81,8 @@ Deno.serve(async (req) => {
     fileName = resource.file_name || true;
   }
 
-  // Did THIS user buy the resource this file belongs to?
+  // Is THIS user entitled to the resource this file belongs to? Two ways in:
+  // they bought it, or the owner approved their access request.
   const { data: purchase } = await supabase
     .from("purchases")
     .select("id")
@@ -89,8 +90,24 @@ Deno.serve(async (req) => {
     .eq("resource_id", ownerResourceId)
     .limit(1)
     .maybeSingle();
-  if (!purchase)
-    return json({ success: false, error: "You haven't purchased this." }, 403);
+
+  let granted = !!purchase;
+  if (!granted) {
+    const { data: request } = await supabase
+      .from("access_requests")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("resource_id", ownerResourceId)
+      .eq("status", "approved")
+      .limit(1)
+      .maybeSingle();
+    granted = !!request;
+  }
+  if (!granted)
+    return json(
+      { success: false, error: "You don't have access to this file." },
+      403
+    );
 
   const { data: signed, error: signErr } = await supabase.storage
     .from("paid-resources")
