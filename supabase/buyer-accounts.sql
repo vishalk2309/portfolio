@@ -13,7 +13,7 @@
 -- It MUST match the email of the user you created in Authentication → Users.
 create or replace function is_owner() returns boolean
 language sql stable as $$
-  select coalesce(auth.jwt() ->> 'email', '') = 'kushwahavishal296@zohomail.com'
+  select coalesce(auth.jwt() ->> 'email', '') = 'kushwahavishal296@gmail.com'
 $$;
 
 -- ---- 1) purchases: tie each purchase to the buyer's account ----------------

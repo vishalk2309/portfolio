@@ -52,7 +52,7 @@ export default function AdminApp() {
   // reach the dashboard — only the owner's email may. Anything the UI misses is
   // still blocked by the owner-only RLS write policies (buyer-accounts.sql).
   const owner = (
-    import.meta.env.VITE_OWNER_EMAIL || "kushwahavishal296@zohomail.com"
+    import.meta.env.VITE_OWNER_EMAIL || "kushwahavishal296@gmail.com"
   ).toLowerCase();
   const email = (session.user?.email || "").toLowerCase();
   if (email !== owner) {
