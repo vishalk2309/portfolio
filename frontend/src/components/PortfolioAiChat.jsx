@@ -16,20 +16,25 @@ const PortfolioAiChat = () => {
     setAnswer('');
 
     try {
+      console.log('Sending to:', `${BACKEND_URL}/api/questions/ask`);
+
       const response = await fetch(`${BACKEND_URL}/api/questions/ask`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question: question.trim() }),
       });
 
-      if (!response.ok) throw new Error('Backend error');
+      console.log('Response status:', response.status);
+
+      if (!response.ok) throw new Error(`Backend error: ${response.status}`);
       const data = await response.json();
 
       const firstLine = data.answer.split('\n')[0];
       setAnswer(firstLine.substring(0, 150));
       setQuestion('');
     } catch (err) {
-      setAnswer('Sorry, I had an error. Try again!');
+      console.error('Chat error:', err);
+      setAnswer(`Error: ${err.message}`);
     } finally {
       setLoading(false);
     }
