@@ -1,5 +1,5 @@
 # Build stage
-FROM maven:3.9.4-eclipse-temurin-21 AS builder
+FROM maven:3.9-eclipse-temurin-21-alpine AS builder
 
 WORKDIR /app
 
@@ -16,7 +16,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Runtime stage
-FROM eclipse-temurin:21-jre-slim
+FROM openjdk:21-slim
 
 WORKDIR /app
 
@@ -30,4 +30,4 @@ EXPOSE 8080
 ENV PORT=8080
 
 # Run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+CMD ["java", "-jar", "app.jar"]
