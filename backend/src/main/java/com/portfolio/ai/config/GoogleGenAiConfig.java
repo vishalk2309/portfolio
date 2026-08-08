@@ -1,12 +1,6 @@
 package com.portfolio.ai.config;
 
-import com.google.genai.Client;
-import com.google.genai.types.GenerateContentRequest;
-import com.google.genai.types.Part;
-import com.google.genai.types.TextPart;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.google.genai.GoogleGenAiChatModel;
-import org.springframework.ai.google.genai.api.GoogleGenAiApi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,8 +12,8 @@ public class GoogleGenAiConfig {
     private String apiKey;
 
     @Bean
-    public ChatClient chatClient() {
-        // Get API key from environment variable with fallback to property
+    public ChatClient chatClient(ChatClient.Builder builder) {
+        // Check for API key from multiple sources
         String key = apiKey;
         if (key == null || key.isEmpty()) {
             key = System.getenv("SPRING_AI_GOOGLE_GENERATIVEAI_API_KEY");
@@ -29,14 +23,10 @@ public class GoogleGenAiConfig {
         }
 
         if (key == null || key.isEmpty()) {
-            throw new IllegalStateException(
-                "Google Gemini API key not found. Set SPRING_AI_GOOGLE_GENERATIVEAI_API_KEY environment variable."
-            );
+            System.err.println("WARNING: Google Gemini API key not found!");
+            System.err.println("Please set SPRING_AI_GOOGLE_GENERATIVEAI_API_KEY environment variable");
         }
 
-        GoogleGenAiApi googleGenAiApi = new GoogleGenAiApi(key);
-        GoogleGenAiChatModel chatModel = new GoogleGenAiChatModel(googleGenAiApi);
-
-        return ChatClient.builder(chatModel).build();
+        return builder.build();
     }
 }
