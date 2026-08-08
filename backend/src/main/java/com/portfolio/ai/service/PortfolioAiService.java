@@ -57,7 +57,7 @@ public class PortfolioAiService {
 
             String requestBody = """
                     {
-                        "model": "grok-2",
+                        "model": "grok-beta",
                         "messages": [
                             {
                                 "role": "user",
