@@ -39,12 +39,12 @@ const PortfolioAiChat = () => {
   };
 
   return (
-    <div className="w-full flex justify-center mb-8">
-      <div className="relative">
+    <div className="w-full flex justify-center py-8">
+      <div className="relative z-30">
         {/* AI Chat Label */}
         <button
           onClick={() => setShowDropdown(!showDropdown)}
-          className="text-white/70 hover:text-white transition font-medium text-sm flex items-center gap-2"
+          className="text-white/70 hover:text-white transition font-semibold text-base flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-white/5"
         >
           <span className="text-lg">✨</span>
           Ask AI about me
@@ -53,7 +53,7 @@ const PortfolioAiChat = () => {
 
         {/* Dropdown Answer */}
         {showDropdown && (
-          <div className="absolute top-full mt-3 w-96 backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl p-6 shadow-2xl">
+          <div className="absolute top-full mt-3 w-96 z-50 backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl p-6 shadow-2xl">
 
             {/* Answer Display */}
             {answer && !loading && (
