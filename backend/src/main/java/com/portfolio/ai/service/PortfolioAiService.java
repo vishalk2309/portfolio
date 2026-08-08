@@ -48,7 +48,7 @@ public class PortfolioAiService {
     public String askQuestion(String question) {
         try {
             if (apiKey == null || apiKey.isEmpty()) {
-                return "Error: API key not configured. Please set SPRING_AI_GOOGLE_GENERATIVEAI_API_KEY environment variable.";
+                return "Error: API key not configured.";
             }
 
             String fullPrompt = PORTFOLIO_CONTEXT + "\n\nUser Question: " + question;
@@ -59,20 +59,29 @@ public class PortfolioAiService {
                             "parts": [{
                                 "text": "%s"
                             }]
-                        }]
+                        }],
+                        "generationConfig": {
+                            "temperature": 0.7,
+                            "maxOutputTokens": 200
+                        }
                     }
                     """.formatted(escapeJson(fullPrompt));
 
             String url = GEMINI_API_URL + "?key=" + apiKey;
-            System.out.println("Calling Gemini API...");
+            System.out.println("Calling Gemini API: " + url.substring(0, Math.min(url.length(), 80)) + "...");
+            System.out.println("Request body: " + requestBody.substring(0, Math.min(requestBody.length(), 100)) + "...");
 
             String response = restTemplate.postForObject(url, requestBody, String.class);
+            System.out.println("Response received: " + response.substring(0, Math.min(response.length(), 100)) + "...");
 
             return extractContent(response);
         } catch (Exception e) {
-            System.err.println("Error in askQuestion: " + e.getMessage());
+            System.err.println("Error details: " + e.getClass().getName() + " - " + e.getMessage());
+            if (e.getCause() != null) {
+                System.err.println("Cause: " + e.getCause().getMessage());
+            }
             e.printStackTrace();
-            return "Sorry, I encountered an error: " + e.getMessage();
+            return "Error: " + e.getMessage();
         }
     }
 
