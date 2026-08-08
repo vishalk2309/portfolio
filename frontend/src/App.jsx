@@ -83,6 +83,7 @@ export default function App() {
       <Navbar />
       <main>
         <Hero />
+        <PortfolioAiChat />
         <About />
         <Experience />
         <Skills />
@@ -90,7 +91,6 @@ export default function App() {
         <Certificates />
         <Testimonials />
         <Contact />
-        <PortfolioAiChat />
       </main>
       <Footer />
     </div>
