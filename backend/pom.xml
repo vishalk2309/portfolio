@@ -39,6 +39,7 @@
 		<dependency>
 			<groupId>org.springframework.ai</groupId>
 			<artifactId>spring-ai-google-generativeai</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 
 		<dependency>
