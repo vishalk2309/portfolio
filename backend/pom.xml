@@ -35,11 +35,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc</artifactId>
 		</dependency>
-		<!-- Spring AI with Google Gemini -->
+		<!-- Spring AI with Google Generative AI -->
 		<dependency>
 			<groupId>org.springframework.ai</groupId>
-			<artifactId>spring-ai-google-ai-gemini-spring-boot-starter</artifactId>
-			<version>1.0.8</version>
+			<artifactId>spring-ai-google-generativeai-spring-boot-starter</artifactId>
 		</dependency>
 
 		<dependency>
