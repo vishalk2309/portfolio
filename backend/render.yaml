@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: portfolio-ai-backend
+    env: java
+    buildCommand: mvn clean install
+    startCommand: java -jar target/portfolio-ai-backend-0.0.1-SNAPSHOT.jar
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: GOOGLE_API_KEY
+        sync: false
