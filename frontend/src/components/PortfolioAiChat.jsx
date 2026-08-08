@@ -68,9 +68,15 @@ const PortfolioAiChat = () => {
         </form>
 
         {/* Answer Display */}
-        {answer && (
+        {answer && !answer.includes("Error") && (
           <div className="p-4 backdrop-blur-sm bg-emerald-500/10 border border-emerald-400/30 rounded-xl">
             <p className="text-sm text-emerald-100">{answer}</p>
+          </div>
+        )}
+
+        {answer && answer.includes("Error") && (
+          <div className="p-4 backdrop-blur-sm bg-yellow-500/10 border border-yellow-400/30 rounded-xl">
+            <p className="text-sm text-yellow-100">🚀 AI built-in feature is in progress. Coming soon!</p>
           </div>
         )}
 
