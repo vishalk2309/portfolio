@@ -79,8 +79,8 @@ const PortfolioAiChat = () => {
 
         {/* Answer Display or In Progress Message */}
         {answer && (
-          <div className="p-4 backdrop-blur-sm bg-yellow-500/10 border border-yellow-400/30 rounded-xl">
-            <p className="text-sm text-yellow-100">
+          <div className="p-4 backdrop-blur-sm bg-blue-500/20 border border-blue-400/50 rounded-xl">
+            <p className="text-sm text-white font-medium">
               {answer.includes("Error") ? "🚀 AI built-in feature is in progress. Coming soon!" : answer}
             </p>
           </div>
