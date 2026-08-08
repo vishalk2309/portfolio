@@ -1,12 +1,15 @@
 package com.portfolio.ai.service;
 
-import org.springframework.ai.chat.client.ChatClient;
+import com.google.generativeai.GenerativeModel;
+import com.google.generativeai.java.ChatSession;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PortfolioAiService {
 
-    private final ChatClient chatClient;
+    private final String apiKey;
+    private final String model;
 
     private final String PORTFOLIO_CONTEXT = """
             You are an AI assistant representing Vishal Kushwaha, a Full Stack Developer.
@@ -20,7 +23,7 @@ public class PortfolioAiService {
             - Current Focus: AI-powered portfolio with Spring AI integration
 
             Projects:
-            - Portfolio Website: An interactive portfolio with AI chatbot powered by Spring AI and Google Gemini
+            - Portfolio Website: An interactive portfolio with AI chatbot powered by Google Gemini
             - Various full-stack applications using React and Spring Boot
 
             Education & Certifications: Working at Cognizant as a developer
@@ -34,24 +37,29 @@ public class PortfolioAiService {
             - If you don't know something specific, say so honestly
             """;
 
-    public PortfolioAiService(ChatClient.Builder chatClientBuilder) {
-        this.chatClient = chatClientBuilder.build();
+    public PortfolioAiService(
+            @Value("${app.gemini.api-key:}") String apiKey,
+            @Value("${app.gemini.model:gemini-1.5-flash}") String model) {
+        this.apiKey = apiKey;
+        this.model = model;
     }
 
     public String askQuestion(String question) {
-        // Validate that API key is properly configured
-        String apiKey = System.getenv("SPRING_AI_GOOGLE_GENERATIVEAI_API_KEY");
-        if (apiKey == null || apiKey.isEmpty() || apiKey.contains("placeholder")) {
+        // Validate API key
+        if (apiKey == null || apiKey.isEmpty()) {
             throw new IllegalStateException(
-                "Google Gemini API key is not properly configured. " +
-                "Please set the SPRING_AI_GOOGLE_GENERATIVEAI_API_KEY environment variable."
+                "Google Gemini API key not configured. Set SPRING_AI_GOOGLE_GENERATIVEAI_API_KEY environment variable."
             );
         }
 
-        return chatClient.prompt()
-                .system(PORTFOLIO_CONTEXT)
-                .user(question)
-                .call()
-                .content();
+        try {
+            GenerativeModel generativeModel = new GenerativeModel(model, apiKey);
+            ChatSession chatSession = generativeModel.startChat();
+
+            var response = chatSession.sendMessage(PORTFOLIO_CONTEXT + "\n\nUser question: " + question);
+            return response.getText();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to get AI response: " + e.getMessage(), e);
+        }
     }
 }
