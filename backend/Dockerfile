@@ -12,5 +12,8 @@ RUN mvn clean package -DskipTests
 # Expose port
 EXPOSE 8080
 
-# Run the application
+# Set environment variable for Spring Boot
+ENV JAVA_OPTS="-Dspring.config.location=classpath:/application.properties"
+
+# Run the application with explicit env variable passing
 CMD ["java", "-jar", "target/portfolio-ai-backend-0.0.1-SNAPSHOT.jar"]
