@@ -15,6 +15,7 @@ import Certificates from "./components/Certificates";
 import Testimonials from "./components/Testimonials";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
+import PortfolioAiChat from "./components/PortfolioAiChat";
 
 export default function App() {
   // Lenis smooth scrolling
@@ -89,6 +90,7 @@ export default function App() {
         <Certificates />
         <Testimonials />
         <Contact />
+        <PortfolioAiChat />
       </main>
       <Footer />
     </div>
