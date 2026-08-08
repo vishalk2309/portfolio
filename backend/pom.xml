@@ -38,8 +38,7 @@
 		<!-- Spring AI with Google Generative AI -->
 		<dependency>
 			<groupId>org.springframework.ai</groupId>
-			<artifactId>spring-ai-google-generativeai-spring-boot-starter</artifactId>
-			<version>1.0.8</version>
+			<artifactId>spring-ai-google-generativeai</artifactId>
 		</dependency>
 
 		<dependency>
