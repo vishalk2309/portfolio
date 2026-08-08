@@ -1,12 +1,17 @@
 package com.portfolio.ai.service;
 
-import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @Service
 public class PortfolioAiService {
 
-    private final ChatClient chatClient;
+    private final RestTemplate restTemplate;
+    private final String apiKey;
+    private static final String GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
 
     private final String PORTFOLIO_CONTEXT = """
             You are an AI assistant representing Vishal Kushwaha, a Full Stack Developer.
@@ -17,7 +22,7 @@ public class PortfolioAiService {
             - Email: vishalkumar.kushwaha@cognizant.com
             - Skills: React, Java, Spring Boot, JavaScript, Supabase, PostgreSQL, Tailwind CSS, Vite, Node.js, Git
             - Experience: Building scalable web applications with modern technologies
-            - Current Focus: AI-powered portfolio with Spring AI integration
+            - Current Focus: AI-powered portfolio with Google Gemini chatbot
 
             Projects:
             - Portfolio Website: An interactive portfolio with AI chatbot powered by Google Gemini
@@ -34,15 +39,44 @@ public class PortfolioAiService {
             - If you don't know something specific, say so honestly
             """;
 
-    public PortfolioAiService(ChatClient.Builder chatClientBuilder) {
-        this.chatClient = chatClientBuilder.build();
+    public PortfolioAiService(@Value("${SPRING_AI_GOOGLE_GENERATIVEAI_API_KEY}") String apiKey) {
+        this.restTemplate = new RestTemplate();
+        this.apiKey = apiKey;
     }
 
     public String askQuestion(String question) {
-        return chatClient.prompt()
-                .system(PORTFOLIO_CONTEXT)
-                .user(question)
-                .call()
-                .content();
+        try {
+            String fullPrompt = PORTFOLIO_CONTEXT + "\n\nUser Question: " + question;
+
+            String requestBody = """
+                    {
+                        "contents": [{
+                            "parts": [{
+                                "text": "%s"
+                            }]
+                        }]
+                    }
+                    """.formatted(escapeJson(fullPrompt));
+
+            String url = GEMINI_API_URL + "?key=" + apiKey;
+            String response = restTemplate.postForObject(url, requestBody, String.class);
+
+            return extractContent(response);
+        } catch (Exception e) {
+            return "Sorry, I encountered an error: " + e.getMessage();
+        }
+    }
+
+    private String extractContent(String response) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode root = mapper.readTree(response);
+        return root.at("/candidates/0/content/parts/0/text").asText("No response");
+    }
+
+    private String escapeJson(String input) {
+        return input.replace("\"", "\\\"")
+                   .replace("\n", "\\n")
+                   .replace("\r", "\\r")
+                   .replace("\t", "\\t");
     }
 }
