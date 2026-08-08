@@ -15,29 +15,39 @@ const PortfolioAiChat = () => {
     setAnswer('');
 
     try {
+      console.log('Fetching from:', `${BACKEND_URL}/api/questions/ask`);
+
       const response = await fetch(`${BACKEND_URL}/api/questions/ask`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question: question.trim() }),
       });
 
-      if (!response.ok) throw new Error(`Backend error: ${response.status}`);
+      console.log('Response status:', response.status);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Backend error response:', errorText);
+        throw new Error(`Backend error: ${response.status} - ${errorText}`);
+      }
+
       const data = await response.json();
+      console.log('Response data:', data);
 
       const firstLine = data.answer.split('\n')[0];
       setAnswer(firstLine.substring(0, 200));
       setQuestion('');
     } catch (err) {
-      console.error('Chat error:', err);
-      setAnswer(`Error: ${err.message}`);
+      console.error('Full error:', err);
+      setAnswer(`❌ ${err.message}`);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="w-full px-4 py-6">
-      <div className="max-w-2xl mx-auto">
+    <div className="w-full px-4 pt-0 pb-6">
+      <div className="max-w-2xl mx-auto z-20 relative">
         {/* Search Bar */}
         <form onSubmit={handleSubmit} className="flex gap-3 mb-6">
           <input
