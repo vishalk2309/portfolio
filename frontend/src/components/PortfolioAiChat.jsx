@@ -67,25 +67,22 @@ const PortfolioAiChat = () => {
           </button>
         </form>
 
-        {/* Answer Display */}
-        {answer && !answer.includes("Error") && (
-          <div className="p-4 backdrop-blur-sm bg-emerald-500/10 border border-emerald-400/30 rounded-xl">
-            <p className="text-sm text-emerald-100">{answer}</p>
-          </div>
-        )}
-
-        {answer && answer.includes("Error") && (
-          <div className="p-4 backdrop-blur-sm bg-yellow-500/10 border border-yellow-400/30 rounded-xl">
-            <p className="text-sm text-yellow-100">🚀 AI built-in feature is in progress. Coming soon!</p>
-          </div>
-        )}
-
+        {/* Loading State */}
         {loading && (
           <div className="text-center py-4">
             <div className="inline-block animate-spin">
               <div className="w-4 h-4 border-2 border-blue-400/30 border-t-blue-400 rounded-full"></div>
             </div>
-            <p className="text-white/50 text-sm mt-2">AI is thinking...</p>
+            <p className="text-white/50 text-sm mt-2">Processing...</p>
+          </div>
+        )}
+
+        {/* Answer Display or In Progress Message */}
+        {answer && (
+          <div className="p-4 backdrop-blur-sm bg-yellow-500/10 border border-yellow-400/30 rounded-xl">
+            <p className="text-sm text-yellow-100">
+              {answer.includes("Error") ? "🚀 AI built-in feature is in progress. Coming soon!" : answer}
+            </p>
           </div>
         )}
       </div>
