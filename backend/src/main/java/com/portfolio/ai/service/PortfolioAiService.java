@@ -39,6 +39,15 @@ public class PortfolioAiService {
     }
 
     public String askQuestion(String question) {
+        // Validate that API key is properly configured
+        String apiKey = System.getenv("SPRING_AI_GOOGLE_GENERATIVEAI_API_KEY");
+        if (apiKey == null || apiKey.isEmpty() || apiKey.contains("placeholder")) {
+            throw new IllegalStateException(
+                "Google Gemini API key is not properly configured. " +
+                "Please set the SPRING_AI_GOOGLE_GENERATIVEAI_API_KEY environment variable."
+            );
+        }
+
         return chatClient.prompt()
                 .system(PORTFOLIO_CONTEXT)
                 .user(question)
