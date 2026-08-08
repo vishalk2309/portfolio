@@ -39,13 +39,18 @@ public class PortfolioAiService {
             - If you don't know something specific, say so honestly
             """;
 
-    public PortfolioAiService(@Value("${SPRING_AI_GOOGLE_GENERATIVEAI_API_KEY}") String apiKey) {
+    public PortfolioAiService(@Value("${SPRING_AI_GOOGLE_GENERATIVEAI_API_KEY:}") String apiKey) {
         this.restTemplate = new RestTemplate();
-        this.apiKey = apiKey;
+        this.apiKey = apiKey != null ? apiKey.trim() : "";
+        System.out.println("API Key loaded: " + (this.apiKey.isEmpty() ? "MISSING" : "OK"));
     }
 
     public String askQuestion(String question) {
         try {
+            if (apiKey == null || apiKey.isEmpty()) {
+                return "Error: API key not configured. Please set SPRING_AI_GOOGLE_GENERATIVEAI_API_KEY environment variable.";
+            }
+
             String fullPrompt = PORTFOLIO_CONTEXT + "\n\nUser Question: " + question;
 
             String requestBody = """
@@ -59,10 +64,14 @@ public class PortfolioAiService {
                     """.formatted(escapeJson(fullPrompt));
 
             String url = GEMINI_API_URL + "?key=" + apiKey;
+            System.out.println("Calling Gemini API: " + url.substring(0, 50) + "...");
+
             String response = restTemplate.postForObject(url, requestBody, String.class);
 
             return extractContent(response);
         } catch (Exception e) {
+            System.err.println("Error in askQuestion: " + e.getMessage());
+            e.printStackTrace();
             return "Sorry, I encountered an error: " + e.getMessage();
         }
     }
