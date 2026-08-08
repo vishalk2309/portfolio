@@ -2,6 +2,7 @@ import { Suspense, lazy } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useContent } from "../lib/ContentContext";
 import Magnetic from "./Magnetic";
+import PortfolioAiChat from "./PortfolioAiChat";
 
 // Lazy-load the WebGL cube so three.js ships as its own chunk.
 const HeroCube = lazy(() => import("./HeroCube"));
@@ -27,6 +28,9 @@ export default function Hero() {
           <HeroCube />
         </Suspense>
       </div>
+
+      {/* AI Chat Search Bar */}
+      <PortfolioAiChat />
 
       <div className="relative z-10 mx-auto max-w-4xl text-center">
         {/* Name — fade in + scale 0.8 -> 1, 1s ease out */}
