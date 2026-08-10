@@ -4,8 +4,15 @@ const PortfolioAiChat = () => {
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://portfolio-ai-backend-eq0l.onrender.com';
+
+  const closeChat = () => {
+    setAnswer('');
+    setQuestion('');
+    setIsOpen(false);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,6 +43,7 @@ const PortfolioAiChat = () => {
 
       setAnswer(data.answer);
       setQuestion('');
+      setIsOpen(true);
     } catch (err) {
       console.error('Full error:', err);
       setAnswer(`❌ ${err.message}`);
@@ -46,6 +54,14 @@ const PortfolioAiChat = () => {
 
   return (
     <div className="w-full px-4 pt-0 pb-12">
+      {/* Backdrop - Click outside to close */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-10 transition-opacity"
+          onClick={closeChat}
+        />
+      )}
+
       <div className="w-full mx-auto z-20 relative">
         {/* Search Bar Container */}
         <div className="max-w-2xl mx-auto backdrop-blur-xl bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-white/30 rounded-full p-1.5 mb-8 shadow-lg">
@@ -79,11 +95,19 @@ const PortfolioAiChat = () => {
         )}
 
         {/* Answer Display or In Progress Message */}
-        {answer && (
-          <div className="w-full p-8 backdrop-blur-lg bg-white/5 border border-white/20 rounded-2xl min-h-64 max-h-96 overflow-y-auto">
-            <p className="text-base text-white font-medium leading-relaxed whitespace-pre-wrap">
-              {answer.includes("Error") ? "🚀 AI built-in feature is in progress. Coming soon!" : answer}
-            </p>
+        {answer && isOpen && (
+          <div className="w-full relative">
+            <div className="w-full p-8 backdrop-blur-lg bg-white/5 border border-white/20 rounded-2xl min-h-64 max-h-96 overflow-y-auto">
+              <button
+                onClick={closeChat}
+                className="absolute top-4 right-4 text-white/50 hover:text-white transition text-xl"
+              >
+                ✕
+              </button>
+              <p className="text-base text-white font-medium leading-relaxed whitespace-pre-wrap pr-6">
+                {answer.includes("Error") ? "🚀 AI built-in feature is in progress. Coming soon!" : answer}
+              </p>
+            </div>
           </div>
         )}
       </div>
