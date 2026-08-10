@@ -69,15 +69,21 @@ const PortfolioAiChat = () => {
         body: JSON.stringify({ question: question.trim() }),
       });
 
-      if (!response.ok) throw new Error('Backend error');
+      if (!response.ok) {
+        const errorData = await response.text();
+        console.error('Backend error response:', errorData);
+        throw new Error(`Backend error: ${response.status}`);
+      }
 
       const data = await response.json();
+      console.log('AI Response:', data);
       setAnswer(data.answer);
       setQuestion('');
       setIsOpen(true);
     } catch (err) {
       console.error('Error:', err);
-      setAnswer(`❌ ${err.message}`);
+      const errorMsg = err.message || 'Network error - please try again';
+      setAnswer(`❌ ${errorMsg}`);
       setIsOpen(true);
     } finally {
       setLoading(false);
