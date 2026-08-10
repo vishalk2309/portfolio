@@ -48,7 +48,7 @@ const PortfolioAiChat = () => {
     <div className="w-full px-4 pt-0 pb-12">
       <div className="w-full mx-auto z-20 relative">
         {/* Search Bar Container */}
-        <div className="backdrop-blur-xl bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-white/30 rounded-full p-1.5 mb-8 shadow-lg">
+        <div className="max-w-2xl mx-auto backdrop-blur-xl bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-white/30 rounded-full p-1.5 mb-8 shadow-lg">
           <form onSubmit={handleSubmit} className="flex gap-1 items-center">
             <input
               type="text"
