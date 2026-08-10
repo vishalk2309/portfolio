@@ -1,17 +1,58 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const PortfolioAiChat = () => {
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [displayedAnswer, setDisplayedAnswer] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const typingIntervalRef = useRef(null);
 
+  const TYPING_SPEED = 20; // milliseconds per character
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://portfolio-ai-backend-eq0l.onrender.com';
+
+  // Typewriter effect
+  useEffect(() => {
+    if (!answer) {
+      setDisplayedAnswer('');
+      setIsTyping(false);
+      return;
+    }
+
+    setDisplayedAnswer('');
+    setIsTyping(true);
+    let index = 0;
+
+    const startTyping = () => {
+      typingIntervalRef.current = setInterval(() => {
+        if (index < answer.length) {
+          setDisplayedAnswer(answer.slice(0, index + 1));
+          index++;
+        } else {
+          clearInterval(typingIntervalRef.current);
+          setIsTyping(false);
+        }
+      }, TYPING_SPEED);
+    };
+
+    startTyping();
+
+    return () => {
+      if (typingIntervalRef.current) {
+        clearInterval(typingIntervalRef.current);
+      }
+    };
+  }, [answer]);
 
   const closeChat = () => {
     setAnswer('');
     setQuestion('');
+    setDisplayedAnswer('');
     setIsOpen(false);
+    if (typingIntervalRef.current) {
+      clearInterval(typingIntervalRef.current);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -86,7 +127,8 @@ const PortfolioAiChat = () => {
                 ✕
               </button>
               <p className="text-base text-white/90 font-medium leading-relaxed whitespace-pre-wrap pr-6">
-                {answer.includes("Error") ? "🚀 AI built-in feature is in progress. Coming soon!" : answer}
+                {answer.includes("Error") ? "🚀 AI built-in feature is in progress. Coming soon!" : displayedAnswer}
+                {isTyping && <span className="inline-block w-1.5 h-5 ml-1 bg-white/90 animate-pulse align-text-bottom">▋</span>}
               </p>
             </div>
           </div>
