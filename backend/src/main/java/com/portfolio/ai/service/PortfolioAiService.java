@@ -3,8 +3,10 @@ package com.portfolio.ai.service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -60,9 +62,21 @@ public class PortfolioAiService {
 
             System.out.println("Calling OpenAI API...");
 
-            String response = restTemplate.postForObject(OPENAI_API_URL, request, String.class);
+            ResponseEntity<String> response = restTemplate.exchange(
+                OPENAI_API_URL,
+                org.springframework.http.HttpMethod.POST,
+                request,
+                String.class
+            );
 
-            return extractContent(response);
+            if (response.getBody() != null) {
+                return extractContent(response.getBody());
+            }
+            return "Error: Empty response from OpenAI";
+        } catch (HttpClientErrorException e) {
+            String errorMsg = "OpenAI API Error: " + e.getStatusCode();
+            System.err.println(errorMsg + " - " + e.getResponseBodyAsString());
+            return "Error: API request failed. Please try again.";
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
             e.printStackTrace();
@@ -73,9 +87,20 @@ public class PortfolioAiService {
     private String extractContent(String response) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readTree(response);
-        String content = root.at("/choices/0/message/content").asText("No response");
-        String finishReason = root.at("/choices/0/finish_reason").asText("");
 
+        // Check for error in response
+        if (root.has("error")) {
+            String errorMsg = root.at("/error/message").asText("Unknown error");
+            System.err.println("OpenAI Error: " + errorMsg);
+            return "Error: " + errorMsg;
+        }
+
+        String content = root.at("/choices/0/message/content").asText("");
+        if (content.isEmpty()) {
+            return "Error: No response content from OpenAI";
+        }
+
+        String finishReason = root.at("/choices/0/finish_reason").asText("");
         if ("length".equals(finishReason)) {
             System.out.println("WARNING: Response was truncated due to token limit");
         }
