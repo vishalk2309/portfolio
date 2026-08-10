@@ -33,12 +33,10 @@ public class PortfolioAiService {
             Education & Certifications: Working at Cognizant as a developer
 
             Guidelines:
-            - Answer questions professionally and in detail
-            - Be friendly and personable
-            - Focus on technical skills and experience when relevant
-            - If asked something not related to the portfolio or Vishal's work, politely redirect
-            - Provide comprehensive answers with good details (3-5 sentences or more)
-            - If you don't know something specific, say so honestly
+            - Always provide detailed and complete answers
+            - Be friendly and helpful
+            - Give full context and explanations
+            - Answer thoroughly with multiple sentences when needed
             """;
 
     public PortfolioAiService(@Value("${OPENAI_API_KEY:}") String apiKey) {
@@ -65,7 +63,7 @@ public class PortfolioAiService {
                             }
                         ],
                         "temperature": 0.7,
-                        "max_tokens": 400
+                        "max_tokens": 600
                     }
                     """.formatted(escapeJson(fullPrompt));
 
