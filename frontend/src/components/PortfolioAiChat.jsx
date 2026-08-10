@@ -45,47 +45,47 @@ const PortfolioAiChat = () => {
 
   return (
     <div className="w-full px-4 pt-0 pb-12">
-      {/* Backdrop - Click outside to close */}
+      {/* Backdrop */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/20 dark:bg-black/40 backdrop-blur-sm z-10 transition-opacity"
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-10"
           onClick={closeChat}
         />
       )}
 
       <div className="w-full mx-auto z-20 relative">
         {/* Search Bar Container */}
-        <div className="max-w-2xl mx-auto backdrop-blur-xl bg-white/50 dark:bg-slate-800/50 border border-gray-300 dark:border-slate-700 rounded-full p-1.5 mb-8 shadow-lg">
+        <div className="max-w-2xl mx-auto backdrop-blur-xl bg-gradient-to-r from-purple-500/10 to-blue-500/10 border border-white/30 rounded-full p-1.5 mb-8 shadow-lg">
           <form onSubmit={handleSubmit} className="flex gap-1 items-center">
             <input
               type="text"
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
               placeholder="Ask me anything..."
-              className="flex-1 px-5 py-2.5 rounded-full backdrop-blur-sm bg-white dark:bg-slate-700 border-0 text-sm text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-400 transition"
+              className="flex-1 px-5 py-2.5 rounded-full backdrop-blur-sm bg-white/10 border-0 text-sm text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400/50 transition"
               disabled={loading}
             />
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-2.5 rounded-full font-semibold text-sm text-white transition bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 disabled:from-gray-400 disabled:to-gray-500 shadow-md hover:shadow-lg whitespace-nowrap"
+              className="px-6 py-2.5 rounded-full font-semibold text-sm text-white transition bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 disabled:from-gray-500 disabled:to-gray-600 shadow-md hover:shadow-lg whitespace-nowrap"
             >
               {loading ? '✨' : '✨'}
             </button>
           </form>
         </div>
 
-        {/* Answer Display */}
+        {/* Answer Display Modal */}
         {answer && isOpen && (
           <div className="w-full relative max-w-2xl mx-auto">
-            <div className="w-full p-8 backdrop-blur-lg bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl min-h-64 max-h-96 overflow-y-auto shadow-lg">
+            <div className="w-full p-8 backdrop-blur-lg bg-gradient-to-b from-slate-950/80 via-slate-900/80 to-slate-950/80 border border-purple-500/20 rounded-2xl min-h-64 max-h-96 overflow-y-auto shadow-2xl">
               <button
                 onClick={closeChat}
-                className="absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition text-xl"
+                className="absolute top-4 right-4 text-white/60 hover:text-white transition text-xl"
               >
                 ✕
               </button>
-              <p className="text-base text-gray-900 dark:text-white font-medium leading-relaxed whitespace-pre-wrap pr-6">
+              <p className="text-base text-white font-medium leading-relaxed whitespace-pre-wrap pr-6">
                 {answer.includes("Error") ? "🚀 AI built-in feature is in progress. Coming soon!" : answer}
               </p>
             </div>
