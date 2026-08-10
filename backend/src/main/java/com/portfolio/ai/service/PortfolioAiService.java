@@ -42,8 +42,8 @@ public class PortfolioAiService {
                                 "content": "%s"
                             }
                         ],
-                        "temperature": 0.7,
-                        "max_tokens": 800
+                        "temperature": 0.5,
+                        "max_tokens": 1500
                     }
                     """.formatted(escapeJson(fullPrompt));
 
@@ -68,7 +68,14 @@ public class PortfolioAiService {
     private String extractContent(String response) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readTree(response);
-        return root.at("/choices/0/message/content").asText("No response");
+        String content = root.at("/choices/0/message/content").asText("No response");
+        String finishReason = root.at("/choices/0/finish_reason").asText("");
+
+        if ("length".equals(finishReason)) {
+            System.out.println("WARNING: Response was truncated due to token limit");
+        }
+
+        return content;
     }
 
     private String escapeJson(String input) {
