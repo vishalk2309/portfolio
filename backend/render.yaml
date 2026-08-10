@@ -5,7 +5,7 @@ services:
     region: oregon
     dockerCommand: java -jar target/portfolio-ai-backend-0.0.1-SNAPSHOT.jar
     envVars:
-      - key: SPRING_AI_GOOGLE_GENERATIVEAI_API_KEY
+      - key: OPENAI_API_KEY
         sync: false
       - key: PORT
         value: "8080"
