@@ -127,7 +127,7 @@ const PortfolioAiChat = () => {
                 ✕
               </button>
               <p className="text-base text-white/90 font-medium leading-relaxed whitespace-pre-wrap pr-6">
-                {answer.includes("Error") ? "🚀 AI built-in feature is in progress. Coming soon!" : displayedAnswer}
+                {answer.startsWith("❌") ? "🚀 Something went wrong. Please try again!" : displayedAnswer}
                 {isTyping && <span className="inline-block w-1.5 h-5 ml-1 bg-white/90 animate-pulse align-text-bottom">▋</span>}
               </p>
             </div>
