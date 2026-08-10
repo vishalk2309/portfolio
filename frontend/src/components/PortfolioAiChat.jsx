@@ -47,24 +47,26 @@ const PortfolioAiChat = () => {
   return (
     <div className="w-full px-4 pt-0 pb-12">
       <div className="w-full mx-auto z-20 relative">
-        {/* Search Bar */}
-        <form onSubmit={handleSubmit} className="flex gap-3 mb-6">
-          <input
-            type="text"
-            value={question}
-            onChange={(e) => setQuestion(e.target.value)}
-            placeholder="Ask me anything about my skills, projects..."
-            className="flex-1 px-4 py-3 rounded-xl backdrop-blur-sm bg-white/5 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-            disabled={loading}
-          />
-          <button
-            type="submit"
-            disabled={loading}
-            className="px-6 py-3 rounded-xl font-semibold text-white transition backdrop-blur-sm bg-blue-500/70 hover:bg-blue-600/70 disabled:bg-gray-500/50 border border-white/20 whitespace-nowrap"
-          >
-            {loading ? '✨ Asking...' : '✨ Ask'}
-          </button>
-        </form>
+        {/* Search Bar Container */}
+        <div className="backdrop-blur-lg bg-white/5 border border-white/20 rounded-xl p-3 mb-6">
+          <form onSubmit={handleSubmit} className="flex gap-2">
+            <input
+              type="text"
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              placeholder="Ask me..."
+              className="flex-1 px-3 py-2 rounded-lg backdrop-blur-sm bg-white/5 border border-white/10 text-sm text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              disabled={loading}
+            />
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-4 py-2 rounded-lg font-semibold text-sm text-white transition backdrop-blur-sm bg-blue-500/70 hover:bg-blue-600/70 disabled:bg-gray-500/50 border border-white/20 whitespace-nowrap"
+            >
+              {loading ? '...' : 'Ask'}
+            </button>
+          </form>
+        </div>
 
         {/* Loading State */}
         {loading && (
