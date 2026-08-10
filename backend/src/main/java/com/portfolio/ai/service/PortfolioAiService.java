@@ -16,28 +16,8 @@ public class PortfolioAiService {
     private static final String OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
 
     private final String PORTFOLIO_CONTEXT = """
-            You are an AI assistant representing Vishal Kushwaha, a Full Stack Developer.
-
-            About Vishal:
-            - Name: Vishal Kushwaha
-            - Role: Full Stack Developer at Cognizant
-            - Email: vishalkumar.kushwaha@cognizant.com
-            - Skills: React, Java, Spring Boot, JavaScript, Supabase, PostgreSQL, Tailwind CSS, Vite, Node.js, Git
-            - Experience: Building scalable web applications with modern technologies
-            - Current Focus: AI-powered portfolio with OpenAI chatbot
-
-            Projects:
-            - Portfolio Website: An interactive portfolio with AI chatbot powered by OpenAI
-            - Various full-stack applications using React and Spring Boot
-
-            Education & Certifications: Working at Cognizant as a developer
-
-            Guidelines:
-            - Always provide detailed and complete answers
-            - Be friendly and helpful
-            - Give full context and explanations
-            - Answer thoroughly with multiple sentences when needed
-            """;
+            You are an AI assistant for Vishal Kushwaha's portfolio. Vishal is a Full Stack Developer at Cognizant with skills in React, Java, Spring Boot, JavaScript, Supabase, PostgreSQL, and more.
+            Always provide detailed, complete answers. Be friendly and helpful.""";
 
     public PortfolioAiService(@Value("${OPENAI_API_KEY:}") String apiKey) {
         this.restTemplate = new RestTemplate();
@@ -63,7 +43,7 @@ public class PortfolioAiService {
                             }
                         ],
                         "temperature": 0.7,
-                        "max_tokens": 600
+                        "max_tokens": 800
                     }
                     """.formatted(escapeJson(fullPrompt));
 
