@@ -3,6 +3,8 @@ package com.portfolio.ai.service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -11,7 +13,7 @@ public class PortfolioAiService {
 
     private final RestTemplate restTemplate;
     private final String apiKey;
-    private static final String GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
+    private static final String OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
 
     private final String PORTFOLIO_CONTEXT = """
             You are an AI assistant representing Vishal Kushwaha, a Full Stack Developer.
@@ -22,10 +24,10 @@ public class PortfolioAiService {
             - Email: vishalkumar.kushwaha@cognizant.com
             - Skills: React, Java, Spring Boot, JavaScript, Supabase, PostgreSQL, Tailwind CSS, Vite, Node.js, Git
             - Experience: Building scalable web applications with modern technologies
-            - Current Focus: AI-powered portfolio with Google Gemini chatbot
+            - Current Focus: AI-powered portfolio with OpenAI chatbot
 
             Projects:
-            - Portfolio Website: An interactive portfolio with AI chatbot powered by Google Gemini
+            - Portfolio Website: An interactive portfolio with AI chatbot powered by OpenAI
             - Various full-stack applications using React and Spring Boot
 
             Education & Certifications: Working at Cognizant as a developer
@@ -39,47 +41,47 @@ public class PortfolioAiService {
             - If you don't know something specific, say so honestly
             """;
 
-    public PortfolioAiService(@Value("${SPRING_AI_GOOGLE_GENERATIVEAI_API_KEY:}") String apiKey) {
+    public PortfolioAiService(@Value("${OPENAI_API_KEY:}") String apiKey) {
         this.restTemplate = new RestTemplate();
         this.apiKey = apiKey != null ? apiKey.trim() : "";
-        System.out.println("Gemini API Key loaded: " + (this.apiKey.isEmpty() ? "MISSING" : "OK"));
+        System.out.println("OpenAI API Key loaded: " + (this.apiKey.isEmpty() ? "MISSING" : "OK"));
     }
 
     public String askQuestion(String question) {
         try {
             if (apiKey == null || apiKey.isEmpty()) {
-                return "Error: API key not configured.";
+                return "Error: OpenAI API key not configured.";
             }
 
             String fullPrompt = PORTFOLIO_CONTEXT + "\n\nUser Question: " + question;
 
             String requestBody = """
                     {
-                        "contents": [{
-                            "parts": [{
-                                "text": "%s"
-                            }]
-                        }],
-                        "generationConfig": {
-                            "temperature": 0.7,
-                            "maxOutputTokens": 200
-                        }
+                        "model": "gpt-4o-mini",
+                        "messages": [
+                            {
+                                "role": "user",
+                                "content": "%s"
+                            }
+                        ],
+                        "temperature": 0.7,
+                        "max_tokens": 200
                     }
                     """.formatted(escapeJson(fullPrompt));
 
-            String url = GEMINI_API_URL + "?key=" + apiKey;
-            System.out.println("Calling Gemini API: " + url.substring(0, Math.min(url.length(), 80)) + "...");
-            System.out.println("Request body: " + requestBody.substring(0, Math.min(requestBody.length(), 100)) + "...");
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", "Bearer " + apiKey);
+            headers.set("Content-Type", "application/json");
 
-            String response = restTemplate.postForObject(url, requestBody, String.class);
-            System.out.println("Response received: " + response.substring(0, Math.min(response.length(), 100)) + "...");
+            HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
+
+            System.out.println("Calling OpenAI API...");
+
+            String response = restTemplate.postForObject(OPENAI_API_URL, request, String.class);
 
             return extractContent(response);
         } catch (Exception e) {
-            System.err.println("Error details: " + e.getClass().getName() + " - " + e.getMessage());
-            if (e.getCause() != null) {
-                System.err.println("Cause: " + e.getCause().getMessage());
-            }
+            System.err.println("Error: " + e.getMessage());
             e.printStackTrace();
             return "Error: " + e.getMessage();
         }
@@ -88,7 +90,7 @@ public class PortfolioAiService {
     private String extractContent(String response) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readTree(response);
-        return root.at("/candidates/0/content/parts/0/text").asText("No response");
+        return root.at("/choices/0/message/content").asText("No response");
     }
 
     private String escapeJson(String input) {
