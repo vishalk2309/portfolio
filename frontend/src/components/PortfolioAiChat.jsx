@@ -48,22 +48,22 @@ const PortfolioAiChat = () => {
     <div className="w-full px-4 pt-0 pb-12">
       <div className="w-full mx-auto z-20 relative">
         {/* Search Bar Container */}
-        <div className="backdrop-blur-lg bg-white/5 border border-white/20 rounded-xl p-3 mb-6">
-          <form onSubmit={handleSubmit} className="flex gap-2">
+        <div className="backdrop-blur-xl bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-white/30 rounded-full p-1.5 mb-8 shadow-lg">
+          <form onSubmit={handleSubmit} className="flex gap-1 items-center">
             <input
               type="text"
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              placeholder="Ask me..."
-              className="flex-1 px-3 py-2 rounded-lg backdrop-blur-sm bg-white/5 border border-white/10 text-sm text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              placeholder="Ask me anything..."
+              className="flex-1 px-5 py-2.5 rounded-full backdrop-blur-sm bg-white/3 border-0 text-sm text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 transition"
               disabled={loading}
             />
             <button
               type="submit"
               disabled={loading}
-              className="px-4 py-2 rounded-lg font-semibold text-sm text-white transition backdrop-blur-sm bg-blue-500/70 hover:bg-blue-600/70 disabled:bg-gray-500/50 border border-white/20 whitespace-nowrap"
+              className="px-6 py-2.5 rounded-full font-semibold text-sm text-white transition bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:from-gray-500 disabled:to-gray-600 shadow-md hover:shadow-lg whitespace-nowrap"
             >
-              {loading ? '...' : 'Ask'}
+              {loading ? '✨' : '✨'}
             </button>
           </form>
         </div>
