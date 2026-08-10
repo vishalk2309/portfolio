@@ -78,14 +78,14 @@ const PortfolioAiChat = () => {
         {/* Answer Display Modal */}
         {answer && isOpen && (
           <div className="w-full relative max-w-2xl mx-auto">
-            <div className="w-full p-8 backdrop-blur-lg bg-white dark:bg-blue-950/30 border border-gray-200 dark:border-gray-700/50 rounded-2xl min-h-64 max-h-96 overflow-y-auto shadow-2xl">
+            <div className="w-full p-8 backdrop-blur-md bg-base/40 border border-white/10 rounded-2xl min-h-64 max-h-96 overflow-y-auto shadow-lg">
               <button
                 onClick={closeChat}
-                className="absolute top-4 right-4 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition text-xl"
+                className="absolute top-4 right-4 text-white/50 hover:text-white/80 transition text-xl"
               >
                 ✕
               </button>
-              <p className="text-base text-gray-900 dark:text-gray-100 font-medium leading-relaxed whitespace-pre-wrap pr-6">
+              <p className="text-base text-white/90 font-medium leading-relaxed whitespace-pre-wrap pr-6">
                 {answer.includes("Error") ? "🚀 AI built-in feature is in progress. Coming soon!" : answer}
               </p>
             </div>
