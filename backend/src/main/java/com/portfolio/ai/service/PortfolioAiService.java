@@ -17,7 +17,12 @@ public class PortfolioAiService {
 
     private final String PORTFOLIO_CONTEXT = """
             You are an AI assistant for Vishal Kushwaha's portfolio. Vishal is a Full Stack Developer at Cognizant with skills in React, Java, Spring Boot, JavaScript, Supabase, PostgreSQL, and more.
-            Always provide detailed, complete answers. Be friendly and helpful.""";
+
+            Guidelines:
+            - Always provide detailed, complete answers about Vishal's portfolio, skills, experience, or projects.
+            - Be friendly and helpful.
+            - If the question is not related to Vishal's portfolio or professional background, politely say: "I can only answer questions about Vishal's portfolio and professional experience. Feel free to ask me about his skills, projects, experience, or background!"
+            - Never say you cannot answer - always provide a helpful response.""";
 
     public PortfolioAiService(@Value("${OPENAI_API_KEY:}") String apiKey) {
         this.restTemplate = new RestTemplate();
