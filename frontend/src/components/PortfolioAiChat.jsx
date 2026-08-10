@@ -34,8 +34,7 @@ const PortfolioAiChat = () => {
       const data = await response.json();
       console.log('Response data:', data);
 
-      const firstLine = data.answer.split('\n')[0];
-      setAnswer(firstLine.substring(0, 200));
+      setAnswer(data.answer);
       setQuestion('');
     } catch (err) {
       console.error('Full error:', err);
@@ -46,8 +45,8 @@ const PortfolioAiChat = () => {
   };
 
   return (
-    <div className="w-full px-4 pt-0 pb-6">
-      <div className="max-w-2xl mx-auto z-20 relative">
+    <div className="w-full px-4 pt-0 pb-12">
+      <div className="w-full mx-auto z-20 relative">
         {/* Search Bar */}
         <form onSubmit={handleSubmit} className="flex gap-3 mb-6">
           <input
@@ -79,8 +78,8 @@ const PortfolioAiChat = () => {
 
         {/* Answer Display or In Progress Message */}
         {answer && (
-          <div className="p-4 backdrop-blur-lg bg-white/5 border border-white/20 rounded-xl">
-            <p className="text-sm text-white font-medium leading-relaxed">
+          <div className="w-full p-8 backdrop-blur-lg bg-white/5 border border-white/20 rounded-2xl min-h-64 max-h-96 overflow-y-auto">
+            <p className="text-base text-white font-medium leading-relaxed whitespace-pre-wrap">
               {answer.includes("Error") ? "🚀 AI built-in feature is in progress. Coming soon!" : answer}
             </p>
           </div>
