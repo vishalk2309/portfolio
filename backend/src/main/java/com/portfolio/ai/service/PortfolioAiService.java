@@ -65,7 +65,7 @@ public class PortfolioAiService {
                             }
                         ],
                         "temperature": 0.7,
-                        "max_tokens": 1000
+                        "max_tokens": 400
                     }
                     """.formatted(escapeJson(fullPrompt));
 
