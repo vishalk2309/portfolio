@@ -7,6 +7,7 @@ import CommentsAdmin from "./CommentsAdmin";
 import SubscribersAdmin from "./SubscribersAdmin";
 import AccessRequestsAdmin from "./AccessRequestsAdmin";
 import FolderUpload from "./FolderUpload";
+import ResumeAdmin from "./ResumeAdmin";
 import ChangePassword from "./ChangePassword";
 
 const BLOG_KEY = "__blog";
@@ -14,6 +15,7 @@ const COMMENTS_KEY = "__comments";
 const SUBS_KEY = "__subs";
 const ACCESS_KEY = "__access";
 const FOLDER_KEY = "__folder";
+const RESUME_KEY = "__resume";
 const PASSWORD_KEY = "__password";
 
 export default function Dashboard({ session }) {
@@ -23,6 +25,7 @@ export default function Dashboard({ session }) {
   const isSubs = activeKey === SUBS_KEY;
   const isAccess = activeKey === ACCESS_KEY;
   const isFolder = activeKey === FOLDER_KEY;
+  const isResume = activeKey === RESUME_KEY;
   const isPassword = activeKey === PASSWORD_KEY;
   const active = TABLES.find((t) => t.key === activeKey);
 
@@ -102,6 +105,15 @@ export default function Dashboard({ session }) {
                 Folder Upload
               </button>
               <button
+                onClick={() => setActiveKey(RESUME_KEY)}
+                className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
+                  isResume ? "bg-white/10 text-white" : "text-white/60 hover:text-white"
+                }`}
+              >
+                <span>📄</span>
+                Resume
+              </button>
+              <button
                 onClick={() => setActiveKey(PASSWORD_KEY)}
                 className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
                   isPassword ? "bg-white/10 text-white" : "text-white/60 hover:text-white"
@@ -141,6 +153,8 @@ export default function Dashboard({ session }) {
             <AccessRequestsAdmin />
           ) : isFolder ? (
             <FolderUpload />
+          ) : isResume ? (
+            <ResumeAdmin />
           ) : isPassword ? (
             <ChangePassword />
           ) : (
