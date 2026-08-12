@@ -8,7 +8,9 @@ const IndependenceDayWish = () => {
   // Check if it's Independence Day period (Aug 11-15)
   const isIndependenceDay = () => {
     const today = new Date();
-    return today.getMonth() === 7 && today.getDate() >= 11 && today.getDate() <= 15;
+    return (
+      today.getMonth() === 7 && today.getDate() >= 13 && today.getDate() <= 15
+    );
   };
 
   // Generate confetti particles
