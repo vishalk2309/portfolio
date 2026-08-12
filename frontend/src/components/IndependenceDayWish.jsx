@@ -172,7 +172,7 @@ const IndependenceDayWish = () => {
 
         {/* Subheading */}
         <motion.p
-          className="text-lg md:text-2xl text-center text-white/80 mb-8"
+          className="text-lg md:text-2xl text-center text-gray-900 dark:text-white/80 mb-8"
           variants={itemVariants}
         >
           Celebrating the spirit of freedom — 15th August 🇮🇳
@@ -205,27 +205,27 @@ const IndependenceDayWish = () => {
 
         {/* Patriotic Quote */}
         <motion.div
-          className="glass rounded-xl p-6 md:p-8 border border-white/10 mb-8 max-w-2xl mx-auto"
+          className="glass rounded-xl p-6 md:p-8 border border-gray-300 dark:border-white/10 mb-8 max-w-2xl mx-auto"
           variants={itemVariants}
         >
-          <p className="text-center text-lg md:text-xl text-white/90 italic mb-3">
+          <p className="text-center text-lg md:text-xl text-gray-900 dark:text-white/90 italic mb-3">
             "{randomQuote.text}"
           </p>
-          <p className="text-center text-sm md:text-base text-white/60">
+          <p className="text-center text-sm md:text-base text-gray-700 dark:text-white/60">
             — {randomQuote.author}
           </p>
 
           {/* Quote Tricolor Accent */}
           <div className="mt-4 flex gap-1 justify-center">
             <div className="h-1 w-8 bg-amber-600 rounded-full" />
-            <div className="h-1 w-8 bg-white rounded-full" />
+            <div className="h-1 w-8 bg-gray-400 dark:bg-white rounded-full" />
             <div className="h-1 w-8 bg-green-600 rounded-full" />
           </div>
         </motion.div>
 
         {/* Call to Action */}
         <motion.div className="text-center" variants={itemVariants}>
-          <p className="text-white/70 text-sm md:text-base max-w-xl mx-auto">
+          <p className="text-gray-800 dark:text-white/70 text-sm md:text-base max-w-xl mx-auto">
             On this auspicious day, we celebrate the courage and sacrifice of
             our freedom fighters who paved the way for a free India. Let us
             continue to build a stronger, more inclusive nation.
