@@ -62,19 +62,28 @@ export default function ResumeAdmin() {
       setError(null);
       setSuccess(null);
 
-      // Delete old resume if it exists
-      try {
-        await supabase.storage.from(RESUME_BUCKET).remove([RESUME_FILE_NAME]);
-      } catch {
-        // File might not exist
+      // Get user email for backend verification
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user?.email) {
+        throw new Error('Not authenticated');
       }
 
-      // Upload new resume
-      const { error: uploadError } = await supabase.storage
-        .from(RESUME_BUCKET)
-        .upload(RESUME_FILE_NAME, file, { upsert: true });
+      // Upload via backend (uses service role, bypasses RLS)
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('email', user.email);
 
-      if (uploadError) throw uploadError;
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://portfolio-ai-backend-eq0l.onrender.com';
+      const response = await fetch(`${backendUrl}/api/resume/upload`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Upload failed');
+      }
 
       setSuccess('Resume uploaded successfully!');
       await loadCurrentResume();
