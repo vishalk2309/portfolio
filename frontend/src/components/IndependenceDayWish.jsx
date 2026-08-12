@@ -8,7 +8,7 @@ const IndependenceDayWish = () => {
   // Check if today is Independence Day
   const isIndependenceDay = () => {
     const today = new Date();
-    return today.getMonth() === 7 && today.getDate() === 12;
+    return today.getMonth() === 7 && today.getDate() === 15;
   };
 
   // Generate confetti particles
@@ -153,8 +153,8 @@ const IndependenceDayWish = () => {
             alt="Indian Flag"
             className="h-32 md:h-40 w-auto drop-shadow-lg hover:scale-110 transition-transform duration-300"
             style={{
-              backgroundColor: 'transparent',
-              filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3))',
+              backgroundColor: "transparent",
+              filter: "drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3))",
             }}
             loading="lazy"
           />
