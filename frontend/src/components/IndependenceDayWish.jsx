@@ -145,7 +145,7 @@ const IndependenceDayWish = () => {
 
         {/* Flag Section */}
         <motion.div
-          className="mb-8 flex justify-center"
+          className="mb-8 flex justify-center bg-transparent"
           variants={flagVariants}
         >
           <img
@@ -153,8 +153,8 @@ const IndependenceDayWish = () => {
             alt="Indian Flag"
             className="h-32 md:h-40 w-auto drop-shadow-lg hover:scale-110 transition-transform duration-300"
             style={{
-              mixBlendMode: 'screen',
-              filter: 'brightness(1.2) contrast(1.1)',
+              backgroundColor: 'transparent',
+              filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3))',
             }}
             loading="lazy"
           />
