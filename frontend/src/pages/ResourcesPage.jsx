@@ -19,6 +19,7 @@ import Background from "../components/Background";
 import Footer from "../components/Footer";
 import AuthModal from "../components/AuthModal";
 import ResourceRulesBanner from "../components/ResourceRulesBanner";
+import ResourcesSubscribe from "../components/ResourcesSubscribe";
 import RequestAccessModal from "../components/RequestAccessModal";
 import { useAccessRequests } from "../hooks/useAccessRequests";
 import { useBookmarks } from "../hooks/useBookmarks";
@@ -374,6 +375,10 @@ export default function ResourcesPage() {
 
         <div className="mt-8">
           <ResourceRulesBanner />
+        </div>
+
+        <div className="mt-8">
+          <ResourcesSubscribe />
         </div>
 
         {err && (
