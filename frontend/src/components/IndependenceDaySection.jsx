@@ -1,150 +1,147 @@
 import { motion } from 'framer-motion';
-import SectionHeading from './SectionHeading';
 
 export default function IndependenceDaySection() {
   // Show only on August 15th
   const today = new Date();
-  const isIndependenceDay = today.getMonth() === 7 && today.getDate() === 15;
+  const isIndependenceDay = true; // Temporarily set to true for testing
+
+  //const isIndependenceDay = today.getMonth() === 7 && today.getDate() === 15;
 
   if (!isIndependenceDay) return null;
 
-  const cards = [
-    {
-      emoji: '🎓',
-      title: 'Mentoring Future Developers',
-      description: 'Helping aspiring developers from India grow their careers in tech',
-      stat: '100+ mentees supported',
-      color: 'amber',
-    },
-    {
-      emoji: '💻',
-      title: 'Open Source Contributions',
-      description: 'Building tools and libraries used by Indian developers',
-      stat: '15+ projects',
-      color: 'green',
-    },
-    {
-      emoji: '🌍',
-      title: 'Community Initiatives',
-      description: 'Supporting local tech communities and coding bootcamps',
-      stat: '5 communities',
-      color: 'cyan',
-    },
-    {
-      emoji: '🚀',
-      title: 'Indian Companies',
-      description: 'Working with Cognizant and contributing to India\'s tech growth',
-      stat: '3+ years',
-      color: 'purple',
-    },
-  ];
-
-  const getColorClasses = (color) => {
-    const colors = {
-      amber: 'hover:border-amber-600/50 text-amber-400',
-      green: 'hover:border-green-600/50 text-green-400',
-      cyan: 'hover:border-cyan-500/50 text-cyan-400',
-      purple: 'hover:border-purple-600/50 text-purple-400',
-    };
-    return colors[color] || colors.amber;
-  };
-
   return (
-    <section className="relative px-6 py-24">
-      {/* Tricolor accent bar at top */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-600 via-white to-green-600" />
+    <section className="relative px-6 py-24 overflow-hidden">
+      {/* Tricolor accent bars */}
+      <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-amber-600 via-white to-green-600" />
+      <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r from-green-600 via-white to-amber-600" />
 
-      <div className="mx-auto max-w-6xl">
-        {/* Section Heading */}
-        <SectionHeading
-          eyebrow="🇮🇳 August 15"
-          title="Tech for India"
-          subtitle="Contributing to India's growing tech ecosystem"
-        />
-
-        {/* Cards Grid */}
-        <div className="grid md:grid-cols-2 gap-6 mb-16">
-          {cards.map((card, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
-              whileHover={{ y: -5 }}
-              className={`glass rounded-2xl p-6 border border-white/10 transition ${getColorClasses(
-                card.color
-              )}`}
-            >
-              <div className="text-4xl mb-3">{card.emoji}</div>
-              <h3 className="text-lg font-semibold mb-2 text-white">{card.title}</h3>
-              <p className="text-sm text-white/60 mb-4">{card.description}</p>
-              <div className={`text-xs font-semibold ${getColorClasses(card.color).split(' ')[1]}`}>
-                {card.stat}
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Quote Section */}
+      <div className="mx-auto max-w-4xl">
+        {/* Main Celebration Content */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="glass rounded-2xl p-8 border border-white/10 text-center max-w-3xl mx-auto mb-12"
-        >
-          <p className="text-xl md:text-2xl font-semibold mb-4 text-white">
-            "In a nation of 1.4 billion people, I'm proud to be a developer building solutions that matter."
-          </p>
-          <p className="text-white/60 mb-6">— Building with pride, for India</p>
-
-          {/* Tricolor border accent */}
-          <div className="h-1 bg-gradient-to-r from-amber-600 via-white to-green-600 rounded-full" />
-        </motion.div>
-
-        {/* CTA Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.5 }}
+          transition={{ duration: 0.6 }}
           className="text-center"
         >
-          <h3 className="text-2xl font-bold mb-4 text-white">Let's build together</h3>
-          <p className="text-white/60 mb-6 max-w-xl mx-auto">
-            Interested in collaborating on projects that make an impact in the Indian tech ecosystem?
-          </p>
-          <div className="flex gap-4 justify-center flex-wrap">
-            <a
-              href="#contact"
-              className="px-6 py-3 rounded-lg bg-gradient-btn hover:opacity-90 transition font-semibold text-base text-white shadow-lg"
+          {/* Animated Flags */}
+          <div className="mb-8 flex justify-center gap-4 text-6xl">
+            <motion.span
+              animate={{ rotateZ: [-5, 5, -5], y: [0, -10, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
             >
-              Let's Collaborate
-            </a>
-            <a
-              href="https://github.com/vishalk2309"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-6 py-3 rounded-lg border border-white/20 hover:bg-white/5 transition font-semibold text-white"
+              🇮🇳
+            </motion.span>
+            <motion.span
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+              className="text-7xl"
             >
-              View Open Source
-            </a>
+              ✨
+            </motion.span>
+            <motion.span
+              animate={{ rotateZ: [5, -5, 5], y: [0, -10, 0] }}
+              transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+            >
+              🇮🇳
+            </motion.span>
           </div>
+
+          {/* Main Heading */}
+          <motion.h1
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-5xl md:text-7xl font-bold mb-4"
+          >
+            <span className="bg-gradient-to-r from-amber-400 via-white to-green-400 bg-clip-text text-transparent">
+              Happy Independence Day
+            </span>
+          </motion.h1>
+
+          {/* Subheading */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="text-2xl md:text-3xl text-white/80 mb-8"
+          >
+            77 Years of Freedom 🇮🇳
+          </motion.p>
+
+          {/* Wishes */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="glass rounded-2xl p-8 md:p-12 border border-white/10 mb-12"
+          >
+            <p className="text-xl md:text-2xl text-white mb-6 leading-relaxed">
+              On this special day, I celebrate the spirit of freedom, unity, and progress that defines our nation.
+            </p>
+            <p className="text-lg md:text-xl text-white/70 mb-6">
+              Wishing everyone a day filled with pride, joy, and inspiration.
+            </p>
+
+            {/* Tricolor divider */}
+            <div className="flex gap-2 justify-center mb-6">
+              <div className="h-1 w-12 bg-amber-600 rounded-full" />
+              <div className="h-1 w-12 bg-white rounded-full" />
+              <div className="h-1 w-12 bg-green-600 rounded-full" />
+            </div>
+
+            <p className="text-white font-semibold italic">
+              "Jai Hind! 🇮🇳"
+            </p>
+          </motion.div>
+
+          {/* Celebration Elements */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="flex justify-center gap-6 flex-wrap mb-8"
+          >
+            <div className="text-4xl">🎆</div>
+            <div className="text-4xl">🎉</div>
+            <div className="text-4xl">🇮🇳</div>
+            <div className="text-4xl">🎊</div>
+            <div className="text-4xl">🌟</div>
+          </motion.div>
+
+          {/* Extra Quote */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            className="text-white/60 text-sm md:text-base"
+          >
+            "In freedom, we find strength. In unity, we find power. In India, we find home."
+          </motion.p>
         </motion.div>
       </div>
 
-      {/* Animated background elements */}
+      {/* Animated background - Tricolor glows */}
       <div className="fixed inset-0 -z-10 pointer-events-none">
         <motion.div
-          animate={{ opacity: [0.05, 0.15, 0.05] }}
+          animate={{ opacity: [0.1, 0.25, 0.1] }}
           transition={{ duration: 4, repeat: Infinity }}
-          className="absolute top-20 right-20 w-32 h-32 bg-amber-600 rounded-full blur-3xl"
+          className="absolute top-1/4 right-1/4 w-40 h-40 bg-amber-600 rounded-full blur-3xl"
+        />
+        <motion.div
+          animate={{ opacity: [0.1, 0.2, 0.1] }}
+          transition={{ duration: 5, repeat: Infinity, delay: 1 }}
+          className="absolute bottom-1/4 left-1/4 w-48 h-48 bg-green-600 rounded-full blur-3xl"
         />
         <motion.div
           animate={{ opacity: [0.05, 0.15, 0.05] }}
-          transition={{ duration: 5, repeat: Infinity, delay: 1 }}
-          className="absolute bottom-20 left-20 w-40 h-40 bg-green-600 rounded-full blur-3xl"
+          transition={{ duration: 6, repeat: Infinity, delay: 2 }}
+          className="absolute top-1/2 left-1/3 w-32 h-32 bg-white rounded-full blur-3xl"
         />
       </div>
     </section>

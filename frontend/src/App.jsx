@@ -8,7 +8,6 @@ import ScrollProgress from "./components/ScrollProgress";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import About from "./components/About";
-import IndependenceDaySection from "./components/IndependenceDaySection";
 import Experience from "./components/Experience";
 import Skills from "./components/Skills";
 import Projects from "./components/Projects";
@@ -84,7 +83,6 @@ export default function App() {
       <main>
         <Hero />
         <About />
-        <IndependenceDaySection />
         <Experience />
         <Skills />
         <Projects />
