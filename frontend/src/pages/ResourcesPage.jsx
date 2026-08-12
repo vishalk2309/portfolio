@@ -377,10 +377,6 @@ export default function ResourcesPage() {
           <ResourceRulesBanner />
         </div>
 
-        <div className="mt-8">
-          <ResourcesSubscribe />
-        </div>
-
         {err && (
           <p className="mt-6 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">
             {err}
@@ -521,6 +517,12 @@ export default function ResourcesPage() {
             />
           ))}
         </div>
+
+        {!!resources?.length && (
+          <div className="mt-16">
+            <ResourcesSubscribe />
+          </div>
+        )}
       </main>
 
       <Footer />
