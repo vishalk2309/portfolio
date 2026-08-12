@@ -8,11 +8,18 @@ import AccentDots from "./AccentDots";
 const openPalette = () =>
   window.dispatchEvent(new Event("open-command-palette"));
 
+// Check if today is Independence Day
+const isIndependenceDay = () => {
+  const today = new Date();
+  return today.getMonth() === 7 && today.getDate() === 15;
+};
+
 export default function Navbar() {
   const { navLinks, profile } = useContent();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [activeId, setActiveId] = useState("home");
+  const showTricolorBorder = isIndependenceDay();
 
   // Blog is its own page now: point any "Blog" nav link at /blog (route).
   // We also guarantee the Resources and Blog links exist (before Contact)
@@ -81,10 +88,23 @@ export default function Navbar() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "glass shadow-[0_8px_30px_-12px_rgba(30,30,30,0.15)]"
-          : "bg-transparent border-b border-transparent"
+        showTricolorBorder
+          ? "bg-transparent border-b-4"
+          : scrolled
+            ? "glass shadow-[0_8px_30px_-12px_rgba(30,30,30,0.15)]"
+            : "bg-transparent border-b border-transparent"
       }`}
+      style={
+        showTricolorBorder
+          ? {
+              backgroundImage:
+                "linear-gradient(to right, rgb(217, 164, 65) 0%, rgb(217, 164, 65) 33.33%, white 33.33%, white 66.66%, rgb(34, 197, 94) 66.66%, rgb(34, 197, 94) 100%)",
+              backgroundPosition: "bottom",
+              backgroundRepeat: "repeat-x",
+              backgroundSize: "100% 4px",
+            }
+          : {}
+      }
     >
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <a href="#home" className="text-xl font-bold tracking-tight">
