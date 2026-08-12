@@ -8,10 +8,10 @@ import AccentDots from "./AccentDots";
 const openPalette = () =>
   window.dispatchEvent(new Event("open-command-palette"));
 
-// Check if today is Independence Day
+// Check if it's Independence Day period (Aug 11-15)
 const isIndependenceDay = () => {
   const today = new Date();
-  return today.getMonth() === 7 && today.getDate() === 15;
+  return today.getMonth() === 7 && today.getDate() >= 11 && today.getDate() <= 15;
 };
 
 export default function Navbar() {
