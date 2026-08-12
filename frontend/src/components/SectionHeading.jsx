@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-export default function SectionHeading({ eyebrow, title }) {
+export default function SectionHeading({ eyebrow, title, subtitle }) {
   return (
     <div className="mb-14 text-center">
       {eyebrow && (
@@ -23,6 +23,17 @@ export default function SectionHeading({ eyebrow, title }) {
       >
         <span className="gradient-text">{title}</span>
       </motion.h2>
+      {subtitle && (
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="mt-4 text-white/60"
+        >
+          {subtitle}
+        </motion.p>
+      )}
     </div>
   );
 }
