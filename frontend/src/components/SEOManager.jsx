@@ -5,7 +5,6 @@ const SEOManager = () => {
   const location = useLocation();
 
   useEffect(() => {
-    // Determine if the current page should be indexed
     const isAdminPath = location.pathname.startsWith('/admin');
 
     // Update robots meta tag
@@ -16,23 +15,19 @@ const SEOManager = () => {
       document.head.appendChild(robotsMeta);
     }
 
-    if (isAdminPath) {
-      robotsMeta.content = 'noindex, nofollow';
-    } else {
-      robotsMeta.content = 'index, follow';
-    }
+    robotsMeta.content = isAdminPath ? 'noindex, nofollow' : 'index, follow';
 
-    // Update canonical tag
-    let canonicalLink = document.querySelector('link[rel="canonical"]');
-    if (!canonicalLink) {
-      canonicalLink = document.createElement('link');
-      canonicalLink.rel = 'canonical';
-      document.head.appendChild(canonicalLink);
+    // Skip canonical tag updates for admin routes (they're not indexed anyway)
+    if (!isAdminPath) {
+      let canonicalLink = document.querySelector('link[rel="canonical"]');
+      if (!canonicalLink) {
+        canonicalLink = document.createElement('link');
+        canonicalLink.rel = 'canonical';
+        document.head.appendChild(canonicalLink);
+      }
+      const baseUrl = 'https://vishalworks.co.in';
+      canonicalLink.href = `${baseUrl}${location.pathname}`;
     }
-
-    // Set canonical URL based on current path
-    const baseUrl = 'https://vishalworks.co.in';
-    canonicalLink.href = `${baseUrl}${location.pathname}`;
 
   }, [location.pathname]);
 
