@@ -149,7 +149,7 @@ const IndependenceDayWish = () => {
           variants={flagVariants}
         >
           <img
-            src="https://www.crossed-flag-pins.com/animated-flag-gif/gifs/India_240-animated-flag-gifs.gif"
+            src="/flag.gif"
             alt="Indian Flag"
             className="h-32 md:h-40 w-auto drop-shadow-lg hover:scale-110 transition-transform duration-300"
             style={{
