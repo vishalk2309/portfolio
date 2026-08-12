@@ -5,6 +5,7 @@ import App from "./App.jsx";
 import CursorTrail from "./components/CursorTrail.jsx";
 import TouchSpark from "./components/TouchSpark.jsx";
 import VisitorBadge from "./components/VisitorBadge.jsx";
+import SEOManager from "./components/SEOManager.jsx";
 import "./index.css";
 import { applyAccent, getAccent, applyMode, getMode } from "./theme";
 import { ContentProvider } from "./lib/ContentContext";
@@ -44,6 +45,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       {/* Live viewers + total visits — one instance for the whole site, so it
           stays on screen across every public page and route change. */}
       <VisitorBadge />
+      {/* Manages canonical tags and robots meta tag per route for SEO. */}
+      <SEOManager />
       <Routes>
         {/* Public portfolio */}
         <Route
