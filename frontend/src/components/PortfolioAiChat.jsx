@@ -10,7 +10,7 @@ const PortfolioAiChat = () => {
   const typingIntervalRef = useRef(null);
 
   const TYPING_SPEED = 20; // milliseconds per character
-  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://portfolio-ai-backend-eq0l.onrender.com';
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://portfolio-ai-backend-eq0l.onrender.com';
 
   // Typewriter effect
   useEffect(() => {
