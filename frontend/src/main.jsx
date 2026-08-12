@@ -29,6 +29,8 @@ const Privacy = lazy(() =>
 const Refund = lazy(() =>
   import("./pages/LegalPages.jsx").then((m) => ({ default: m.Refund }))
 );
+const NotFound = lazy(() => import("./pages/NotFound.jsx"));
+const AdminDebug = lazy(() => import("./pages/AdminDebug.jsx"));
 
 // apply the saved light/dark mode + accent before first paint
 applyMode(getMode());
@@ -151,12 +153,30 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             </ContentProvider>
           }
         />
+        {/* Debug route - test if routing works */}
+        <Route
+          path="/debug"
+          element={
+            <Suspense fallback={null}>
+              <AdminDebug />
+            </Suspense>
+          }
+        />
         {/* Private dashboard */}
         <Route
           path="/admin/*"
           element={
             <Suspense fallback={null}>
               <AdminApp />
+            </Suspense>
+          }
+        />
+        {/* Catch-all 404 route */}
+        <Route
+          path="*"
+          element={
+            <Suspense fallback={null}>
+              <NotFound />
             </Suspense>
           }
         />
