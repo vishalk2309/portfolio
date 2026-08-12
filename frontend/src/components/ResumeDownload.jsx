@@ -35,10 +35,9 @@ export default function ResumeDownload() {
 
   if (loading) {
     return (
-      <a href="#" className="inline-flex items-center gap-2 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-2 text-sm font-semibold text-white hover:bg-white/15 transition opacity-50 cursor-not-allowed">
-        <span>📄</span>
+      <span className="inline-block rounded-full border border-white/20 bg-white/5 px-8 py-3.5 font-semibold text-white backdrop-blur-md transition-transform opacity-50 cursor-not-allowed">
         Loading Resume...
-      </a>
+      </span>
     );
   }
 
@@ -52,10 +51,9 @@ export default function ResumeDownload() {
       download="Vishal_Kushwaha_Resume.pdf"
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex items-center gap-2 rounded-lg bg-gradient-btn px-4 py-2 text-sm font-semibold text-base hover:opacity-90 transition shadow-lg hover:shadow-xl"
+      className="inline-block rounded-full border border-white/20 bg-white/5 px-8 py-3.5 font-semibold text-white backdrop-blur-md transition-transform hover:scale-105"
     >
-      <span>📄</span>
-      Download Resume
+      📄 My Resume
     </a>
   );
 }

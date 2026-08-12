@@ -3,7 +3,6 @@ import OrbitPhoto from "./OrbitPhoto";
 import { LeetCodeCard, GfgCard, GitHubCard } from "./StatCards";
 import ContributionHeatmap from "./ContributionHeatmap";
 import SectionHeading from "./SectionHeading";
-import ResumeDownload from "./ResumeDownload";
 import { useContent } from "../lib/ContentContext";
 
 export default function About() {
@@ -38,15 +37,6 @@ export default function About() {
             >
               {profile.summary}
             </motion.p>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="flex justify-center pt-4"
-            >
-              <ResumeDownload />
-            </motion.div>
           </div>
         )}
 

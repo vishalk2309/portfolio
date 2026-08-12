@@ -3,6 +3,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useContent } from "../lib/ContentContext";
 import Magnetic from "./Magnetic";
 import IndependenceDayWish from "./IndependenceDayWish";
+import ResumeDownload from "./ResumeDownload";
 //import PortfolioAiChat from "./PortfolioAiChat";
 
 // Lazy-load the WebGL cube so three.js ships as its own chunk.
@@ -101,13 +102,7 @@ export default function Hero() {
               </a>
             </Magnetic>
             <Magnetic>
-              <a
-                href={profile.resumeUrl}
-                download="Vishal_Resume.pdf"
-                className="inline-block rounded-full border border-white/20 bg-white/5 px-8 py-3.5 font-semibold text-white backdrop-blur-md transition-transform hover:scale-105"
-              >
-                My Resume
-              </a>
+              <ResumeDownload />
             </Magnetic>
           </motion.div>
 
