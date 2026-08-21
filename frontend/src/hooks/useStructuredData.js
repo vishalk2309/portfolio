@@ -4,21 +4,19 @@ export const useStructuredData = (data) => {
   useEffect(() => {
     if (!data) return;
 
-    // Remove old structured data script if it exists
-    const existing = document.querySelector('script[data-structured-data="true"]');
-    if (existing) {
-      existing.remove();
-    }
+    // Remove all dynamic schema scripts we've added (marked with our attribute)
+    document.querySelectorAll('script[data-dynamic-ld-json="true"]').forEach(el => el.remove());
 
-    // Create new structured data script
+    // Create new structured data script with proper type
     const script = document.createElement('script');
-    script.type = 'application/ld+json';
-    script.setAttribute('data-structured-data', 'true');
-    script.textContent = JSON.stringify(data);
-    document.head.appendChild(script);
+    script.setAttribute('type', 'application/ld+json');
+    script.setAttribute('data-dynamic-ld-json', 'true');
+    script.innerHTML = JSON.stringify(data);
 
-    return () => {
-      // Cleanup is handled by the new script replacing the old one
-    };
+    // Always append to document.head
+    const headElement = document.querySelector('head');
+    if (headElement) {
+      headElement.appendChild(script);
+    }
   }, [data]);
 };

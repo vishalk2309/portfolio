@@ -15,7 +15,7 @@ export const useSEO = ({ title, description, image, canonical, noindex = false }
         descMeta.name = 'description';
         document.head.appendChild(descMeta);
       }
-      descMeta.content = description;
+      descMeta.setAttribute('content', description);
     }
 
     // Update OG tags
@@ -26,7 +26,7 @@ export const useSEO = ({ title, description, image, canonical, noindex = false }
         ogTitle.setAttribute('property', 'og:title');
         document.head.appendChild(ogTitle);
       }
-      ogTitle.content = title;
+      ogTitle.setAttribute('content', title);
     }
 
     if (description) {
@@ -36,7 +36,7 @@ export const useSEO = ({ title, description, image, canonical, noindex = false }
         ogDesc.setAttribute('property', 'og:description');
         document.head.appendChild(ogDesc);
       }
-      ogDesc.content = description;
+      ogDesc.setAttribute('content', description);
     }
 
     if (image) {
@@ -46,19 +46,19 @@ export const useSEO = ({ title, description, image, canonical, noindex = false }
         ogImage.setAttribute('property', 'og:image');
         document.head.appendChild(ogImage);
       }
-      ogImage.content = image;
+      ogImage.setAttribute('content', image);
     }
 
-    // Update robots meta for noindex pages
-    if (noindex) {
-      let robotsMeta = document.querySelector('meta[name="robots"]');
-      if (!robotsMeta) {
-        robotsMeta = document.createElement('meta');
-        robotsMeta.name = 'robots';
-        document.head.appendChild(robotsMeta);
+    // Update canonical tag
+    if (canonical) {
+      let canonicalLink = document.querySelector('link[rel="canonical"]');
+      if (!canonicalLink) {
+        canonicalLink = document.createElement('link');
+        canonicalLink.rel = 'canonical';
+        document.head.appendChild(canonicalLink);
       }
-      robotsMeta.content = 'noindex, nofollow';
+      canonicalLink.href = canonical;
     }
 
-  }, [title, description, image, noindex, canonical]);
+  }, [title, description, image, canonical]);
 };
