@@ -103,7 +103,7 @@ export default function ResourcesPage() {
           '@type': 'CollectionPage',
           name: 'Learning Resources',
           description: 'A curated collection of learning resources and materials for web development and software engineering',
-          url: 'https://vishalworks.co.in/resources',
+          url: 'https://www.vishalworks.co.in/resources',
           mainEntity: {
             '@type': 'ItemList',
             itemListElement: resources.slice(0, 10).map((resource, index) => ({
@@ -113,7 +113,7 @@ export default function ResourcesPage() {
                 '@type': 'CreativeWork',
                 name: resource.title,
                 description: resource.description || "",
-                url: resource.fileUrl || 'https://vishalworks.co.in/resources',
+                url: resource.fileUrl || 'https://www.vishalworks.co.in/resources',
               },
             })),
           },

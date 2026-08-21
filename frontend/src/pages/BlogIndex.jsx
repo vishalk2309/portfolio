@@ -36,7 +36,7 @@ export default function BlogIndex() {
               item: {
                 '@type': 'BlogPosting',
                 headline: post.title,
-                url: `https://vishalworks.co.in/blog/${post.slug}`,
+                url: `https://www.vishalworks.co.in/blog/${post.slug}`,
                 image: post.cover_image,
                 description: post.excerpt || "",
                 datePublished: post.author_date || post.created_at,

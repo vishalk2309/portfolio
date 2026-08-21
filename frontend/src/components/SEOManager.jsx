@@ -25,7 +25,7 @@ const SEOManager = () => {
         canonicalLink.rel = 'canonical';
         document.head.appendChild(canonicalLink);
       }
-      const baseUrl = 'https://vishalworks.co.in';
+      const baseUrl = 'https://www.vishalworks.co.in';
       canonicalLink.href = `${baseUrl}${location.pathname}`;
     }
 
