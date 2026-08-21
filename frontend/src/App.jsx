@@ -15,8 +15,15 @@ import Certificates from "./components/Certificates";
 import Testimonials from "./components/Testimonials";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
+import { useSEO } from "./hooks/useSEO";
 
 export default function App() {
+  // Set SEO metadata for homepage
+  useSEO({
+    title: "Vishal Kushwaha — Software Developer & Web Developer",
+    description: "Vishal Kushwaha — Software & Web Developer. Full-stack projects, live LeetCode & GitHub stats, and skills in React, Node.js, Python, MongoDB and more.",
+  });
+
   // Lenis smooth scrolling
   useEffect(() => {
     const lenis = new Lenis({

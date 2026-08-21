@@ -4,6 +4,8 @@ import BlogLayout from "./BlogLayout";
 import BlogCard from "../components/BlogCard";
 import SubscribeBox from "../components/SubscribeBox";
 import { useBlogs } from "../hooks/useBlogs";
+import { useSEO } from "../hooks/useSEO";
+import { useStructuredData } from "../hooks/useStructuredData";
 
 const STORAGE_KEY = "blogViewMode";
 
@@ -11,6 +13,39 @@ export default function BlogIndex() {
   const { posts, status } = useBlogs();
   const [viewMode, setViewMode] = useState("grid");
   const [isLoaded, setIsLoaded] = useState(false);
+
+  useSEO({
+    title: "Blogs & Insights - Vishal Kushwaha",
+    description: "Read articles about web development, full-stack engineering, coding practices, and tech insights. Thoughts and notes from a software developer.",
+  });
+
+  // Add CollectionPage structured data for the blog index
+  useStructuredData(
+    status === 'ready' && posts.length > 0
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'CollectionPage',
+          name: 'Blogs & Insights',
+          description: 'A collection of articles about web development and software engineering',
+          url: 'https://vishalworks.co.in/blog',
+          mainEntity: {
+            '@type': 'ItemList',
+            itemListElement: posts.slice(0, 10).map((post, index) => ({
+              '@type': 'ListItem',
+              position: index + 1,
+              item: {
+                '@type': 'BlogPosting',
+                headline: post.title,
+                url: `https://vishalworks.co.in/blog/${post.slug}`,
+                image: post.cover_image,
+                description: post.excerpt || "",
+                datePublished: post.author_date || post.created_at,
+              },
+            })),
+          },
+        }
+      : null
+  );
 
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);

@@ -25,6 +25,8 @@ import { useAccessRequests } from "../hooks/useAccessRequests";
 import { useBookmarks } from "../hooks/useBookmarks";
 import { useContent } from "../lib/ContentContext";
 import { useAuth } from "../lib/AuthContext";
+import { useSEO } from "../hooks/useSEO";
+import { useStructuredData } from "../hooks/useStructuredData";
 import { supabase } from "../lib/supabase";
 
 // Resources loaded from data.js have no `id`, so bookmarks key off the title
@@ -87,6 +89,37 @@ export default function ResourcesPage() {
   const [authOpen, setAuthOpen] = useState(false);
   const [pending, setPending] = useState(null); // resource awaiting login
   const [ownedIds, setOwnedIds] = useState(() => new Set()); // resources the user bought
+
+  useSEO({
+    title: "Resources & Learning Materials - Vishal Kushwaha",
+    description: "Curated collection of learning resources, guides, tools, and materials for web development, coding, and software engineering. Free and premium resources available.",
+  });
+
+  // Add CollectionPage structured data for resources
+  useStructuredData(
+    resources && resources.length > 0
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'CollectionPage',
+          name: 'Learning Resources',
+          description: 'A curated collection of learning resources and materials for web development and software engineering',
+          url: 'https://vishalworks.co.in/resources',
+          mainEntity: {
+            '@type': 'ItemList',
+            itemListElement: resources.slice(0, 10).map((resource, index) => ({
+              '@type': 'ListItem',
+              position: index + 1,
+              item: {
+                '@type': 'CreativeWork',
+                name: resource.title,
+                description: resource.description || "",
+                url: resource.fileUrl || 'https://vishalworks.co.in/resources',
+              },
+            })),
+          },
+        }
+      : null
+  );
 
   // ---- browse controls (search / sort / view / bookmarks) -----------------
   const [query, setQuery] = useState("");

@@ -7,10 +7,37 @@ import LikeButton from "../components/LikeButton";
 import Comments from "../components/Comments";
 import SubscribeBox from "../components/SubscribeBox";
 import { useBlogPost } from "../hooks/useBlogs";
+import { useSEO } from "../hooks/useSEO";
+import { useStructuredData } from "../hooks/useStructuredData";
 
 export default function BlogPost() {
   const { slug } = useParams();
   const { post, status } = useBlogPost(slug);
+
+  useSEO({
+    title: post ? `${post.title} - Vishal Kushwaha's Blog` : "Blog Post - Vishal Kushwaha",
+    description: post?.excerpt || post?.summary || "Read this article on web development and software engineering.",
+    image: post?.cover_image,
+  });
+
+  // Add BlogPosting structured data for search engines
+  useStructuredData(
+    post && status === 'ready'
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'BlogPosting',
+          headline: post.title,
+          description: post.excerpt || post.summary || "",
+          image: post.cover_image || 'https://vishalworks.co.in/og.png',
+          datePublished: post.author_date || post.created_at,
+          author: {
+            '@type': 'Person',
+            name: post.author_name || 'Vishal Kushwaha',
+          },
+          keywords: (post.tags || []).join(', '),
+        }
+      : null
+  );
 
   const stamp = post?.author_date || post?.created_at;
   const date = stamp
