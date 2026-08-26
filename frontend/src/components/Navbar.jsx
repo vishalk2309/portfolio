@@ -47,6 +47,18 @@ export default function Navbar() {
           : [...mapped.slice(0, ci), blog, ...mapped.slice(ci)];
     }
 
+    // Job Updates — inject before Blog/Contact if missing.
+    if (!mapped.some((l) => l.href === "/jobs")) {
+      const jobs = { label: "Jobs", href: "/jobs" };
+      const at = mapped.findIndex(
+        (l) => l.href === "/blog" || l.href === "#contact"
+      );
+      mapped =
+        at === -1
+          ? [...mapped, jobs]
+          : [...mapped.slice(0, at), jobs, ...mapped.slice(at)];
+    }
+
     return mapped;
   }, [navLinks]);
 
@@ -93,15 +105,17 @@ export default function Navbar() {
         backgroundSize: "100% 4px",
       }}
     >
-      <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <a href="#home" className="text-xl font-bold tracking-tight">
+      <nav className="mx-auto flex max-w-6xl items-center gap-6 px-6 py-4">
+        {/* Logo */}
+        <a href="#home" className="shrink-0 text-xl font-bold tracking-tight">
           <span className="gradient-text">{profile.name}</span>
         </a>
 
-        <ul className="hidden items-center gap-8 md:flex">
+        {/* Desktop Navigation Links - Center */}
+        <ul className="hidden flex-1 items-center justify-center gap-6 md:flex">
           {links.map((link) => {
             const isActive = activeId === link.href.slice(1);
-            const cls = `nav-link text-sm font-medium transition-colors hover:text-white ${
+            const cls = `nav-link text-sm font-medium transition-colors hover:text-white whitespace-nowrap ${
               isActive ? "nav-link-active text-white" : "text-white/75"
             }`;
             return (
@@ -120,7 +134,8 @@ export default function Navbar() {
           })}
         </ul>
 
-        <div className="flex items-center gap-3">
+        {/* Right side items */}
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           {/* Accent theme dots (desktop) */}
           <div className="hidden sm:block">
             <AccentDots size={16} />
@@ -130,42 +145,43 @@ export default function Navbar() {
           <button
             onClick={openPalette}
             aria-label="Open command palette"
-            className="flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-2 text-xs text-white/60 transition-colors hover:text-white"
+            className="flex shrink-0 items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-2 text-xs text-white/60 transition-colors hover:text-white"
           >
-            <FiSearch />
-            <kbd className="hidden sm:inline">⌘K</kbd>
+            <FiSearch size={16} />
+            <kbd className="hidden sm:inline text-xs">⌘K</kbd>
           </button>
 
+          {/* Let's Talk - Desktop only */}
           <a
             href="#contact"
-            className="hidden items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white shadow-[0_0_20px_rgba(168,85,247,0.25)] backdrop-blur-md transition-transform hover:scale-105 md:inline-flex"
+            className="hidden items-center gap-2 shrink-0 rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white shadow-[0_0_20px_rgba(168,85,247,0.25)] backdrop-blur-md transition-transform hover:scale-105 lg:inline-flex"
           >
-            <FiArrowRight className="text-neon-cyan" /> Let's Talk
+            <FiArrowRight size={16} className="text-neon-cyan" /> Let's Talk
           </a>
 
-          {/* Mobile toggle */}
+          {/* Mobile menu toggle */}
           <button
             aria-label="Toggle menu"
             onClick={() => setOpen((o) => !o)}
-            className="flex h-10 w-10 items-center justify-center rounded-lg glass md:hidden"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg glass md:hidden"
           >
-          <div className="space-y-1.5">
-            <span
-              className={`block h-0.5 w-5 bg-white transition-transform ${
-                open ? "translate-y-2 rotate-45" : ""
-              }`}
-            />
-            <span
-              className={`block h-0.5 w-5 bg-white transition-opacity ${
-                open ? "opacity-0" : ""
-              }`}
-            />
-            <span
-              className={`block h-0.5 w-5 bg-white transition-transform ${
-                open ? "-translate-y-2 -rotate-45" : ""
-              }`}
-            />
-          </div>
+            <div className="space-y-1.5">
+              <span
+                className={`block h-0.5 w-5 bg-white transition-transform ${
+                  open ? "translate-y-2 rotate-45" : ""
+                }`}
+              />
+              <span
+                className={`block h-0.5 w-5 bg-white transition-opacity ${
+                  open ? "opacity-0" : ""
+                }`}
+              />
+              <span
+                className={`block h-0.5 w-5 bg-white transition-transform ${
+                  open ? "-translate-y-2 -rotate-45" : ""
+                }`}
+              />
+            </div>
           </button>
         </div>
       </nav>

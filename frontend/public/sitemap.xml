@@ -24,6 +24,14 @@
     <priority>0.8</priority>
   </url>
 
+  <!-- Job Updates page -->
+  <url>
+    <loc>https://www.vishalworks.co.in/jobs</loc>
+    <lastmod>2026-08-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
   <!-- Legal pages -->
   <url>
     <loc>https://www.vishalworks.co.in/terms</loc>

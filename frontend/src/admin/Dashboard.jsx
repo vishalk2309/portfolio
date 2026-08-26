@@ -3,6 +3,7 @@ import { supabase } from "../lib/supabase";
 import { TABLES } from "./schema";
 import TableEditor from "./TableEditor";
 import BlogEditor from "./BlogEditor";
+import JobEditor from "./JobEditor";
 import CommentsAdmin from "./CommentsAdmin";
 import SubscribersAdmin from "./SubscribersAdmin";
 import ResourceSubscribersAdmin from "./ResourceSubscribersAdmin";
@@ -12,6 +13,7 @@ import ResumeAdmin from "./ResumeAdmin";
 import ChangePassword from "./ChangePassword";
 
 const BLOG_KEY = "__blog";
+const JOBS_KEY = "__jobs";
 const COMMENTS_KEY = "__comments";
 const SUBS_KEY = "__subs";
 const RESOURCE_SUBS_KEY = "__resource_subs";
@@ -23,6 +25,7 @@ const PASSWORD_KEY = "__password";
 export default function Dashboard({ session }) {
   const [activeKey, setActiveKey] = useState(TABLES[0].key);
   const isBlog = activeKey === BLOG_KEY;
+  const isJobs = activeKey === JOBS_KEY;
   const isComments = activeKey === COMMENTS_KEY;
   const isSubs = activeKey === SUBS_KEY;
   const isResourceSubs = activeKey === RESOURCE_SUBS_KEY;
@@ -70,6 +73,15 @@ export default function Dashboard({ session }) {
               >
                 <span>📝</span>
                 Blog
+              </button>
+              <button
+                onClick={() => setActiveKey(JOBS_KEY)}
+                className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
+                  isJobs ? "bg-white/10 text-white" : "text-white/60 hover:text-white"
+                }`}
+              >
+                <span>💼</span>
+                Job Updates
               </button>
               <button
                 onClick={() => setActiveKey(COMMENTS_KEY)}
@@ -157,6 +169,8 @@ export default function Dashboard({ session }) {
         <main className="min-w-0 flex-1">
           {isBlog ? (
             <BlogEditor />
+          ) : isJobs ? (
+            <JobEditor />
           ) : isComments ? (
             <CommentsAdmin />
           ) : isSubs ? (

@@ -19,6 +19,8 @@ const BlogPost = lazy(() => import("./pages/BlogPost.jsx"));
 const BlogWrite = lazy(() => import("./pages/BlogWrite.jsx"));
 const BlogStatus = lazy(() => import("./pages/BlogStatus.jsx"));
 const ResourcesPage = lazy(() => import("./pages/ResourcesPage.jsx"));
+const JobUpdatesPage = lazy(() => import("./pages/JobUpdatesPage.jsx"));
+const JobUpdateDetail = lazy(() => import("./pages/JobUpdateDetail.jsx"));
 const AccountPage = lazy(() => import("./pages/AccountPage.jsx"));
 const Terms = lazy(() =>
   import("./pages/LegalPages.jsx").then((m) => ({ default: m.Terms }))
@@ -107,6 +109,27 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <ContentProvider>
               <Suspense fallback={null}>
                 <ResourcesPage />
+              </Suspense>
+            </ContentProvider>
+          }
+        />
+        {/* Job Updates */}
+        <Route
+          path="/jobs"
+          element={
+            <ContentProvider>
+              <Suspense fallback={null}>
+                <JobUpdatesPage />
+              </Suspense>
+            </ContentProvider>
+          }
+        />
+        <Route
+          path="/job/:slug"
+          element={
+            <ContentProvider>
+              <Suspense fallback={null}>
+                <JobUpdateDetail />
               </Suspense>
             </ContentProvider>
           }
