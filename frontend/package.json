@@ -12,6 +12,7 @@
   "dependencies": {
     "@react-three/drei": "^9.122.0",
     "@react-three/fiber": "^8.18.0",
+    "@sentry/react": "^7.91.0",
     "@supabase/supabase-js": "^2.110.8",
     "dompurify": "^3.4.12",
     "framer-motion": "^11.3.0",
@@ -24,7 +25,8 @@
     "react-quill-new": "^3.8.3",
     "react-router-dom": "^7.18.1",
     "remark-gfm": "^4.0.1",
-    "three": "^0.160.1"
+    "three": "^0.160.1",
+    "web-vitals": "^3.7.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.1",

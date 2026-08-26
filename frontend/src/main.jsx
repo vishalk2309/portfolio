@@ -1,6 +1,9 @@
 import React, { Suspense, lazy } from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import * as Sentry from "@sentry/react";
+import { getCLS, getFID, getFCP, getLCP, getTTFB } from "web-vitals";
+import { config } from "./config";
 import App from "./App.jsx";
 import CursorTrail from "./components/CursorTrail.jsx";
 import TouchSpark from "./components/TouchSpark.jsx";
@@ -10,6 +13,23 @@ import "./index.css";
 import { applyAccent, getAccent, applyMode, getMode } from "./theme";
 import { ContentProvider } from "./lib/ContentContext";
 import { AuthProvider } from "./lib/AuthContext";
+
+// Initialize error tracking (Sentry) - only in production with valid DSN
+if (config.sentry.enabled) {
+  Sentry.init({
+    dsn: config.sentry.dsn,
+    environment: config.sentry.environment,
+    tracesSampleRate: 0.1,
+    integrations: [new Sentry.Replay()],
+  });
+}
+
+// Track Web Vitals for performance monitoring
+getCLS((metric) => console.log("CLS:", metric.value));
+getFID((metric) => console.log("FID:", metric.value));
+getFCP((metric) => console.log("FCP:", metric.value));
+getLCP((metric) => console.log("LCP:", metric.value));
+getTTFB((metric) => console.log("TTFB:", metric.value));
 
 // Admin ships as its own chunk — portfolio visitors never download it.
 const AdminApp = lazy(() => import("./admin/AdminApp.jsx"));

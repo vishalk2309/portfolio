@@ -38,7 +38,7 @@ function computeGrade(stars, followers, repos) {
   return { letter: "C", pct: 35 };
 }
 
-const CACHE_TTL = 3 * 60 * 60 * 1000; // 3 hours
+const CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours (reduces API calls by ~90%)
 
 /**
  * Fetches live GitHub stats. Languages are BYTE-ACCURATE (summed from each
