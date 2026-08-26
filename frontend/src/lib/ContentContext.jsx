@@ -192,19 +192,20 @@ export function ContentProvider({ children }) {
             (filesByResource[f.resource_id] ||= []).push(shapeResourceFile(f));
           }
           next.resources = shapeResources(res.data, filesByResource);
+          console.log("[content] Loaded resources from Supabase:", next.resources.length);
         } else {
           // Keep fallback if Supabase returned empty or has an error
           next.resources = fallback.resources;
+          console.log("[content] Using fallback resources (Supabase empty or no data)");
         }
 
         // Ensure critical data always has fallback
-        const final = {
+        setContent((c) => ({
           ...c,
           ...next,
           socials: next.socials || fallback.socials,
           resources: next.resources || fallback.resources,
-        };
-        setContent(final);
+        }));
       } catch (err) {
         // Network/CORS/etc. — silently keep the fallback content.
         console.warn("[content] Supabase fetch failed, using data.js", err);
