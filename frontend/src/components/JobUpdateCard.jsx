@@ -26,7 +26,7 @@ export default function JobUpdateCard({ update, viewMode = "grid" }) {
   const shareLinks = {
     linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(jobUrl)}`,
     twitter: `https://twitter.com/intent/tweet?text=Check out this job: ${encodeURIComponent(jobTitle)} at ${encodeURIComponent(jobCompany)}&url=${encodeURIComponent(jobUrl)}`,
-    whatsapp: `https://whatsapp.com/channel/EngiSync`,
+    whatsapp: `https://wa.me/?text=Check out this job opportunity: ${encodeURIComponent(jobTitle)} at ${encodeURIComponent(jobCompany)} - ${encodeURIComponent(jobUrl)}`,
     email: `mailto:?subject=Interesting Job Opportunity: ${encodeURIComponent(jobTitle)}&body=Check this out: ${encodeURIComponent(jobUrl)}`,
   };
 
