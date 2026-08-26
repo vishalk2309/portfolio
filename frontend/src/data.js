@@ -14,7 +14,14 @@ import {
   SiVercel,
   SiRender,
 } from "react-icons/si";
-import { FaGithub, FaLinkedin, FaEnvelope, FaJava } from "react-icons/fa";
+import {
+  FaGithub,
+  FaLinkedin,
+  FaEnvelope,
+  FaJava,
+  FaWhatsapp,
+  FaYoutube,
+} from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 
 /* ----------------------------- Profile ----------------------------- */
@@ -56,6 +63,16 @@ export const socials = [
     Icon: FaEnvelope,
     href: "mailto:kushwahavishal296@gmail.com",
     label: "Email",
+  },
+  {
+    Icon: FaWhatsapp,
+    href: "https://wa.me/7320916608",
+    label: "WhatsApp",
+  },
+  {
+    Icon: FaYoutube,
+    href: "https://youtube.com/@EngiSync",
+    label: "YouTube",
   },
 ];
 

@@ -61,12 +61,23 @@ export default function Contact() {
         </motion.h2>
 
         <p className="mt-8 text-lg text-white/55">Get in touch directly:</p>
-        <a
-          href={`mailto:${profile.email}`}
-          className="mt-2 inline-block font-mono text-lg text-neon-cyan transition-colors hover:text-white"
-        >
-          {profile.email}
-        </a>
+        <div className="mt-4 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+          <a
+            href={`mailto:${profile.email}`}
+            className="font-mono text-lg text-neon-cyan transition-colors hover:text-white"
+          >
+            {profile.email}
+          </a>
+          <span className="hidden sm:inline text-white/30">•</span>
+          <a
+            href="https://wa.me/919876543210"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 rounded-full bg-green-500/20 border border-green-500/50 px-4 py-2 text-sm font-semibold text-green-400 transition-all hover:bg-green-500/30 hover:border-green-500"
+          >
+            💬 WhatsApp
+          </a>
+        </div>
 
         {/* Socials */}
         <div className="mt-8 flex items-center justify-center gap-6 text-2xl text-white/70">

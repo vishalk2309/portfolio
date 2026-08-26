@@ -113,9 +113,9 @@ export default function Hero() {
               animate: { opacity: 1 },
               transition: { delay: 0.8 },
             })}
-            className="mt-8 flex items-center justify-center gap-6 text-2xl text-white/45"
+            className="mt-8 flex flex-wrap items-center justify-center gap-6 text-2xl text-white/45"
           >
-            {socials.slice(0, 3).map(({ Icon, href, label }) => (
+            {socials.map(({ Icon, href, label }) => (
               <a
                 key={label}
                 href={href}
