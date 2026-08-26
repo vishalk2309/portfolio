@@ -166,6 +166,7 @@ export function ContentProvider({ children }) {
         if (profileRes.data) next.profile = shapeProfile(profileRes.data);
         if (nav.data?.length) next.navLinks = shapeNav(nav.data);
         if (soc.data?.length) next.socials = shapeSocials(soc.data);
+        else next.socials = fallback.socials;
         if (skills.data?.length) {
           next.orbitSkills = shapeOrbit(skills.data);
           next.playgroundSkills = shapePlayground(skills.data);

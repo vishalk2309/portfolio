@@ -69,14 +69,16 @@ export default function Contact() {
             {profile.email}
           </a>
           <span className="hidden sm:inline text-white/30">•</span>
-          <a
-            href="https://wa.me/919876543210"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-green-500/20 border border-green-500/50 px-4 py-2 text-sm font-semibold text-green-400 transition-all hover:bg-green-500/30 hover:border-green-500"
-          >
-            💬 WhatsApp
-          </a>
+          {socials.find(s => s.label === "WhatsApp") && (
+            <a
+              href={socials.find(s => s.label === "WhatsApp").href}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-full bg-green-500/20 border border-green-500/50 px-4 py-2 text-sm font-semibold text-green-400 transition-all hover:bg-green-500/30 hover:border-green-500"
+            >
+              💬 WhatsApp
+            </a>
+          )}
         </div>
 
         {/* Socials */}
