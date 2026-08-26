@@ -182,6 +182,8 @@ export function ContentProvider({ children }) {
         if (edu.data?.length) next.education = shapeTimeline(edu.data);
         if (ach.data?.length) next.achievements = shapeTimeline(ach.data);
         if (testi.data?.length) next.testimonials = shapeTestimonials(testi.data);
+
+        // Resources with fallback
         if (res.data?.length) {
           // Group files under their resource so each resource carries a
           // `files` array (a "folder" can hold many files).
@@ -190,6 +192,9 @@ export function ContentProvider({ children }) {
             (filesByResource[f.resource_id] ||= []).push(shapeResourceFile(f));
           }
           next.resources = shapeResources(res.data, filesByResource);
+        } else {
+          // Keep fallback if Supabase returned empty or has an error
+          next.resources = fallback.resources;
         }
 
         // Ensure critical data always has fallback
@@ -197,6 +202,7 @@ export function ContentProvider({ children }) {
           ...c,
           ...next,
           socials: next.socials || fallback.socials,
+          resources: next.resources || fallback.resources,
         };
         setContent(final);
       } catch (err) {

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FiArrowLeft } from "react-icons/fi";
+import { FiArrowLeft, FiGrid, FiList } from "react-icons/fi";
 import Background from "../components/Background";
 import Footer from "../components/Footer";
 import JobUpdateCard from "../components/JobUpdateCard";
@@ -15,6 +15,7 @@ export default function JobUpdatesPage() {
   const navigate = useNavigate();
   const { updates, status } = useJobUpdates();
   const [selectedTag, setSelectedTag] = useState(null);
+  const [viewMode, setViewMode] = useState("grid");
 
   useSEO({
     title: "Job Updates & Career Journey - Vishal Kushwaha",
@@ -101,38 +102,66 @@ export default function JobUpdatesPage() {
           </p>
         </motion.div>
 
-        {allTags.length > 0 && (
-          <div className="mt-8 flex flex-wrap gap-2">
+        <div className="mt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          {allTags.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setSelectedTag(null)}
+                className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                  selectedTag === null
+                    ? "border-neon-cyan/50 bg-neon-cyan/10 text-neon-cyan"
+                    : "glass border-white/15 text-white/70 hover:text-white"
+                }`}
+              >
+                All ({updates?.length || 0})
+              </button>
+              {allTags.map((tag) => {
+                const count = (updates || []).filter((u) =>
+                  u.tags?.includes(tag)
+                ).length;
+                return (
+                  <button
+                    key={tag}
+                    onClick={() => setSelectedTag(tag)}
+                    className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                      selectedTag === tag
+                        ? "border-neon-cyan/50 bg-neon-cyan/10 text-neon-cyan"
+                        : "glass border-white/15 text-white/70 hover:text-white"
+                    }`}
+                  >
+                    {tag} ({count})
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {/* View Toggle */}
+          <div className="flex items-center gap-2 glass rounded-full p-1">
             <button
-              onClick={() => setSelectedTag(null)}
-              className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
-                selectedTag === null
-                  ? "border-neon-cyan/50 bg-neon-cyan/10 text-neon-cyan"
-                  : "glass border-white/15 text-white/70 hover:text-white"
+              onClick={() => setViewMode("grid")}
+              className={`p-2 rounded-full transition-colors ${
+                viewMode === "grid"
+                  ? "bg-neon-cyan/20 text-neon-cyan"
+                  : "text-white/60 hover:text-white"
               }`}
+              aria-label="Grid view"
             >
-              All ({updates?.length || 0})
+              <FiGrid size={18} />
             </button>
-            {allTags.map((tag) => {
-              const count = (updates || []).filter((u) =>
-                u.tags?.includes(tag)
-              ).length;
-              return (
-                <button
-                  key={tag}
-                  onClick={() => setSelectedTag(tag)}
-                  className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
-                    selectedTag === tag
-                      ? "border-neon-cyan/50 bg-neon-cyan/10 text-neon-cyan"
-                      : "glass border-white/15 text-white/70 hover:text-white"
-                  }`}
-                >
-                  {tag} ({count})
-                </button>
-              );
-            })}
+            <button
+              onClick={() => setViewMode("list")}
+              className={`p-2 rounded-full transition-colors ${
+                viewMode === "list"
+                  ? "bg-neon-cyan/20 text-neon-cyan"
+                  : "text-white/60 hover:text-white"
+              }`}
+              aria-label="List view"
+            >
+              <FiList size={18} />
+            </button>
           </div>
-        )}
+        </div>
 
         {status === "loading" && (
           <p className="mt-12 text-white/40">Loading updates…</p>
@@ -147,7 +176,11 @@ export default function JobUpdatesPage() {
         )}
 
         {filtered && filtered.length > 0 && (
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className={`mt-12 ${
+            viewMode === "grid"
+              ? "grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+              : "space-y-4"
+          }`}>
             {filtered.map((update, i) => (
               <motion.div
                 key={update.id}
@@ -156,7 +189,7 @@ export default function JobUpdatesPage() {
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.4, delay: Math.min(i, 6) * 0.05 }}
               >
-                <JobUpdateCard update={update} />
+                <JobUpdateCard update={update} viewMode={viewMode} />
               </motion.div>
             ))}
           </div>

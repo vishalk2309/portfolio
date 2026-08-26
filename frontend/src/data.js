@@ -66,7 +66,7 @@ export const socials = [
   },
   {
     Icon: FaWhatsapp,
-    href: "https://wa.me/917320916608",
+    href: "https://whatsapp.com/channel/EngiSync",
     label: "WhatsApp",
   },
   {
