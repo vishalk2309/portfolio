@@ -16,7 +16,13 @@ const EMPTY = {
   content: "",
   company: "",
   position: "",
+  location: "",
+  job_type: "Remote",
+  job_id: "",
+  experience: "",
+  qualification: "",
   start_date: "",
+  end_date: "",
   cover_image: "",
   tags: [],
   published: false,
@@ -83,7 +89,13 @@ export default function JobEditor() {
       content: form.content || "",
       company: form.company || null,
       position: form.position || null,
+      location: form.location || null,
+      job_type: form.job_type || "Remote",
+      job_id: form.job_id || null,
+      experience: form.experience || null,
+      qualification: form.qualification || null,
       start_date: form.start_date || null,
+      end_date: form.end_date || null,
       cover_image: form.cover_image || null,
       tags: form.tags,
       published: form.published,
@@ -298,14 +310,79 @@ export default function JobEditor() {
             </div>
           </div>
 
-          <div>
-            <label className="mb-1 block text-sm text-white/70">Start date</label>
-            <input
-              type="date"
-              className={inputCls}
-              value={form.start_date || ""}
-              onChange={(e) => set("start_date", e.target.value)}
-            />
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div>
+              <label className="mb-1 block text-sm text-white/70">Location</label>
+              <input
+                className={inputCls}
+                placeholder="e.g., New York, NY"
+                value={form.location}
+                onChange={(e) => set("location", e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-sm text-white/70">Job Type</label>
+              <select
+                className={inputCls}
+                value={form.job_type}
+                onChange={(e) => set("job_type", e.target.value)}
+              >
+                <option value="Remote" className="bg-base">Remote</option>
+                <option value="Hybrid" className="bg-base">Hybrid</option>
+                <option value="On-site" className="bg-base">On-site</option>
+              </select>
+            </div>
+            <div>
+              <label className="mb-1 block text-sm text-white/70">Job ID</label>
+              <input
+                className={inputCls}
+                placeholder="e.g., JOB-2026-001"
+                value={form.job_id}
+                onChange={(e) => set("job_id", e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div>
+              <label className="mb-1 block text-sm text-white/70">Experience Required</label>
+              <input
+                className={inputCls}
+                placeholder="e.g., 3-5 years"
+                value={form.experience}
+                onChange={(e) => set("experience", e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-sm text-white/70">Qualification Required</label>
+              <input
+                className={inputCls}
+                placeholder="e.g., Bachelor's in Computer Science"
+                value={form.qualification}
+                onChange={(e) => set("qualification", e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div>
+              <label className="mb-1 block text-sm text-white/70">Start date</label>
+              <input
+                type="date"
+                className={inputCls}
+                value={form.start_date || ""}
+                onChange={(e) => set("start_date", e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-sm text-white/70">End date (optional)</label>
+              <input
+                type="date"
+                className={inputCls}
+                value={form.end_date || ""}
+                onChange={(e) => set("end_date", e.target.value)}
+              />
+            </div>
           </div>
 
           <div>
@@ -388,23 +465,61 @@ export default function JobEditor() {
           <label className="mb-1 block text-sm text-white/70">Preview</label>
           <div className="h-[600px] overflow-y-auto rounded-xl border border-white/10 bg-white/[0.03] p-5">
             <div className="space-y-3">
-              {form.company && (
-                <p className="text-sm font-semibold text-neon-cyan">{form.company}</p>
-              )}
-              {form.position && (
-                <p className="text-xs text-white/60">{form.position}</p>
-              )}
+              <div className="flex items-center justify-between">
+                <div>
+                  {form.company && (
+                    <p className="text-sm font-semibold text-neon-cyan">{form.company}</p>
+                  )}
+                  {form.position && (
+                    <p className="text-xs text-white/60">{form.position}</p>
+                  )}
+                </div>
+                {form.job_id && (
+                  <p className="text-xs text-white/40">ID: {form.job_id}</p>
+                )}
+              </div>
+
               <h1 className="text-2xl font-bold text-white">
                 {form.title || "Untitled"}
               </h1>
+
               {form.description && (
                 <p className="text-sm text-white/70">{form.description}</p>
               )}
-              {form.start_date && (
-                <p className="text-xs text-white/50">
-                  Started: {new Date(form.start_date).toLocaleDateString()}
-                </p>
+
+              <div className="flex flex-wrap gap-3 pt-3 text-xs text-white/60">
+                {form.location && (
+                  <span>📍 {form.location}</span>
+                )}
+                {form.job_type && (
+                  <span>💼 {form.job_type}</span>
+                )}
+              </div>
+
+              {(form.experience || form.qualification) && (
+                <div className="flex flex-wrap gap-3 pt-2 text-xs text-white/50">
+                  {form.experience && (
+                    <span>📚 Experience: {form.experience}</span>
+                  )}
+                  {form.qualification && (
+                    <span>🎓 Qualification: {form.qualification}</span>
+                  )}
+                </div>
               )}
+
+              <div className="space-y-1 border-t border-white/10 pt-3 text-xs text-white/50">
+                {form.start_date && (
+                  <p>
+                    Started: {new Date(form.start_date).toLocaleDateString()}
+                  </p>
+                )}
+                {form.end_date && (
+                  <p>
+                    Ended: {new Date(form.end_date).toLocaleDateString()}
+                  </p>
+                )}
+              </div>
+
               {form.tags.length > 0 && (
                 <div className="flex flex-wrap gap-1.5 pt-3">
                   {form.tags.map((tag, i) => (

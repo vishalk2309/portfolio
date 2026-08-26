@@ -5,6 +5,7 @@ import { FiArrowLeft } from "react-icons/fi";
 import Background from "../components/Background";
 import Footer from "../components/Footer";
 import JobUpdateCard from "../components/JobUpdateCard";
+import JobUpdatesSubscribe from "../components/JobUpdatesSubscribe";
 import { useJobUpdates } from "../hooks/useJobUpdates";
 import { useSEO } from "../hooks/useSEO";
 import { useStructuredData } from "../hooks/useStructuredData";
@@ -159,6 +160,10 @@ export default function JobUpdatesPage() {
             ))}
           </div>
         )}
+
+        <div className="mt-16">
+          <JobUpdatesSubscribe />
+        </div>
       </main>
 
       <Footer />

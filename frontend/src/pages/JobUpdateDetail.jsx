@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FiArrowLeft, FiBriefcase, FiCalendar } from "react-icons/fi";
+import { FiArrowLeft, FiBriefcase, FiCalendar, FiMapPin, FiTag, FiAward } from "react-icons/fi";
 import Background from "../components/Background";
 import Footer from "../components/Footer";
 import { supabase } from "../lib/supabase";
@@ -99,6 +99,13 @@ export default function JobUpdateDetail() {
       })
     : null;
 
+  const endDate = update?.end_date
+    ? new Date(update.end_date).toLocaleDateString("en-US", {
+        month: "long",
+        year: "numeric",
+      })
+    : null;
+
   return (
     <div className="relative min-h-screen">
       <Background />
@@ -159,6 +166,9 @@ export default function JobUpdateDetail() {
                   {update.position && (
                     <p className="text-lg font-bold text-white">{update.position}</p>
                   )}
+                  {update.job_id && (
+                    <p className="text-xs text-white/50 mt-1">Job ID: {update.job_id}</p>
+                  )}
                 </div>
                 <FiBriefcase className="shrink-0 text-white/40" size={24} />
               </div>
@@ -171,23 +181,82 @@ export default function JobUpdateDetail() {
                 </p>
               )}
 
-              <div className="flex flex-wrap items-center gap-4 text-sm text-white/50">
-                {startDate && (
-                  <div className="flex items-center gap-2">
-                    <FiCalendar size={16} />
-                    Started: {startDate}
-                  </div>
-                )}
-                {update.tags && update.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {update.tags.map((tag, i) => (
-                      <span key={i} className="text-white/60">
-                        {i > 0 ? "•" : ""} {tag}
+              <div className="grid gap-4 py-4 border-y border-white/10">
+                {/* Location & Job Type */}
+                <div className="flex flex-wrap items-center gap-6 text-sm">
+                  {update.location && (
+                    <div className="flex items-center gap-2 text-white/70">
+                      <FiMapPin size={16} className="text-neon-cyan" />
+                      {update.location}
+                    </div>
+                  )}
+                  {update.job_type && (
+                    <div className="flex items-center gap-2 text-white/70">
+                      <FiBriefcase size={16} className="text-neon-cyan" />
+                      <span className="rounded-full border border-neon-cyan/30 bg-neon-cyan/10 px-2.5 py-1 text-xs font-medium text-neon-cyan">
+                        {update.job_type}
                       </span>
-                    ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Experience & Qualification */}
+                {(update.experience || update.qualification) && (
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    {update.experience && (
+                      <div className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/5 p-3">
+                        <FiAward size={18} className="text-amber-400 shrink-0" />
+                        <div>
+                          <p className="text-xs text-white/50">Experience Required</p>
+                          <p className="text-sm font-semibold text-white">{update.experience}</p>
+                        </div>
+                      </div>
+                    )}
+                    {update.qualification && (
+                      <div className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/5 p-3">
+                        <span className="text-lg">🎓</span>
+                        <div>
+                          <p className="text-xs text-white/50">Qualification Required</p>
+                          <p className="text-sm font-semibold text-white">{update.qualification}</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
+
+                {/* Employment Duration */}
+                <div className="flex flex-wrap items-center gap-4 text-sm text-white/60">
+                  {startDate && (
+                    <div className="flex items-center gap-2">
+                      <FiCalendar size={14} />
+                      Started: <span className="text-white">{startDate}</span>
+                    </div>
+                  )}
+                  {startDate && update.end_date && (
+                    <span className="text-white/40">•</span>
+                  )}
+                  {update.end_date && (
+                    <div className="flex items-center gap-2">
+                      <FiCalendar size={14} />
+                      Ended: <span className="text-white">{endDate}</span>
+                    </div>
+                  )}
+                </div>
               </div>
+
+              {update.tags && update.tags.length > 0 && (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {update.tags.map((tag, i) => (
+                    <span
+                      key={i}
+                      className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-sm font-medium text-white/70"
+                    >
+                      <FiTag size={12} />
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
 
             {update.tags && update.tags.length > 0 && (

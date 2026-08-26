@@ -13,7 +13,13 @@ create table if not exists job_updates (
   content     text,                       -- markdown
   company     text,                       -- company name
   position    text,                       -- job title
+  location    text,                       -- job location
+  job_type    text,                       -- Remote, Hybrid, On-site
+  job_id      text,                       -- job identifier/reference
+  experience  text,                       -- required experience (e.g., "3-5 years")
+  qualification text,                    -- required qualification (e.g., "Bachelor's in CS")
   start_date  date,                       -- when they started
+  end_date    date,                       -- when they left (if applicable)
   cover_image text,                       -- featured image
   tags        text[] not null default '{}', -- tech stack, skills, etc.
   published   boolean not null default false,

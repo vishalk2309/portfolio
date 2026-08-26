@@ -7,6 +7,7 @@ import JobEditor from "./JobEditor";
 import CommentsAdmin from "./CommentsAdmin";
 import SubscribersAdmin from "./SubscribersAdmin";
 import ResourceSubscribersAdmin from "./ResourceSubscribersAdmin";
+import JobSubscribersAdmin from "./JobSubscribersAdmin";
 import AccessRequestsAdmin from "./AccessRequestsAdmin";
 import FolderUpload from "./FolderUpload";
 import ResumeAdmin from "./ResumeAdmin";
@@ -14,6 +15,7 @@ import ChangePassword from "./ChangePassword";
 
 const BLOG_KEY = "__blog";
 const JOBS_KEY = "__jobs";
+const JOB_SUBS_KEY = "__job_subs";
 const COMMENTS_KEY = "__comments";
 const SUBS_KEY = "__subs";
 const RESOURCE_SUBS_KEY = "__resource_subs";
@@ -26,6 +28,7 @@ export default function Dashboard({ session }) {
   const [activeKey, setActiveKey] = useState(TABLES[0].key);
   const isBlog = activeKey === BLOG_KEY;
   const isJobs = activeKey === JOBS_KEY;
+  const isJobSubs = activeKey === JOB_SUBS_KEY;
   const isComments = activeKey === COMMENTS_KEY;
   const isSubs = activeKey === SUBS_KEY;
   const isResourceSubs = activeKey === RESOURCE_SUBS_KEY;
@@ -82,6 +85,15 @@ export default function Dashboard({ session }) {
               >
                 <span>💼</span>
                 Job Updates
+              </button>
+              <button
+                onClick={() => setActiveKey(JOB_SUBS_KEY)}
+                className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
+                  isJobSubs ? "bg-white/10 text-white" : "text-white/60 hover:text-white"
+                }`}
+              >
+                <span>📬</span>
+                Job Subscribers
               </button>
               <button
                 onClick={() => setActiveKey(COMMENTS_KEY)}
@@ -171,6 +183,8 @@ export default function Dashboard({ session }) {
             <BlogEditor />
           ) : isJobs ? (
             <JobEditor />
+          ) : isJobSubs ? (
+            <JobSubscribersAdmin />
           ) : isComments ? (
             <CommentsAdmin />
           ) : isSubs ? (

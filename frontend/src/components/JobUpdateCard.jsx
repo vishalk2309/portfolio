@@ -1,10 +1,17 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FiBriefcase, FiCalendar } from "react-icons/fi";
+import { FiBriefcase, FiCalendar, FiMapPin, FiAward } from "react-icons/fi";
 
 export default function JobUpdateCard({ update }) {
   const startDate = update.start_date
     ? new Date(update.start_date).toLocaleDateString("en-US", {
+        month: "short",
+        year: "numeric",
+      })
+    : null;
+
+  const endDate = update.end_date
+    ? new Date(update.end_date).toLocaleDateString("en-US", {
         month: "short",
         year: "numeric",
       })
@@ -35,6 +42,9 @@ export default function JobUpdateCard({ update }) {
           {update.position && (
             <p className="text-xs text-white/60">{update.position}</p>
           )}
+          {update.job_id && (
+            <p className="text-xs text-white/40">ID: {update.job_id}</p>
+          )}
         </div>
         <FiBriefcase className="shrink-0 text-white/40" size={20} />
       </div>
@@ -47,8 +57,40 @@ export default function JobUpdateCard({ update }) {
         </p>
       )}
 
+      <div className="mt-3 space-y-2">
+        <div className="flex flex-wrap items-center gap-2 text-xs text-white/50">
+          {update.location && (
+            <span className="flex items-center gap-1">
+              <FiMapPin size={12} />
+              {update.location}
+            </span>
+          )}
+          {update.job_type && (
+            <span className="rounded-full border border-white/15 bg-white/5 px-2 py-0.5">
+              {update.job_type}
+            </span>
+          )}
+        </div>
+
+        {(update.experience || update.qualification) && (
+          <div className="flex flex-wrap items-center gap-2 text-xs text-white/50">
+            {update.experience && (
+              <span className="flex items-center gap-1">
+                <FiAward size={12} />
+                {update.experience}
+              </span>
+            )}
+            {update.qualification && (
+              <span className="flex items-center gap-1">
+                📚 {update.qualification}
+              </span>
+            )}
+          </div>
+        )}
+      </div>
+
       {update.tags && update.tags.length > 0 && (
-        <div className="mt-4 flex flex-wrap gap-1.5">
+        <div className="mt-3 flex flex-wrap gap-1.5">
           {update.tags.slice(0, 3).map((tag, i) => (
             <span
               key={i}
@@ -65,12 +107,19 @@ export default function JobUpdateCard({ update }) {
         </div>
       )}
 
-      {startDate && (
-        <div className="mt-4 flex items-center gap-2 text-xs text-white/50">
-          <FiCalendar size={14} />
-          {startDate}
-        </div>
-      )}
+      <div className="mt-4 flex items-center gap-4 text-xs text-white/50 border-t border-white/10 pt-3">
+        {startDate && (
+          <div className="flex items-center gap-1">
+            <FiCalendar size={12} />
+            {startDate}
+          </div>
+        )}
+        {endDate && (
+          <div className="flex items-center gap-1">
+            - {endDate}
+          </div>
+        )}
+      </div>
 
       <Link
         to={`/job/${update.slug}`}
