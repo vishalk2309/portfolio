@@ -31,6 +31,20 @@ const EMPTY = {
 const inputCls =
   "w-full rounded-xl border border-white/15 bg-white/[0.04] px-4 py-2.5 text-white outline-none focus:border-neon-purple";
 
+const notifySubscribers = async (jobId) => {
+  try {
+    const { data, error } = await supabase.functions.invoke("notify-job-subscribers", {
+      body: { job_id: jobId },
+    });
+    if (error || !data?.success) {
+      throw new Error(data?.error || "Could not send notifications.");
+    }
+    alert(`✓ Sent notifications to ${data.sent} subscribers!`);
+  } catch (err) {
+    alert("Error: " + (err.message || "Could not send notifications."));
+  }
+};
+
 export default function JobEditor() {
   const [updates, setUpdates] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -217,6 +231,14 @@ export default function JobEditor() {
                 >
                   {u.published ? "Unpublish" : "Publish"}
                 </button>
+                {u.published && (
+                  <button
+                    onClick={() => notifySubscribers(u.id)}
+                    className="rounded-lg bg-emerald-500/15 px-3 py-1.5 text-xs font-medium text-emerald-400 hover:bg-emerald-500/25"
+                  >
+                    📬 Notify
+                  </button>
+                )}
                 <button
                   onClick={() => startEdit(u)}
                   className="rounded-lg bg-white/10 px-3 py-1.5 text-xs text-white hover:bg-white/20"
