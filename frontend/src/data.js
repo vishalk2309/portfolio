@@ -66,7 +66,7 @@ export const socials = [
   },
   {
     Icon: FaWhatsapp,
-    href: "https://whatsapp.com/channel/0029VbDjWfgHQbS6XEdBjf0H",
+    href: "https://whatsapp.com/channel/0029VbDjWfgHQbS6XRdBjf0H",
     label: "WhatsApp",
   },
   {
