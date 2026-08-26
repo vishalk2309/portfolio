@@ -92,7 +92,7 @@ export default function Navbar() {
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 flex flex-col flex-shrink-0 ${
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
         scrolled
           ? "glass shadow-[0_8px_30px_-12px_rgba(30,30,30,0.15)]"
           : "bg-transparent border-b border-transparent"
@@ -105,7 +105,7 @@ export default function Navbar() {
         backgroundSize: "100% 4px",
       }}
     >
-      <nav className="mx-auto flex max-w-6xl items-center gap-6 px-6 py-4 flex-shrink-0">
+      <nav className="mx-auto w-full flex max-w-6xl items-center justify-between gap-6 px-4 sm:px-6 py-3 sm:py-4">
         {/* Logo */}
         <a href="#home" className="shrink-0 text-xl font-bold tracking-tight">
           <span className="gradient-text">{profile.name}</span>
