@@ -14,32 +14,8 @@ interface Job {
   description?: string;
   job_type?: string;
   posted_date?: string;
-  source: "github" | "devto" | "remoteok" | "manual";
+  source: "devto" | "remoteok" | "manual";
   external_id?: string;
-}
-
-// Fetch from GitHub Jobs API
-async function fetchGitHubJobs(): Promise<Job[]> {
-  try {
-    const response = await fetch("https://api.github.com/jobs?location=remote");
-    if (!response.ok) throw new Error("GitHub API failed");
-
-    const jobs = await response.json();
-    return jobs.map((job: any) => ({
-      title: job.title,
-      company: job.company,
-      location: job.location || "Remote",
-      url: job.url,
-      description: job.description,
-      job_type: job.type,
-      source: "github",
-      external_id: `github_${job.id}`,
-      posted_date: job.created_at,
-    }));
-  } catch (error) {
-    console.error("GitHub Jobs fetch failed:", error);
-    return [];
-  }
 }
 
 // Fetch from Dev.to Jobs API
@@ -53,6 +29,7 @@ async function fetchDevToJobs(): Promise<Job[]> {
     const listings = await response.json();
     return listings
       .filter((job: any) => job.body_markdown?.toLowerCase().includes("remote"))
+      .slice(0, 20)
       .map((job: any) => ({
         title: job.title,
         company: job.user?.name || "Unknown",
@@ -65,6 +42,33 @@ async function fetchDevToJobs(): Promise<Job[]> {
       }));
   } catch (error) {
     console.error("Dev.to Jobs fetch failed:", error);
+    return [];
+  }
+}
+
+// Fetch from RemoteOK API
+async function fetchRemoteOKJobs(): Promise<Job[]> {
+  try {
+    const response = await fetch("https://remoteok.com/api");
+    if (!response.ok) throw new Error("RemoteOK API failed");
+
+    const jobs = await response.json();
+    return jobs
+      .filter((job: any) => job.id !== "0" && job.position)
+      .slice(0, 20)
+      .map((job: any) => ({
+        title: job.position,
+        company: job.company,
+        location: job.location || "Remote",
+        url: job.url,
+        description: job.description?.substring(0, 500) || job.position,
+        job_type: "Remote",
+        source: "remoteok",
+        external_id: `remoteok_${job.id}`,
+        posted_date: new Date(job.date_posted * 1000).toISOString(),
+      }));
+  } catch (error) {
+    console.error("RemoteOK Jobs fetch failed:", error);
     return [];
   }
 }
@@ -84,14 +88,11 @@ serve(async (req) => {
   try {
     console.log("Starting job fetch...");
 
-    // Fetch from all sources
-    const [githubJobs, devtoJobs] = await Promise.all([
-      fetchGitHubJobs(),
-      fetchDevToJobs(),
-    ]);
+    // Fetch from RemoteOK (Dev.to API endpoint is broken)
+    const remoteokJobs = await fetchRemoteOKJobs();
 
-    const allJobs = [...githubJobs, ...devtoJobs];
-    console.log(`Fetched ${allJobs.length} jobs`);
+    const allJobs = [...remoteokJobs];
+    console.log(`Fetched ${allJobs.length} jobs total`);
 
     // Deduplicate
     const uniqueJobs = deduplicateJobs(allJobs);
@@ -135,8 +136,7 @@ serve(async (req) => {
         success: true,
         count: uniqueJobs.length,
         sources: {
-          github: githubJobs.length,
-          devto: devtoJobs.length,
+          remoteok: remoteokJobs.length,
         },
       }),
       { headers: { "Content-Type": "application/json" } }
