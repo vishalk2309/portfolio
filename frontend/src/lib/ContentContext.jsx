@@ -144,12 +144,10 @@ export function ContentProvider({ children }) {
 
     (async () => {
       try {
-        console.log("[content] Fetching data from Supabase...");
-        const [profileRes, nav, soc, skills, proj, certs, edu, ach, testi, res, rfiles] =
+        const [profileRes, nav, skills, proj, certs, edu, ach, testi, res, rfiles] =
           await Promise.all([
             supabase.from("profile").select("*").limit(1).maybeSingle(),
             supabase.from("nav_links").select("*").order("sort_order"),
-            supabase.from("socials").select("*").order("sort_order"),
             supabase.from("skills").select("*").order("sort_order"),
             supabase.from("projects").select("*").order("sort_order"),
             supabase.from("certificates").select("*").order("sort_order"),
@@ -167,16 +165,7 @@ export function ContentProvider({ children }) {
         if (profileRes.data) next.profile = shapeProfile(profileRes.data);
         if (nav.data?.length) next.navLinks = shapeNav(nav.data);
 
-        // Always prefer Supabase socials if they exist, otherwise use fallback
-        console.log("[content] Supabase socials response:", soc);
-        if (soc.data?.length) {
-          next.socials = shapeSocials(soc.data);
-          console.log("[content] Loaded socials from Supabase:", soc.data.length);
-        } else {
-          // Keep fallback if Supabase returned empty or has an error
-          next.socials = fallback.socials;
-          console.log("[content] Using fallback socials - Supabase returned empty/error");
-        }
+        // Socials always come from data.js (configured by user)
         if (skills.data?.length) {
           next.orbitSkills = shapeOrbit(skills.data);
           next.playgroundSkills = shapePlayground(skills.data);
