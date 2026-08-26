@@ -18,6 +18,7 @@ create table if not exists job_updates (
   job_id      text,                       -- job identifier/reference
   experience  text,                       -- required experience (e.g., "3-5 years")
   qualification text,                    -- required qualification (e.g., "Bachelor's in CS")
+  apply_url   text,                       -- URL to apply for the job
   start_date  date,                       -- when they started
   end_date    date,                       -- when they left (if applicable)
   cover_image text,                       -- featured image

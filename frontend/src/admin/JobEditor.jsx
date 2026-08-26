@@ -21,6 +21,7 @@ const EMPTY = {
   job_id: "",
   experience: "",
   qualification: "",
+  apply_url: "",
   start_date: "",
   end_date: "",
   cover_image: "",
@@ -108,6 +109,7 @@ export default function JobEditor() {
       job_id: form.job_id || null,
       experience: form.experience || null,
       qualification: form.qualification || null,
+      apply_url: form.apply_url || null,
       start_date: form.start_date || null,
       end_date: form.end_date || null,
       cover_image: form.cover_image || null,
@@ -386,6 +388,17 @@ export default function JobEditor() {
             </div>
           </div>
 
+          <div>
+            <label className="mb-1 block text-sm text-white/70">Apply URL (optional)</label>
+            <input
+              className={inputCls}
+              placeholder="e.g., https://example.com/apply or mailto:jobs@example.com"
+              value={form.apply_url}
+              onChange={(e) => set("apply_url", e.target.value)}
+            />
+            <p className="mt-1 text-xs text-white/50">Leave empty to link to the job detail page</p>
+          </div>
+
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
               <label className="mb-1 block text-sm text-white/70">Start date</label>
@@ -526,6 +539,12 @@ export default function JobEditor() {
                   {form.qualification && (
                     <span>🎓 Qualification: {form.qualification}</span>
                   )}
+                </div>
+              )}
+
+              {form.apply_url && (
+                <div className="mt-3 pt-3 border-t border-white/10">
+                  <p className="text-xs text-white/50 mb-2">Apply link: {form.apply_url}</p>
                 </div>
               )}
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FiArrowLeft, FiBriefcase, FiCalendar, FiMapPin, FiTag, FiAward } from "react-icons/fi";
+import { FiArrowLeft, FiBriefcase, FiCalendar, FiMapPin, FiTag, FiAward, FiExternalLink } from "react-icons/fi";
 import Background from "../components/Background";
 import Footer from "../components/Footer";
 import { supabase } from "../lib/supabase";
@@ -281,13 +281,34 @@ export default function JobUpdateDetail() {
               </div>
             )}
 
-            <div className="mt-12 border-t border-white/10 pt-8 text-center">
-              <button
-                onClick={() => navigate("/jobs")}
-                className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-white/10"
-              >
-                ← View all updates
-              </button>
+            {/* Apply Section */}
+            <div className="mt-12 border-t border-white/10 pt-8">
+              <div className="flex flex-col gap-4 sm:flex-row">
+                {update.apply_url ? (
+                  <a
+                    href={update.apply_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl border border-neon-cyan/30 bg-gradient-to-r from-neon-cyan/20 to-neon-cyan/10 px-6 py-3 text-sm font-semibold text-neon-cyan transition-all hover:border-neon-cyan/50 hover:from-neon-cyan/30 hover:to-neon-cyan/20"
+                  >
+                    🚀 Apply Now
+                    <FiExternalLink size={16} />
+                  </a>
+                ) : (
+                  <button
+                    onClick={() => navigate("/jobs")}
+                    className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl border border-neon-cyan/30 bg-gradient-to-r from-neon-cyan/20 to-neon-cyan/10 px-6 py-3 text-sm font-semibold text-neon-cyan transition-all hover:border-neon-cyan/50 hover:from-neon-cyan/30 hover:to-neon-cyan/20"
+                  >
+                    🚀 Back to Jobs
+                  </button>
+                )}
+                <button
+                  onClick={() => navigate("/jobs")}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-white/10"
+                >
+                  ← View all updates
+                </button>
+              </div>
             </div>
           </motion.article>
         )}

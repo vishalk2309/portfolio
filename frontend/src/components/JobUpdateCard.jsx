@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FiBriefcase, FiCalendar, FiMapPin, FiAward } from "react-icons/fi";
+import { FiBriefcase, FiCalendar, FiMapPin, FiAward, FiArrowRight } from "react-icons/fi";
 
 export default function JobUpdateCard({ update }) {
   const startDate = update.start_date
@@ -121,12 +121,33 @@ export default function JobUpdateCard({ update }) {
         )}
       </div>
 
-      <Link
-        to={`/job/${update.slug}`}
-        className="mt-4 inline-flex items-center gap-2 rounded-xl border border-neon-cyan/30 bg-neon-cyan/5 px-4 py-2 text-sm font-semibold text-neon-cyan transition-colors hover:border-neon-cyan/50 hover:bg-neon-cyan/10"
-      >
-        Read update →
-      </Link>
+      <div className="mt-4 flex gap-2">
+        {update.apply_url ? (
+          <a
+            href={update.apply_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl border border-neon-cyan/30 bg-gradient-to-r from-neon-cyan/20 to-neon-cyan/10 px-4 py-2 text-sm font-semibold text-neon-cyan transition-all hover:border-neon-cyan/50 hover:from-neon-cyan/30 hover:to-neon-cyan/20"
+          >
+            🚀 Apply
+            <FiArrowRight size={14} />
+          </a>
+        ) : (
+          <Link
+            to={`/job/${update.slug}`}
+            className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl border border-neon-cyan/30 bg-gradient-to-r from-neon-cyan/20 to-neon-cyan/10 px-4 py-2 text-sm font-semibold text-neon-cyan transition-all hover:border-neon-cyan/50 hover:from-neon-cyan/30 hover:to-neon-cyan/20"
+          >
+            🚀 Apply
+            <FiArrowRight size={14} />
+          </Link>
+        )}
+        <Link
+          to={`/job/${update.slug}`}
+          className="inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-sm font-medium text-white/70 transition-colors hover:text-white"
+        >
+          Details
+        </Link>
+      </div>
     </motion.div>
   );
 }

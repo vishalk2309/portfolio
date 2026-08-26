@@ -74,7 +74,7 @@ Deno.serve(async (req) => {
   // Get the job update
   const { data: job } = await supabase
     .from("job_updates")
-    .select("id,title,slug,description,company,position,location,job_type,experience,qualification,published")
+    .select("id,title,slug,description,company,position,location,job_type,experience,qualification,apply_url,published")
     .eq("id", jobId)
     .maybeSingle();
 
@@ -125,9 +125,12 @@ Deno.serve(async (req) => {
 
       ${job.description ? `<p style="color:#555;margin:16px 0;font-style:italic">${esc(job.description)}</p>` : ""}
 
-      <p style="margin:20px 0"><a href="${site}/job/${job.slug}" style="background-color:#6ee7f9;color:#000;padding:12px 24px;border-radius:6px;text-decoration:none;font-weight:600;display:inline-block">View Full Details →</a></p>
+      <p style="margin:20px 0;text-align:center">
+        <a href="${job.apply_url || `${site}/job/${job.slug}`}" style="background-color:#6ee7f9;color:#000;padding:12px 32px;border-radius:6px;text-decoration:none;font-weight:600;display:inline-block;margin-right:10px">🚀 Apply Now</a>
+        <a href="${site}/job/${job.slug}" style="background-color:#f3f4f6;color:#1f2937;padding:12px 24px;border-radius:6px;text-decoration:none;font-weight:600;display:inline-block">View Details</a>
+      </p>
 
-      <p><a href="${site}/jobs" style="color:#6ee7f9;text-decoration:none">See all job updates</a></p>
+      <p style="text-align:center"><a href="${site}/jobs" style="color:#6ee7f9;text-decoration:none;font-size:14px">See all job updates</a></p>
 
       <hr style="border:none;border-top:1px solid #eee;margin:24px 0">
       <p style="font-size:12px;color:#999">You're receiving this because you subscribed to job updates from Vishal Kushwaha.</p>
