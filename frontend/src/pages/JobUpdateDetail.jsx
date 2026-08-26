@@ -273,9 +273,10 @@ export default function JobUpdateDetail() {
             )}
 
             {update.content && (
-              <div className="prose prose-invert max-w-none">
+              <div className="prose prose-invert max-w-none overflow-hidden">
                 <div
-                  className="space-y-4 text-white/70 leading-relaxed"
+                  className="space-y-4 text-white/70 leading-relaxed break-words overflow-x-hidden"
+                  style={{ wordBreak: "break-word", overflowWrap: "break-word" }}
                   dangerouslySetInnerHTML={{ __html: update.content }}
                 />
               </div>

@@ -52,7 +52,7 @@ export default function JobUpdateCard({ update }) {
       <h3 className="text-lg font-bold text-white">{update.title}</h3>
 
       {update.description && (
-        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-white/60">
+        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-white/60 break-words">
           {update.description}
         </p>
       )}

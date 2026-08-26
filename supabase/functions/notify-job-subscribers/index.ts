@@ -114,7 +114,7 @@ Deno.serve(async (req) => {
   `;
 
   const htmlContent = `
-    <div style="font-family:system-ui,Segoe UI,Arial,sans-serif;font-size:15px;line-height:1.6;color:#111">
+    <div style="font-family:system-ui,Segoe UI,Arial,sans-serif;font-size:15px;line-height:1.6;color:#111;max-width:600px;word-wrap:break-word;overflow-wrap:break-word">
       <h2 style="margin:0 0 8px;color:#1f2937">🎉 New Job Update Posted!</h2>
       <p style="color:#666;margin:0 0 16px">You're subscribed to job updates from Vishal Kushwaha</p>
 
@@ -123,7 +123,7 @@ Deno.serve(async (req) => {
 
       ${jobDetailsHtml}
 
-      ${job.description ? `<p style="color:#555;margin:16px 0;font-style:italic">${esc(job.description)}</p>` : ""}
+      ${job.description ? `<p style="color:#555;margin:16px 0;font-style:italic;word-wrap:break-word;overflow-wrap:break-word">${esc(job.description)}</p>` : ""}
 
       <p style="margin:20px 0;text-align:center">
         <a href="${job.apply_url || `${site}/job/${job.slug}`}" style="background-color:#6ee7f9;color:#000;padding:12px 32px;border-radius:6px;text-decoration:none;font-weight:600;display:inline-block;margin-right:10px">🚀 Apply Now</a>
