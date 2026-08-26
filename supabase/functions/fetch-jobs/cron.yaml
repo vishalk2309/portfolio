@@ -1,0 +1,6 @@
+# Daily job fetcher - runs at 2 AM UTC every day
+# Fetches jobs from GitHub and Dev.to APIs and stores them
+
+schedule: "0 2 * * *"
+name: "Fetch Jobs Daily"
+description: "Automatically fetch and update job listings from GitHub and Dev.to APIs"

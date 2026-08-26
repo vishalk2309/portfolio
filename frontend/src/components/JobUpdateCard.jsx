@@ -51,14 +51,24 @@ export default function JobUpdateCard({ update, viewMode = "grid" }) {
 
       <div className="flex items-start justify-between gap-3 mb-3">
         <div>
-          {update.company && (
-            <p className="text-sm font-semibold text-neon-cyan">{update.company}</p>
-          )}
+          <div className="flex items-center gap-2">
+            {update.company && (
+              <p className="text-sm font-semibold text-neon-cyan">{update.company}</p>
+            )}
+            {update.is_auto_fetched && (
+              <span className="rounded-full bg-blue-500/20 border border-blue-500/50 px-2 py-0.5 text-xs text-blue-400">
+                Auto
+              </span>
+            )}
+          </div>
           {update.position && (
             <p className="text-xs text-white/60">{update.position}</p>
           )}
           {update.job_id && (
             <p className="text-xs text-white/40">ID: {update.job_id}</p>
+          )}
+          {update.source && update.source !== "manual" && (
+            <p className="text-xs text-white/40">via {update.source}</p>
           )}
         </div>
         <FiBriefcase className="shrink-0 text-white/40" size={20} />
