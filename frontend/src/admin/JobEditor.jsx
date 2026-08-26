@@ -34,9 +34,12 @@ const inputCls =
 
 const notifySubscribers = async (jobId) => {
   try {
-    const { data, error } = await supabase.functions.invoke("notify-job-subscribers", {
-      body: { job_id: jobId },
-    });
+    const { data, error } = await supabase.functions.invoke(
+      "notify-job-subscribers",
+      {
+        body: { job_id: jobId },
+      },
+    );
     if (error || !data?.success) {
       throw new Error(data?.error || "Could not send notifications.");
     }
@@ -198,7 +201,9 @@ export default function JobEditor() {
         {loading ? (
           <p className="text-white/40">Loading…</p>
         ) : updates.length === 0 ? (
-          <p className="text-white/40">No updates yet. Click "New update" to create one.</p>
+          <p className="text-white/40">
+            No updates yet. Click "New update" to create one.
+          </p>
         ) : (
           <div className="space-y-2">
             {updates.map((u) => (
@@ -298,7 +303,10 @@ export default function JobEditor() {
               onChange={(e) => {
                 const v = e.target.value;
                 set("title", v);
-                if (editing === "new" && (!form.slug || form.slug === slugify(form.title)))
+                if (
+                  editing === "new" &&
+                  (!form.slug || form.slug === slugify(form.title))
+                )
                   set("slug", slugify(v));
               }}
             />
@@ -317,7 +325,9 @@ export default function JobEditor() {
 
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-sm text-white/70">Company</label>
+              <label className="mb-1 block text-sm text-white/70">
+                Company
+              </label>
               <input
                 className={inputCls}
                 value={form.company}
@@ -325,7 +335,9 @@ export default function JobEditor() {
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm text-white/70">Position</label>
+              <label className="mb-1 block text-sm text-white/70">
+                Position
+              </label>
               <input
                 className={inputCls}
                 value={form.position}
@@ -336,7 +348,9 @@ export default function JobEditor() {
 
           <div className="grid gap-3 sm:grid-cols-3">
             <div>
-              <label className="mb-1 block text-sm text-white/70">Location</label>
+              <label className="mb-1 block text-sm text-white/70">
+                Location
+              </label>
               <input
                 className={inputCls}
                 placeholder="e.g., New York, NY"
@@ -345,15 +359,26 @@ export default function JobEditor() {
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm text-white/70">Job Type</label>
+              <label className="mb-1 block text-sm text-white/70">
+                Job Type
+              </label>
               <select
                 className={inputCls}
                 value={form.job_type}
                 onChange={(e) => set("job_type", e.target.value)}
               >
-                <option value="Remote" className="bg-base">Remote</option>
-                <option value="Hybrid" className="bg-base">Hybrid</option>
-                <option value="On-site" className="bg-base">On-site</option>
+                <option value="Remote" className="bg-base">
+                  Remote
+                </option>
+                <option value="Hybrid" className="bg-base">
+                  Hybrid
+                </option>
+                <option value="On-site" className="bg-base">
+                  On-site
+                </option>
+                <option value="Not Specified" className="bg-base">
+                  Not Specified
+                </option>
               </select>
             </div>
             <div>
@@ -369,7 +394,9 @@ export default function JobEditor() {
 
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-sm text-white/70">Experience Required</label>
+              <label className="mb-1 block text-sm text-white/70">
+                Experience Required
+              </label>
               <input
                 className={inputCls}
                 placeholder="e.g., 3-5 years"
@@ -378,7 +405,9 @@ export default function JobEditor() {
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm text-white/70">Qualification Required</label>
+              <label className="mb-1 block text-sm text-white/70">
+                Qualification Required
+              </label>
               <input
                 className={inputCls}
                 placeholder="e.g., Bachelor's in Computer Science"
@@ -389,19 +418,25 @@ export default function JobEditor() {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm text-white/70">Apply URL (optional)</label>
+            <label className="mb-1 block text-sm text-white/70">
+              Apply URL (optional)
+            </label>
             <input
               className={inputCls}
               placeholder="e.g., https://example.com/apply or mailto:jobs@example.com"
               value={form.apply_url}
               onChange={(e) => set("apply_url", e.target.value)}
             />
-            <p className="mt-1 text-xs text-white/50">Leave empty to link to the job detail page</p>
+            <p className="mt-1 text-xs text-white/50">
+              Leave empty to link to the job detail page
+            </p>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-sm text-white/70">Start date</label>
+              <label className="mb-1 block text-sm text-white/70">
+                Start date
+              </label>
               <input
                 type="date"
                 className={inputCls}
@@ -410,7 +445,9 @@ export default function JobEditor() {
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm text-white/70">End date (optional)</label>
+              <label className="mb-1 block text-sm text-white/70">
+                End date (optional)
+              </label>
               <input
                 type="date"
                 className={inputCls}
@@ -445,14 +482,16 @@ export default function JobEditor() {
                   e.target.value
                     .split(",")
                     .map((t) => t.trim())
-                    .filter(Boolean)
+                    .filter(Boolean),
                 )
               }
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm text-white/70">Cover image</label>
+            <label className="mb-1 block text-sm text-white/70">
+              Cover image
+            </label>
             <input
               className={inputCls}
               placeholder="https://… or upload"
@@ -503,7 +542,9 @@ export default function JobEditor() {
               <div className="flex items-center justify-between">
                 <div>
                   {form.company && (
-                    <p className="text-sm font-semibold text-neon-cyan">{form.company}</p>
+                    <p className="text-sm font-semibold text-neon-cyan">
+                      {form.company}
+                    </p>
                   )}
                   {form.position && (
                     <p className="text-xs text-white/60">{form.position}</p>
@@ -523,12 +564,8 @@ export default function JobEditor() {
               )}
 
               <div className="flex flex-wrap gap-3 pt-3 text-xs text-white/60">
-                {form.location && (
-                  <span>📍 {form.location}</span>
-                )}
-                {form.job_type && (
-                  <span>💼 {form.job_type}</span>
-                )}
+                {form.location && <span>📍 {form.location}</span>}
+                {form.job_type && <span>💼 {form.job_type}</span>}
               </div>
 
               {(form.experience || form.qualification) && (
@@ -544,7 +581,9 @@ export default function JobEditor() {
 
               {form.apply_url && (
                 <div className="mt-3 pt-3 border-t border-white/10">
-                  <p className="text-xs text-white/50 mb-2">Apply link: {form.apply_url}</p>
+                  <p className="text-xs text-white/50 mb-2">
+                    Apply link: {form.apply_url}
+                  </p>
                 </div>
               )}
 
@@ -555,9 +594,7 @@ export default function JobEditor() {
                   </p>
                 )}
                 {form.end_date && (
-                  <p>
-                    Ended: {new Date(form.end_date).toLocaleDateString()}
-                  </p>
+                  <p>Ended: {new Date(form.end_date).toLocaleDateString()}</p>
                 )}
               </div>
 
