@@ -165,8 +165,14 @@ export function ContentProvider({ children }) {
         const next = {};
         if (profileRes.data) next.profile = shapeProfile(profileRes.data);
         if (nav.data?.length) next.navLinks = shapeNav(nav.data);
-        if (soc.data?.length) next.socials = shapeSocials(soc.data);
-        else next.socials = fallback.socials;
+
+        // Always prefer Supabase socials if they exist, otherwise use fallback
+        if (soc.data?.length) {
+          next.socials = shapeSocials(soc.data);
+        } else {
+          // Keep fallback if Supabase returned empty or has an error
+          next.socials = fallback.socials;
+        }
         if (skills.data?.length) {
           next.orbitSkills = shapeOrbit(skills.data);
           next.playgroundSkills = shapePlayground(skills.data);
@@ -186,7 +192,13 @@ export function ContentProvider({ children }) {
           next.resources = shapeResources(res.data, filesByResource);
         }
 
-        setContent((c) => ({ ...c, ...next }));
+        // Ensure critical data always has fallback
+        const final = {
+          ...c,
+          ...next,
+          socials: next.socials || fallback.socials,
+        };
+        setContent(final);
       } catch (err) {
         // Network/CORS/etc. — silently keep the fallback content.
         console.warn("[content] Supabase fetch failed, using data.js", err);
