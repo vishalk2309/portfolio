@@ -21,6 +21,7 @@ import AuthModal from "../components/AuthModal";
 import ResourceRulesBanner from "../components/ResourceRulesBanner";
 import ResourcesSubscribe from "../components/ResourcesSubscribe";
 import RequestAccessModal from "../components/RequestAccessModal";
+import AdSense from "../components/AdSense";
 import { useAccessRequests } from "../hooks/useAccessRequests";
 import { useBookmarks } from "../hooks/useBookmarks";
 import { useContent } from "../lib/ContentContext";
@@ -556,6 +557,9 @@ export default function ResourcesPage() {
             <ResourcesSubscribe />
           </div>
         )}
+
+        {/* AdSense Ad */}
+        <AdSense slot="4371345024" />
       </main>
 
       <Footer />

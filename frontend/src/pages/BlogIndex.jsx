@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import BlogLayout from "./BlogLayout";
 import BlogCard from "../components/BlogCard";
 import SubscribeBox from "../components/SubscribeBox";
+import AdSense from "../components/AdSense";
 import { useBlogs } from "../hooks/useBlogs";
 import { useSEO } from "../hooks/useSEO";
 import { useStructuredData } from "../hooks/useStructuredData";
@@ -187,6 +188,9 @@ export default function BlogIndex() {
           ))}
         </div>
       )}
+
+      {/* AdSense Ad */}
+      <AdSense slot="7419295719" />
 
       <div className="mt-12">
         <SubscribeBox />

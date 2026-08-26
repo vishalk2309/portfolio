@@ -6,6 +6,7 @@ import Background from "../components/Background";
 import Footer from "../components/Footer";
 import JobUpdateCard from "../components/JobUpdateCard";
 import JobUpdatesSubscribe from "../components/JobUpdatesSubscribe";
+import AdSense from "../components/AdSense";
 import { useJobUpdates } from "../hooks/useJobUpdates";
 import { useSEO } from "../hooks/useSEO";
 import { useStructuredData } from "../hooks/useStructuredData";
@@ -160,6 +161,9 @@ export default function JobUpdatesPage() {
             ))}
           </div>
         )}
+
+        {/* AdSense Ad */}
+        <AdSense slot="3452130548" />
 
         <div className="mt-16">
           <JobUpdatesSubscribe />
