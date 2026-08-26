@@ -168,13 +168,14 @@ export function ContentProvider({ children }) {
         if (nav.data?.length) next.navLinks = shapeNav(nav.data);
 
         // Always prefer Supabase socials if they exist, otherwise use fallback
+        console.log("[content] Supabase socials response:", soc);
         if (soc.data?.length) {
           next.socials = shapeSocials(soc.data);
           console.log("[content] Loaded socials from Supabase:", soc.data.length);
         } else {
           // Keep fallback if Supabase returned empty or has an error
           next.socials = fallback.socials;
-          console.log("[content] Using fallback socials - Supabase returned:", soc.data);
+          console.log("[content] Using fallback socials - Supabase returned empty/error");
         }
         if (skills.data?.length) {
           next.orbitSkills = shapeOrbit(skills.data);
