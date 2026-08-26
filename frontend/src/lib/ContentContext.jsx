@@ -144,6 +144,7 @@ export function ContentProvider({ children }) {
 
     (async () => {
       try {
+        console.log("[content] Fetching data from Supabase...");
         const [profileRes, nav, soc, skills, proj, certs, edu, ach, testi, res, rfiles] =
           await Promise.all([
             supabase.from("profile").select("*").limit(1).maybeSingle(),
@@ -169,9 +170,11 @@ export function ContentProvider({ children }) {
         // Always prefer Supabase socials if they exist, otherwise use fallback
         if (soc.data?.length) {
           next.socials = shapeSocials(soc.data);
+          console.log("[content] Loaded socials from Supabase:", soc.data.length);
         } else {
           // Keep fallback if Supabase returned empty or has an error
           next.socials = fallback.socials;
+          console.log("[content] Using fallback socials - Supabase returned:", soc.data);
         }
         if (skills.data?.length) {
           next.orbitSkills = shapeOrbit(skills.data);

@@ -12,6 +12,7 @@ const HeroCube = lazy(() => import("./HeroCube"));
 export default function Hero() {
   const { profile, socials } = useContent();
   const reduceMotion = useReducedMotion();
+  console.log("[Hero] socials received:", socials);
 
   // When the user prefers reduced motion, render everything in its final
   // state instead of animating it in.
