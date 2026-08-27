@@ -1,18 +1,27 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { FiMoon, FiSun } from "react-icons/fi";
 import Background from "../components/Background";
 import Footer from "../components/Footer";
 import SubscribePopup from "../components/SubscribePopup";
 import { useContent } from "../lib/ContentContext";
+import { applyMode, getMode } from "../theme";
 
 /** Shared chrome for the /blog pages: background, a slim header, and footer. */
 export default function BlogLayout({ children }) {
   const { profile } = useContent();
   const navigate = useNavigate();
+  const [mode, setMode] = useState(getMode());
 
-  // Go back to wherever the visitor came from; fall back to the blog index.
   const goBack = () => {
     if (window.history.length > 1) navigate(-1);
     else navigate("/blog");
+  };
+
+  const toggleTheme = () => {
+    const newMode = mode === "light" ? "dark" : "light";
+    applyMode(newMode);
+    setMode(newMode);
   };
 
   return (
@@ -30,12 +39,21 @@ export default function BlogLayout({ children }) {
           <Link to="/" className="text-lg font-bold">
             <span className="gradient-text">{profile.name}</span>
           </Link>
-          <Link
-            to="/"
-            className="hidden text-sm text-white/70 transition-colors hover:text-white sm:inline"
-          >
-            Portfolio
-          </Link>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={toggleTheme}
+              className="text-white/70 transition-colors hover:text-white"
+              aria-label="Toggle theme"
+            >
+              {mode === "light" ? <FiMoon size={18} /> : <FiSun size={18} />}
+            </button>
+            <Link
+              to="/"
+              className="hidden text-sm text-white/70 transition-colors hover:text-white sm:inline"
+            >
+              Portfolio
+            </Link>
+          </div>
         </nav>
       </header>
 

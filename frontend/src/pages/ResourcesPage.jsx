@@ -10,11 +10,14 @@ import {
   FiGrid,
   FiList,
   FiLock,
+  FiMoon,
   FiSearch,
+  FiSun,
   FiUnlock,
   FiUser,
   FiX,
 } from "react-icons/fi";
+import { applyMode, getMode } from "../theme";
 import Background from "../components/Background";
 import Footer from "../components/Footer";
 import AuthModal from "../components/AuthModal";
@@ -90,6 +93,13 @@ export default function ResourcesPage() {
   const [authOpen, setAuthOpen] = useState(false);
   const [pending, setPending] = useState(null); // resource awaiting login
   const [ownedIds, setOwnedIds] = useState(() => new Set()); // resources the user bought
+  const [mode, setMode] = useState(getMode());
+
+  const toggleTheme = () => {
+    const newMode = mode === "light" ? "dark" : "light";
+    applyMode(newMode);
+    setMode(newMode);
+  };
 
   useSEO({
     title: "Resources & Learning Materials - Vishal Kushwaha",
@@ -368,6 +378,13 @@ export default function ResourcesPage() {
             <span className="gradient-text">{profile.name}</span>
           </Link>
           <div className="flex items-center gap-4 text-sm">
+            <button
+              onClick={toggleTheme}
+              className="text-white/70 transition-colors hover:text-white"
+              aria-label="Toggle theme"
+            >
+              {mode === "light" ? <FiMoon size={18} /> : <FiSun size={18} />}
+            </button>
             <Link
               to="/account"
               className="flex items-center gap-1.5 text-white/70 transition-colors hover:text-white"

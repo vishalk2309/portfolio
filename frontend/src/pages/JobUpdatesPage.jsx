@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FiArrowLeft, FiGrid, FiList } from "react-icons/fi";
+import { FiArrowLeft, FiGrid, FiList, FiMoon, FiSun } from "react-icons/fi";
 import Background from "../components/Background";
 import Footer from "../components/Footer";
 import JobUpdateCard from "../components/JobUpdateCard";
@@ -10,12 +10,20 @@ import AdSense from "../components/AdSense";
 import { useJobUpdates } from "../hooks/useJobUpdates";
 import { useSEO } from "../hooks/useSEO";
 import { useStructuredData } from "../hooks/useStructuredData";
+import { applyMode, getMode } from "../theme";
 
 export default function JobUpdatesPage() {
   const navigate = useNavigate();
   const { updates, status } = useJobUpdates();
   const [selectedTag, setSelectedTag] = useState(null);
   const [viewMode, setViewMode] = useState("grid");
+  const [mode, setMode] = useState(getMode());
+
+  const toggleTheme = () => {
+    const newMode = mode === "light" ? "dark" : "light";
+    applyMode(newMode);
+    setMode(newMode);
+  };
 
   useSEO({
     title: "Job Updates & Career Journey - Vishal Kushwaha",
@@ -84,7 +92,13 @@ export default function JobUpdatesPage() {
           <span className="text-lg font-bold">
             <span className="gradient-text">Job Updates</span>
           </span>
-          <div className="w-16" />
+          <button
+            onClick={toggleTheme}
+            className="text-white/70 transition-colors hover:text-white"
+            aria-label="Toggle theme"
+          >
+            {mode === "light" ? <FiMoon size={18} /> : <FiSun size={18} />}
+          </button>
         </nav>
       </header>
 
@@ -102,41 +116,8 @@ export default function JobUpdatesPage() {
           </p>
         </motion.div>
 
-        <div className="mt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          {allTags.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => setSelectedTag(null)}
-                className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
-                  selectedTag === null
-                    ? "border-neon-cyan/50 bg-neon-cyan/10 text-neon-cyan"
-                    : "glass border-white/15 text-white/70 hover:text-white"
-                }`}
-              >
-                All ({updates?.length || 0})
-              </button>
-              {allTags.map((tag) => {
-                const count = (updates || []).filter((u) =>
-                  u.tags?.includes(tag)
-                ).length;
-                return (
-                  <button
-                    key={tag}
-                    onClick={() => setSelectedTag(tag)}
-                    className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
-                      selectedTag === tag
-                        ? "border-neon-cyan/50 bg-neon-cyan/10 text-neon-cyan"
-                        : "glass border-white/15 text-white/70 hover:text-white"
-                    }`}
-                  >
-                    {tag} ({count})
-                  </button>
-                );
-              })}
-            </div>
-          )}
-
-          {/* View Toggle */}
+        {/* View Toggle - Top Right */}
+        <div className="mt-8 flex justify-end">
           <div className="flex items-center gap-2 glass rounded-full p-1">
             <button
               onClick={() => setViewMode("grid")}
@@ -162,6 +143,42 @@ export default function JobUpdatesPage() {
             </button>
           </div>
         </div>
+
+        {/* Tags - Scrollable */}
+        {allTags.length > 0 && (
+          <div className="mt-4 overflow-x-auto pb-2">
+            <div className="flex gap-2 whitespace-nowrap">
+              <button
+                onClick={() => setSelectedTag(null)}
+                className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors shrink-0 ${
+                  selectedTag === null
+                    ? "border-neon-cyan/50 bg-neon-cyan/10 text-neon-cyan"
+                    : "glass border-white/15 text-white/70 hover:text-white"
+                }`}
+              >
+                All ({updates?.length || 0})
+              </button>
+              {allTags.map((tag) => {
+                const count = (updates || []).filter((u) =>
+                  u.tags?.includes(tag)
+                ).length;
+                return (
+                  <button
+                    key={tag}
+                    onClick={() => setSelectedTag(tag)}
+                    className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors shrink-0 ${
+                      selectedTag === tag
+                        ? "border-neon-cyan/50 bg-neon-cyan/10 text-neon-cyan"
+                        : "glass border-white/15 text-white/70 hover:text-white"
+                    }`}
+                  >
+                    {tag} ({count})
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {status === "loading" && (
           <p className="mt-12 text-white/40">Loading updates…</p>
