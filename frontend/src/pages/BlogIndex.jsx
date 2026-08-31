@@ -133,9 +133,65 @@ export default function BlogIndex() {
         <p className="text-white/40">No posts yet — check back soon.</p>
       )}
 
+      {status !== "loading" && posts.length > 0 && (
+        <>
+          <div className="mb-8 space-y-4">
+            <div className="relative">
+              <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40" />
+              <input
+                type="text"
+                placeholder="Search posts..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full bg-white/5 border border-white/10 rounded-full py-3 pl-12 pr-4 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-neon-cyan/50"
+              />
+            </div>
+
+            {allTags.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                <span className="text-xs text-white/60 self-center">Filter:</span>
+                {allTags.map((tag) => (
+                  <button
+                    key={tag}
+                    onClick={() =>
+                      setSelectedTags((prev) =>
+                        prev.includes(tag)
+                          ? prev.filter((t) => t !== tag)
+                          : [...prev, tag]
+                      )
+                    }
+                    className={`rounded-full px-3 py-1 text-xs font-medium transition-all ${
+                      selectedTags.includes(tag)
+                        ? "bg-neon-cyan text-[rgb(var(--c-base))]"
+                        : "bg-white/5 border border-white/10 text-white/60 hover:bg-white/10"
+                    }`}
+                  >
+                    {tag}
+                  </button>
+                ))}
+                {selectedTags.length > 0 && (
+                  <button
+                    onClick={() => setSelectedTags([])}
+                    className="rounded-full px-3 py-1 text-xs text-white/40 hover:text-white transition-all"
+                  >
+                    Clear all
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+
+          {filteredPosts.length === 0 && (
+            <p className="text-white/40 py-8">
+              No posts match your search. Try different keywords or filters.
+            </p>
+          )}
+        </>
+      )}
+
       {viewMode === "grid" && (
         <div className="grid gap-6 sm:grid-cols-2">
-          {posts.map((post) => (
+          {filteredPosts.map((post) => (
             <BlogCard key={post.id} post={post} />
           ))}
         </div>
@@ -143,7 +199,7 @@ export default function BlogIndex() {
 
       {viewMode === "list" && (
         <div className="space-y-4">
-          {posts.map((post) => (
+          {filteredPosts.map((post) => (
             <Link
               key={post.id}
               to={`/blog/${post.slug}`}
