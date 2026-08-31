@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FiArrowLeft, FiGrid, FiList, FiMoon, FiSun } from "react-icons/fi";
+import { FiArrowLeft, FiGrid, FiList, FiMoon, FiSun, FiHome } from "react-icons/fi";
 import Background from "../components/Background";
 import Footer from "../components/Footer";
 import JobUpdateCard from "../components/JobUpdateCard";
@@ -83,12 +83,23 @@ export default function JobUpdatesPage() {
 
       <header className="fixed inset-x-0 top-0 z-50">
         <nav className="glass mx-auto flex max-w-6xl items-center justify-between rounded-b-2xl px-6 py-4">
-          <button
-            onClick={goBack}
-            className="flex items-center gap-1 text-sm text-white/70 transition-colors hover:text-white"
-          >
-            <FiArrowLeft size={16} /> Back
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={goBack}
+              className="flex items-center gap-1 text-sm text-white/70 transition-colors hover:text-white"
+              title="Go back"
+            >
+              <FiArrowLeft size={16} /> Back
+            </button>
+            <span className="text-white/30">•</span>
+            <Link
+              to="/"
+              className="flex items-center gap-1 text-sm text-white/70 transition-colors hover:text-white hover:text-neon-cyan"
+              title="Return to portfolio"
+            >
+              <FiHome size={16} /> Portfolio
+            </Link>
+          </div>
           <span className="text-lg font-bold">
             <span className="gradient-text">Job Updates</span>
           </span>
