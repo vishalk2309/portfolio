@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import OrbitPhoto from "./OrbitPhoto";
 import { LeetCodeCard, GfgCard, GitHubCard } from "./StatCards";
 import ContributionHeatmap from "./ContributionHeatmap";
+import GitHubHeatmap from "./GitHubHeatmap";
+import SkillEndorsement from "./SkillEndorsement";
 import SectionHeading from "./SectionHeading";
 import { useContent } from "../lib/ContentContext";
 
@@ -58,6 +60,22 @@ export default function About() {
         <div className="mt-8">
           <ContributionHeatmap />
         </div>
+
+        {/* GitHub Activity Heatmap */}
+        <div className="mt-12">
+          <GitHubHeatmap username="vishal-works" />
+        </div>
+
+        {/* Skill Endorsements */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mt-12"
+        >
+          <SkillEndorsement skills={["React", "JavaScript", "Node.js", "Python", "MongoDB", "TypeScript"]} />
+        </motion.div>
       </div>
     </section>
   );

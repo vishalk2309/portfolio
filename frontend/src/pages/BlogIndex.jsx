@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import BlogLayout from "./BlogLayout";
 import BlogCard from "../components/BlogCard";
-import SubscribeBox from "../components/SubscribeBox";
+import EnhancedNewsletter from "../components/EnhancedNewsletter";
 import AdSense from "../components/AdSense";
 import { useBlogs } from "../hooks/useBlogs";
 import { useSEO } from "../hooks/useSEO";
@@ -269,7 +269,7 @@ export default function BlogIndex() {
       <AdSense slot="7419295719" />
 
       <div className="mt-12">
-        <SubscribeBox />
+        <EnhancedNewsletter />
       </div>
     </BlogLayout>
   );

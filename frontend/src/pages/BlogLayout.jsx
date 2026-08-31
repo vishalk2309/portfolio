@@ -4,6 +4,7 @@ import { FiMoon, FiSun } from "react-icons/fi";
 import Background from "../components/Background";
 import Footer from "../components/Footer";
 import SubscribePopup from "../components/SubscribePopup";
+import ReadingProgressBar from "../components/ReadingProgressBar";
 import { useContent } from "../lib/ContentContext";
 import { applyMode, getMode } from "../theme";
 
@@ -27,6 +28,7 @@ export default function BlogLayout({ children }) {
   return (
     <div className="relative min-h-screen">
       <Background />
+      <ReadingProgressBar />
 
       <header className="fixed inset-x-0 top-0 z-50">
         <nav className="glass mx-auto flex max-w-4xl items-center justify-between rounded-b-2xl px-6 py-4">

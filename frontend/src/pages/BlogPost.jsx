@@ -1,11 +1,14 @@
 import { useParams, Link } from "react-router-dom";
 import { FaLinkedin } from "react-icons/fa";
+import { useState } from "react";
 import BlogLayout from "./BlogLayout";
 import BlogContent from "../components/BlogContent";
 import ShareButtons from "../components/ShareButtons";
 import LikeButton from "../components/LikeButton";
 import Comments from "../components/Comments";
 import SubscribeBox from "../components/SubscribeBox";
+import EnhancedNewsletter from "../components/EnhancedNewsletter";
+import BlogPostStats from "../components/BlogPostStats";
 import { useBlogPost } from "../hooks/useBlogs";
 import { useSEO } from "../hooks/useSEO";
 import { useStructuredData } from "../hooks/useStructuredData";
@@ -13,6 +16,7 @@ import { useStructuredData } from "../hooks/useStructuredData";
 export default function BlogPost() {
   const { slug } = useParams();
   const { post, status } = useBlogPost(slug);
+  const [views, setViews] = useState(0);
 
   useSEO({
     title: post ? `${post.title} - Vishal Kushwaha's Blog` : "Blog Post - Vishal Kushwaha",
@@ -117,6 +121,11 @@ export default function BlogPost() {
             )}
           </p>
 
+          {/* Blog Post Stats */}
+          <div className="mt-6">
+            <BlogPostStats post={post} views={views} />
+          </div>
+
           <BlogContent content={post.content || ""} className="mt-8" />
 
           <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-6">
@@ -130,7 +139,7 @@ export default function BlogPost() {
           <Comments blogId={post.id} />
 
           <div className="mt-12">
-            <SubscribeBox />
+            <EnhancedNewsletter />
           </div>
 
           <div className="mt-8">

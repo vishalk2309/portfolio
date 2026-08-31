@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
+import ProjectFilter from "./ProjectFilter";
 import { useContent } from "../lib/ContentContext";
 
 export default function Projects() {
@@ -32,12 +33,16 @@ export default function Projects() {
           </p>
         </div>
 
-        {/* Alternating large showcases */}
-        <div className="space-y-24">
-          {projects.map((project, i) => (
-            <ProjectRow key={project.title} project={project} flip={i % 2 === 1} />
-          ))}
-        </div>
+        {/* Project Filter with search & tech filter */}
+        <ProjectFilter projects={projects}>
+          {(filteredProjects) => (
+            <div className="space-y-24">
+              {filteredProjects.map((project, i) => (
+                <ProjectRow key={project.title} project={project} flip={i % 2 === 1} />
+              ))}
+            </div>
+          )}
+        </ProjectFilter>
       </div>
     </section>
   );
