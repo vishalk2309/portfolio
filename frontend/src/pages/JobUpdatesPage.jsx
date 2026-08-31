@@ -109,7 +109,7 @@ export default function JobUpdatesPage() {
           transition={{ duration: 0.6 }}
         >
           <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
-            <span className="gradient-text">Career Journey</span>
+            Job Updates & <span className="gradient-text">Career Journey</span>
           </h1>
           <p className="mt-3 max-w-2xl text-lg text-white/55">
             Follow my professional growth, career milestones, and exciting opportunities I've encountered along the way.

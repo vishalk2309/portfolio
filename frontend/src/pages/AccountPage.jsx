@@ -7,6 +7,7 @@ import AuthModal from "../components/AuthModal";
 import { useAccessRequests } from "../hooks/useAccessRequests";
 import { useContent } from "../lib/ContentContext";
 import { useAuth } from "../lib/AuthContext";
+import { useSEO } from "../hooks/useSEO";
 import { supabase } from "../lib/supabase";
 
 /** /account — a buyer's library of purchased resources with re-download. */
@@ -14,6 +15,12 @@ export default function AccountPage() {
   const { profile, resources } = useContent();
   const { user, ready, signOut } = useAuth();
   const navigate = useNavigate();
+
+  useSEO({
+    title: "My Resource Library - Vishal Kushwaha",
+    description: "Access your purchased resources and downloaded materials from Vishal Kushwaha's portfolio.",
+    keywords: "resource library, purchased resources, downloads, Vishal Kushwaha",
+  });
 
   // Map resource id → resource (so we can list a purchased resource's files).
   const resMap = useMemo(() => {

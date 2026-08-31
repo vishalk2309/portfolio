@@ -22,6 +22,7 @@ export default function App() {
   useSEO({
     title: "Vishal Kushwaha — Software Developer & Web Developer",
     description: "Vishal Kushwaha — Software & Web Developer. Full-stack projects, live LeetCode & GitHub stats, and skills in React, Node.js, Python, MongoDB and more.",
+    keywords: "Vishal Kushwaha, Vishal Kumar Kushwaha, Vishal Kumar, Vishal, software developer, web developer, full stack developer, React developer, Node.js developer, Python developer, JavaScript developer, portfolio, Cognizant, technical skills, MongoDB, MySQL, Java, developer portfolio, full stack engineer",
   });
 
   // Lenis smooth scrolling

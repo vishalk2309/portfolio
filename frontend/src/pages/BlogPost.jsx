@@ -80,7 +80,7 @@ export default function BlogPost() {
           {post.cover_image && (
             <img
               src={post.cover_image}
-              alt=""
+              alt={post.title}
               className="mb-8 mx-auto block max-h-[400px] w-auto max-w-full rounded-3xl"
             />
           )}

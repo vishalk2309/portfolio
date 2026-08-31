@@ -706,7 +706,7 @@ function ResourceCard({
   const cover = r.coverImage ? (
     <img
       src={r.coverImage}
-      alt=""
+      alt={`${r.title} - Learning Resource`}
       className={
         list
           ? "h-24 w-24 shrink-0 rounded-2xl border border-white/10 object-cover sm:h-28 sm:w-40"

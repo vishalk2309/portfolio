@@ -7,6 +7,7 @@ import AdSense from "../components/AdSense";
 import { useBlogs } from "../hooks/useBlogs";
 import { useSEO } from "../hooks/useSEO";
 import { useStructuredData } from "../hooks/useStructuredData";
+import { FiSearch } from "react-icons/fi";
 
 const STORAGE_KEY = "blogViewMode";
 
@@ -14,6 +15,8 @@ export default function BlogIndex() {
   const { posts, status } = useBlogs();
   const [viewMode, setViewMode] = useState("grid");
   const [isLoaded, setIsLoaded] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedTags, setSelectedTags] = useState([]);
 
   useSEO({
     title: "Blogs & Insights - Vishal Kushwaha",
@@ -61,6 +64,23 @@ export default function BlogIndex() {
       localStorage.setItem(STORAGE_KEY, viewMode);
     }
   }, [viewMode, isLoaded]);
+
+  const allTags = Array.from(
+    new Set(posts.flatMap((post) => post.tags || []))
+  ).sort();
+
+  const filteredPosts = posts.filter((post) => {
+    const matchesSearch =
+      searchTerm === "" ||
+      post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (post.excerpt?.toLowerCase() || "").includes(searchTerm.toLowerCase());
+
+    const matchesTags =
+      selectedTags.length === 0 ||
+      selectedTags.some((tag) => post.tags?.includes(tag));
+
+    return matchesSearch && matchesTags;
+  });
 
   return (
     <BlogLayout>
@@ -132,7 +152,7 @@ export default function BlogIndex() {
               {post.cover_image && (
                 <img
                   src={post.cover_image}
-                  alt=""
+                  alt={post.title}
                   loading="lazy"
                   className="hidden sm:block w-24 h-24 object-cover rounded-xl flex-shrink-0"
                 />

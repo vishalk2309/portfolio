@@ -20,7 +20,7 @@ export default function BlogCard({ post }) {
       {post.cover_image && (
         <img
           src={post.cover_image}
-          alt=""
+          alt={`${post.title} by ${post.author_name || 'Vishal Kushwaha'}`}
           loading="lazy"
           className="w-full h-auto"
         />

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-export const useSEO = ({ title, description, image, canonical, noindex = false }) => {
+export const useSEO = ({ title, description, keywords, image, canonical, noindex = false }) => {
   useEffect(() => {
     // Update title
     if (title) {
@@ -16,6 +16,17 @@ export const useSEO = ({ title, description, image, canonical, noindex = false }
         document.head.appendChild(descMeta);
       }
       descMeta.setAttribute('content', description);
+    }
+
+    // Update keywords meta tag
+    if (keywords) {
+      let keywordsMeta = document.querySelector('meta[name="keywords"]');
+      if (!keywordsMeta) {
+        keywordsMeta = document.createElement('meta');
+        keywordsMeta.name = 'keywords';
+        document.head.appendChild(keywordsMeta);
+      }
+      keywordsMeta.setAttribute('content', keywords);
     }
 
     // Update OG tags
@@ -60,5 +71,5 @@ export const useSEO = ({ title, description, image, canonical, noindex = false }
       canonicalLink.href = canonical;
     }
 
-  }, [title, description, image, canonical]);
+  }, [title, description, keywords, image, canonical]);
 };
