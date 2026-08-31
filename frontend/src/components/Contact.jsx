@@ -3,12 +3,14 @@ import { motion } from "framer-motion";
 import { useContent } from "../lib/ContentContext";
 import { supabase } from "../lib/supabase";
 import ProjectRequestForm from "./ProjectRequestForm";
+import CopyButtons from "./CopyButtons";
+import Guestbook from "./Guestbook";
 
 export default function Contact() {
   const { profile, socials } = useContent();
   // status: idle | sending | success | error
   const [status, setStatus] = useState("idle");
-  const [tab, setTab] = useState("hi"); // "hi" | "project"
+  const [tab, setTab] = useState("hi"); // "hi" | "project" | "guestbook"
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -97,12 +99,25 @@ export default function Contact() {
           ))}
         </div>
 
+        {/* Quick Copy Buttons */}
+        <div className="mt-8 max-w-md mx-auto">
+          <CopyButtons
+            email={profile.email}
+            socials={{
+              linkedin: socials.find(s => s.label === "LinkedIn")?.href,
+              github: socials.find(s => s.label === "GitHub")?.href,
+              twitter: socials.find(s => s.label === "Twitter")?.href,
+            }}
+          />
+        </div>
+
         {/* Tabs */}
         <div className="mt-12 flex justify-center">
           <div className="glass inline-flex gap-1 rounded-full p-1">
             {[
               { key: "hi", label: "Say Hi" },
               { key: "project", label: "Request a Project" },
+              { key: "guestbook", label: "Guestbook" },
             ].map((t) => (
               <button
                 key={t.key}
@@ -119,7 +134,17 @@ export default function Contact() {
           </div>
         </div>
 
-        {tab === "project" ? (
+        {tab === "guestbook" ? (
+          <motion.div
+            key="guestbook"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="mt-6 glass rounded-3xl p-6 text-left sm:p-8 max-w-2xl mx-auto"
+          >
+            <Guestbook />
+          </motion.div>
+        ) : tab === "project" ? (
           <motion.div
             key="project"
             initial={{ opacity: 0, y: 20 }}

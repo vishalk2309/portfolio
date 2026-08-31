@@ -4,6 +4,7 @@ import { LeetCodeCard, GfgCard, GitHubCard } from "./StatCards";
 import ContributionHeatmap from "./ContributionHeatmap";
 import GitHubHeatmap from "./GitHubHeatmap";
 import SkillEndorsement from "./SkillEndorsement";
+import AchievementBadges from "./AchievementBadges";
 import SectionHeading from "./SectionHeading";
 import { useContent } from "../lib/ContentContext";
 
@@ -75,6 +76,17 @@ export default function About() {
           className="mt-12"
         >
           <SkillEndorsement skills={["React", "JavaScript", "Node.js", "Python", "MongoDB", "TypeScript"]} />
+        </motion.div>
+
+        {/* Achievement Badges */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mt-12"
+        >
+          <AchievementBadges />
         </motion.div>
       </div>
     </section>
