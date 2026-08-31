@@ -42,19 +42,19 @@ export default function AchievementBadges() {
       id: 5,
       icon: "🚀",
       title: "Builder",
-      description: "Shipped 10+ projects",
+      description: "Shipped 5+ projects",
       unlocked: true,
-      progress: 12,
-      total: 10,
+      progress: 6,
+      total: 5,
     },
     {
       id: 6,
       icon: "👥",
       title: "Community",
-      description: "100+ followers reached",
+      description: "50+ followers reached",
       unlocked: true,
-      progress: 250,
-      total: 100,
+      progress: 50,
+      total: 50,
     },
   ];
 
@@ -130,9 +130,9 @@ export default function AchievementBadges() {
 
       <div className="glass rounded-xl p-4 bg-gradient-to-r from-neon-cyan/5 to-neon-purple/5 border border-white/10">
         <p className="text-sm text-white/70">
-          <span className="font-semibold text-neon-cyan">6 of 6 badges unlocked!</span>
+          <span className="font-semibold text-neon-cyan">🎯 All milestones achieved!</span>
           <br />
-          Keep coding and building to unlock more achievements.
+          Keep building and growing to unlock new levels.
         </p>
       </div>
     </div>
