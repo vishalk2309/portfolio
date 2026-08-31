@@ -1,45 +1,118 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FiThumbsUp } from "react-icons/fi";
+import { supabase } from "../lib/supabase";
 
 export default function SkillEndorsement({ skills = [] }) {
-  const [endorsements, setEndorsements] = useState(
-    skills.reduce((acc, skill) => {
-      acc[skill] = Math.floor(Math.random() * 50) + 10;
-      return acc;
-    }, {})
-  );
-
+  const [endorsements, setEndorsements] = useState({});
   const [endorsed, setEndorsed] = useState(new Set());
+  const [loading, setLoading] = useState(true);
+  const [visitorId, setVisitorId] = useState("");
 
-  const handleEndorse = (skill) => {
-    if (endorsed.has(skill)) return;
+  // Generate or retrieve visitor ID from localStorage
+  useEffect(() => {
+    let id = localStorage.getItem("visitor-id");
+    if (!id) {
+      id = `visitor-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      localStorage.setItem("visitor-id", id);
+    }
+    setVisitorId(id);
+  }, []);
 
-    setEndorsements((prev) => ({
-      ...prev,
-      [skill]: (prev[skill] || 0) + 1,
-    }));
+  // Fetch endorsement data from Supabase
+  useEffect(() => {
+    if (!visitorId) return;
+    fetchEndorsements();
+  }, [visitorId, skills]);
 
-    setEndorsed((prev) => new Set([...prev, skill]));
+  const fetchEndorsements = async () => {
+    try {
+      if (!supabase || skills.length === 0) {
+        setLoading(false);
+        return;
+      }
 
-    setTimeout(() => {
-      setEndorsed((prev) => {
-        const newSet = new Set(prev);
-        newSet.delete(skill);
-        return newSet;
+      // Get all endorsements for these skills
+      const { data: allEndorsements, error } = await supabase
+        .from("skill_endorsements")
+        .select("skill, visitor_id")
+        .in("skill", skills);
+
+      if (error) throw error;
+
+      // Count endorsements per skill
+      const counts = {};
+      const userEndorsed = new Set();
+
+      skills.forEach((skill) => {
+        counts[skill] = 0;
       });
-    }, 2000);
+
+      allEndorsements?.forEach((e) => {
+        counts[e.skill] = (counts[e.skill] || 0) + 1;
+        if (e.visitor_id === visitorId) {
+          userEndorsed.add(e.skill);
+        }
+      });
+
+      setEndorsements(counts);
+      setEndorsed(userEndorsed);
+      setLoading(false);
+    } catch (err) {
+      console.error("Failed to fetch endorsements:", err);
+      setLoading(false);
+    }
+  };
+
+  const handleEndorse = async (skill) => {
+    if (endorsed.has(skill) || !supabase) return;
+
+    try {
+      // Add endorsement to database
+      const { error } = await supabase.from("skill_endorsements").insert([
+        {
+          skill,
+          visitor_id: visitorId,
+          created_at: new Date().toISOString(),
+        },
+      ]);
+
+      if (error) throw error;
+
+      // Update local state
+      setEndorsements((prev) => ({
+        ...prev,
+        [skill]: (prev[skill] || 0) + 1,
+      }));
+
+      setEndorsed((prev) => new Set([...prev, skill]));
+
+      // Remove endorsed state after 2 seconds
+      setTimeout(() => {
+        setEndorsed((prev) => {
+          const newSet = new Set(prev);
+          newSet.delete(skill);
+          return newSet;
+        });
+      }, 2000);
+    } catch (err) {
+      console.error("Failed to endorse:", err);
+    }
   };
 
   const sortedSkills = [...skills].sort(
     (a, b) => (endorsements[b] || 0) - (endorsements[a] || 0)
   );
 
+  if (loading) {
+    return <div className="text-white/40">Loading endorsements...</div>;
+  }
+
   return (
     <div className="space-y-4">
       <div>
         <h3 className="text-lg font-bold text-white mb-4">Skill Endorsements</h3>
         <p className="text-sm text-white/60 mb-6">
-          Endorse skills you&apos;ve witnessed or value
+          Endorse skills you&apos;ve witnessed or value (One vote per visitor)
         </p>
       </div>
 
