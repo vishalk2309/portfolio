@@ -13,7 +13,7 @@ const fmt = (d) =>
       })
     : "";
 
-export default function Comments({ blogId }) {
+export default function Comments({ blogId, onCountChange }) {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -49,6 +49,12 @@ export default function Comments({ blogId }) {
       cancelled = true;
     };
   }, [blogId]);
+
+  // Let the page show the count in its stats tile, and keep it in step
+  // when someone posts without a reload.
+  useEffect(() => {
+    onCountChange?.(comments.length);
+  }, [comments.length, onCountChange]);
 
   const post = async ({ name, email, body, parentId }) => {
     const { data, error } = await supabase.functions.invoke("submit-comment", {

@@ -1,38 +1,67 @@
-import { useState } from "react";
-import { supabase } from "../lib/supabase";
+import { useEffect } from "react";
 import { FiBell, FiArrowRight } from "react-icons/fi";
+import {
+  useSubscribe,
+  submitResourcesSubscribe,
+  RESOURCES_POPUP_KEY,
+} from "../hooks/useSubscribe";
 
-const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+export default function ResourcesSubscribe({ compact = false }) {
+  const { email, setEmail, status, setStatus, msg, subscribe } = useSubscribe({
+    submit: submitResourcesSubscribe,
+    storageKey: RESOURCES_POPUP_KEY,
+  });
 
-export default function ResourcesSubscribe() {
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState("idle");
-  const [msg, setMsg] = useState("");
+  // Show the success state briefly, then hand the form back.
+  useEffect(() => {
+    if (status !== "done") return;
+    const t = setTimeout(() => setStatus("idle"), 3000);
+    return () => clearTimeout(t);
+  }, [status, setStatus]);
 
-  const subscribe = async (e) => {
-    e.preventDefault();
-    if (!emailRe.test(email)) {
-      setStatus("error");
-      setMsg("Enter a valid email.");
-      return;
-    }
-    setStatus("sending");
-    setMsg("");
-    try {
-      if (!supabase) throw new Error("Service not configured.");
-      const { data, error } = await supabase.functions.invoke("subscribe-resources", {
-        body: { email },
-      });
-      if (error || !data?.success)
-        throw new Error(data?.error || "Could not subscribe.");
-      setStatus("done");
-      setEmail("");
-      setTimeout(() => setStatus("idle"), 3000);
-    } catch (err) {
-      setStatus("error");
-      setMsg(err.message || "Could not subscribe.");
-    }
-  };
+  // Compact: single row, sits above the fold without pushing content down.
+  if (compact) {
+    return (
+      <div className="relative overflow-hidden rounded-2xl border border-neon-cyan/20 bg-gradient-to-r from-neon-cyan/10 via-blue-500/5 to-transparent px-5 py-4">
+        <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2.5">
+            <FiBell size={18} className="shrink-0 text-neon-cyan" />
+            <p className="text-sm font-semibold text-white">
+              {status === "done"
+                ? "✓ You're all set — new resources will land in your inbox."
+                : "Get notified when new resources are added"}
+            </p>
+          </div>
+
+          {status !== "done" && (
+            <form
+              onSubmit={subscribe}
+              className="flex flex-col gap-2 sm:flex-row sm:shrink-0"
+            >
+              <input
+                type="email"
+                placeholder="you@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="rounded-xl border border-white/10 bg-white/[0.05] px-3 py-2 text-sm text-white placeholder-white/40 outline-none transition-all focus:border-neon-cyan/50 focus:bg-white/10 sm:w-56"
+              />
+              <button
+                type="submit"
+                disabled={status === "sending"}
+                className="inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-xl border border-neon-cyan/30 bg-neon-cyan/15 px-4 py-2 text-sm font-semibold text-neon-cyan transition-all hover:bg-neon-cyan/25 disabled:opacity-60"
+              >
+                {status === "sending" ? "…" : "Subscribe"}
+              </button>
+            </form>
+          )}
+        </div>
+
+        {status === "error" && (
+          <p className="relative mt-2 text-xs text-red-400">{msg}</p>
+        )}
+      </div>
+    );
+  }
 
   if (status === "done") {
     return (

@@ -23,6 +23,7 @@ import Footer from "../components/Footer";
 import AuthModal from "../components/AuthModal";
 import ResourceRulesBanner from "../components/ResourceRulesBanner";
 import ResourcesSubscribe from "../components/ResourcesSubscribe";
+import ResourcesSubscribePopup from "../components/ResourcesSubscribePopup";
 import RequestAccessModal from "../components/RequestAccessModal";
 import AdSense from "../components/AdSense";
 import { useAccessRequests } from "../hooks/useAccessRequests";
@@ -424,6 +425,16 @@ export default function ResourcesPage() {
           some premium. Grab whatever helps you build faster.
         </p>
 
+        {/* Subscribe — kept above the fold so it's actually seen */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+          className="mt-6"
+        >
+          <ResourcesSubscribe compact />
+        </motion.div>
+
         <div className="mt-8">
           <ResourceRulesBanner />
         </div>
@@ -569,16 +580,11 @@ export default function ResourcesPage() {
           ))}
         </div>
 
-        {!!resources?.length && (
-          <div className="mt-16">
-            <ResourcesSubscribe />
-          </div>
-        )}
-
         {/* AdSense Ad */}
         <AdSense slot="4371345024" />
       </main>
 
+      <ResourcesSubscribePopup />
       <Footer />
 
       <AuthModal

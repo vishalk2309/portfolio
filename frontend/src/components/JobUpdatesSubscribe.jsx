@@ -1,10 +1,16 @@
 import { useEffect } from "react";
 import { FiBell, FiArrowRight } from "react-icons/fi";
-import { useJobSubscribe } from "../hooks/useJobSubscribe";
+import {
+  useSubscribe,
+  submitJobSubscribe,
+  JOBS_POPUP_KEY,
+} from "../hooks/useSubscribe";
 
 export default function JobUpdatesSubscribe({ compact = false }) {
-  const { email, setEmail, status, setStatus, msg, subscribe } =
-    useJobSubscribe();
+  const { email, setEmail, status, setStatus, msg, subscribe } = useSubscribe({
+    submit: submitJobSubscribe,
+    storageKey: JOBS_POPUP_KEY,
+  });
 
   // Show the success state briefly, then hand the form back.
   useEffect(() => {

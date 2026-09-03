@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { FaLinkedin } from "react-icons/fa";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BlogLayout from "./BlogLayout";
 import BlogContent from "../components/BlogContent";
 import ShareButtons from "../components/ShareButtons";
@@ -10,6 +10,7 @@ import SubscribeBox from "../components/SubscribeBox";
 import EnhancedNewsletter from "../components/EnhancedNewsletter";
 import BlogPostStats from "../components/BlogPostStats";
 import { useBlogPost } from "../hooks/useBlogs";
+import { supabase } from "../lib/supabase";
 import { useSEO } from "../hooks/useSEO";
 import { useStructuredData } from "../hooks/useStructuredData";
 
@@ -17,6 +18,34 @@ export default function BlogPost() {
   const { slug } = useParams();
   const { post, status } = useBlogPost(slug);
   const [views, setViews] = useState(0);
+  const [commentCount, setCommentCount] = useState(0);
+
+  // Show the stored total right away, then count this visit at most once
+  // per browser session so refreshing doesn't inflate it.
+  useEffect(() => {
+    if (!post?.id) return;
+    setViews(post.views || 0);
+    if (!supabase) return;
+
+    const key = `viewed_${post.id}`;
+    try {
+      if (sessionStorage.getItem(key)) return;
+      sessionStorage.setItem(key, "1");
+    } catch {
+      return; // private mode — don't count rather than count every load
+    }
+
+    let cancelled = false;
+    (async () => {
+      const { data, error } = await supabase.rpc("bump_blog_views", {
+        p_id: post.id,
+      });
+      if (!cancelled && !error && typeof data === "number") setViews(data);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [post?.id, post?.views]);
 
   useSEO({
     title: post ? `${post.title} - Vishal Kushwaha's Blog` : "Blog Post - Vishal Kushwaha",
@@ -123,7 +152,11 @@ export default function BlogPost() {
 
           {/* Blog Post Stats */}
           <div className="mt-6">
-            <BlogPostStats post={post} views={views} />
+            <BlogPostStats
+              post={post}
+              views={views}
+              commentCount={commentCount}
+            />
           </div>
 
           <BlogContent content={post.content || ""} className="mt-8" />
@@ -136,7 +169,7 @@ export default function BlogPost() {
             />
           </div>
 
-          <Comments blogId={post.id} />
+          <Comments blogId={post.id} onCountChange={setCommentCount} />
 
           <div className="mt-12">
             <EnhancedNewsletter />

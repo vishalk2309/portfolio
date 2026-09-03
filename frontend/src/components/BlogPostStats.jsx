@@ -1,7 +1,7 @@
 import { FiClock, FiEye, FiMessageCircle } from "react-icons/fi";
 import { FaHeart } from "react-icons/fa";
 
-export default function BlogPostStats({ post, views = 0 }) {
+export default function BlogPostStats({ post, views = 0, commentCount = 0 }) {
   const calculateReadingTime = (content) => {
     if (!content) return 1;
     const wordsPerMinute = 200;
@@ -33,7 +33,7 @@ export default function BlogPostStats({ post, views = 0 }) {
     {
       icon: FiMessageCircle,
       label: "Comments",
-      value: (post.comments_count || 0).toLocaleString(),
+      value: commentCount.toLocaleString(),
       color: "text-emerald-400",
     },
   ];
