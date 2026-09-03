@@ -17,7 +17,9 @@ const EMPTY = {
   company: "",
   position: "",
   location: "",
-  job_type: "Remote",
+  job_type: "Full-time",
+  work_mode: "Remote",
+  batch: "",
   job_id: "",
   experience: "",
   qualification: "",
@@ -108,7 +110,9 @@ export default function JobEditor() {
       company: form.company || null,
       position: form.position || null,
       location: form.location || null,
-      job_type: form.job_type || "Remote",
+      job_type: form.job_type || null,
+      work_mode: form.work_mode || null,
+      batch: form.batch || null,
       job_id: form.job_id || null,
       experience: form.experience || null,
       qualification: form.qualification || null,
@@ -367,6 +371,38 @@ export default function JobEditor() {
                 value={form.job_type}
                 onChange={(e) => set("job_type", e.target.value)}
               >
+                <option value="Full-time" className="bg-base">
+                  Full-time
+                </option>
+                <option value="Part-time" className="bg-base">
+                  Part-time
+                </option>
+                <option value="Internship" className="bg-base">
+                  Internship
+                </option>
+                <option value="Apprenticeship" className="bg-base">
+                  Apprenticeship
+                </option>
+                <option value="Full-time/Apprenticeship" className="bg-base">
+                  Full-time/Apprenticeship
+                </option>
+                <option value="Contract" className="bg-base">
+                  Contract
+                </option>
+                <option value="Not Specified" className="bg-base">
+                  Not Specified
+                </option>
+              </select>
+            </div>
+            <div>
+              <label className="mb-1 block text-sm text-white/70">
+                Work Mode
+              </label>
+              <select
+                className={inputCls}
+                value={form.work_mode}
+                onChange={(e) => set("work_mode", e.target.value)}
+              >
                 <option value="Remote" className="bg-base">
                   Remote
                 </option>
@@ -381,6 +417,9 @@ export default function JobEditor() {
                 </option>
               </select>
             </div>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
             <div>
               <label className="mb-1 block text-sm text-white/70">Job ID</label>
               <input
@@ -388,6 +427,17 @@ export default function JobEditor() {
                 placeholder="e.g., JOB-2026-001"
                 value={form.job_id}
                 onChange={(e) => set("job_id", e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-sm text-white/70">
+                Batch (optional)
+              </label>
+              <input
+                className={inputCls}
+                placeholder="e.g., Batch 2026-Q1, Summer Cohort"
+                value={form.batch}
+                onChange={(e) => set("batch", e.target.value)}
               />
             </div>
           </div>
@@ -550,9 +600,10 @@ export default function JobEditor() {
                     <p className="text-xs text-white/60">{form.position}</p>
                   )}
                 </div>
-                {form.job_id && (
-                  <p className="text-xs text-white/40">ID: {form.job_id}</p>
-                )}
+                <div className="flex flex-wrap items-center gap-2 text-xs text-white/40">
+                {form.job_id && <span>ID: {form.job_id}</span>}
+                {form.batch && <span>Batch: {form.batch}</span>}
+              </div>
               </div>
 
               <h1 className="text-2xl font-bold text-white">
@@ -566,6 +617,7 @@ export default function JobEditor() {
               <div className="flex flex-wrap gap-3 pt-3 text-xs text-white/60">
                 {form.location && <span>📍 {form.location}</span>}
                 {form.job_type && <span>💼 {form.job_type}</span>}
+                {form.work_mode && <span>🏢 {form.work_mode}</span>}
               </div>
 
               {(form.experience || form.qualification) && (

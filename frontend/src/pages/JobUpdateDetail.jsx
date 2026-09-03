@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { FiArrowLeft, FiBriefcase, FiCalendar, FiMapPin, FiTag, FiAward, FiExternalLink } from "react-icons/fi";
 import Background from "../components/Background";
 import Footer from "../components/Footer";
+import JobSubscribePopup from "../components/JobSubscribePopup";
 import { supabase } from "../lib/supabase";
 import { useSEO } from "../hooks/useSEO";
 import { useStructuredData } from "../hooks/useStructuredData";
@@ -190,12 +191,19 @@ export default function JobUpdateDetail() {
                       {update.location}
                     </div>
                   )}
-                  {update.job_type && (
+                  {(update.job_type || update.work_mode) && (
                     <div className="flex items-center gap-2 text-white/70">
                       <FiBriefcase size={16} className="text-neon-cyan" />
-                      <span className="rounded-full border border-neon-cyan/30 bg-neon-cyan/10 px-2.5 py-1 text-xs font-medium text-neon-cyan">
-                        {update.job_type}
-                      </span>
+                      {update.job_type && (
+                        <span className="rounded-full border border-neon-cyan/30 bg-neon-cyan/10 px-2.5 py-1 text-xs font-medium text-neon-cyan">
+                          {update.job_type}
+                        </span>
+                      )}
+                      {update.work_mode && (
+                        <span className="rounded-full border border-white/20 bg-white/5 px-2.5 py-1 text-xs font-medium text-white/70">
+                          {update.work_mode}
+                        </span>
+                      )}
                     </div>
                   )}
                 </div>
@@ -315,6 +323,7 @@ export default function JobUpdateDetail() {
         )}
       </main>
 
+      <JobSubscribePopup />
       <Footer />
     </div>
   );

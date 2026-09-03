@@ -13,6 +13,7 @@ interface Job {
   url: string;
   description?: string;
   job_type?: string;
+  work_mode?: string;
   posted_date?: string;
   source: "devto" | "remoteok" | "manual";
   external_id?: string;
@@ -62,7 +63,7 @@ async function fetchRemoteOKJobs(): Promise<Job[]> {
         location: job.location || "Remote",
         url: job.url,
         description: job.description?.substring(0, 500) || job.position,
-        job_type: "Remote",
+        work_mode: "Remote",
         source: "remoteok",
         external_id: `remoteok_${job.id}`,
         posted_date: new Date(job.date_posted * 1000).toISOString(),
@@ -114,6 +115,7 @@ serve(async (req) => {
           location: job.location,
           description: job.description,
           job_type: job.job_type,
+          work_mode: job.work_mode,
           apply_url: job.url,
           source: job.source,
           external_id: job.external_id,

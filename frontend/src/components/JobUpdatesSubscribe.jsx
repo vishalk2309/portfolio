@@ -1,56 +1,88 @@
-import { useState } from "react";
-import { supabase } from "../lib/supabase";
+import { useEffect } from "react";
 import { FiBell, FiArrowRight } from "react-icons/fi";
+import { useJobSubscribe } from "../hooks/useJobSubscribe";
 
-const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+export default function JobUpdatesSubscribe({ compact = false }) {
+  const { email, setEmail, status, setStatus, msg, subscribe } =
+    useJobSubscribe();
 
-export default function JobUpdatesSubscribe() {
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState("idle");
-  const [msg, setMsg] = useState("");
+  // Show the success state briefly, then hand the form back.
+  useEffect(() => {
+    if (status !== "done") return;
+    const t = setTimeout(() => setStatus("idle"), 3000);
+    return () => clearTimeout(t);
+  }, [status, setStatus]);
 
-  const subscribe = async (e) => {
-    e.preventDefault();
-    if (!emailRe.test(email)) {
-      setStatus("error");
-      setMsg("Enter a valid email.");
-      return;
-    }
-    setStatus("sending");
-    setMsg("");
-    try {
-      if (!supabase) throw new Error("Service not configured.");
+  const input = (
+    <input
+      type="email"
+      placeholder="Enter your email"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+      className="flex-1 rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 text-white placeholder-white/40 outline-none transition-all focus:border-neon-cyan/50 focus:bg-white/10 focus:ring-1 focus:ring-neon-cyan/20"
+    />
+  );
 
-      const { data, error } = await supabase
-        .from("job_subscribers")
-        .insert({
-          email,
-          is_active: true,
-        })
-        .select();
+  const button = (
+    <button
+      type="submit"
+      disabled={status === "sending"}
+      className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-2xl border border-neon-cyan/30 bg-gradient-to-r from-neon-cyan/20 to-neon-cyan/10 px-6 py-3 font-semibold text-neon-cyan transition-all hover:border-neon-cyan/50 hover:from-neon-cyan/30 hover:to-neon-cyan/20 disabled:opacity-60"
+    >
+      {status === "sending" ? (
+        "Subscribing…"
+      ) : (
+        <>
+          Subscribe
+          <FiArrowRight size={18} />
+        </>
+      )}
+    </button>
+  );
 
-      if (error) {
-        // If email already exists and is unsubscribed, reactivate it
-        if (error.code === "23505") {
-          const { error: updateError } = await supabase
-            .from("job_subscribers")
-            .update({ is_active: true, unsubscribed_at: null })
-            .eq("email", email);
+  // Compact: single row, sits above the fold without pushing content down.
+  if (compact) {
+    return (
+      <div className="relative overflow-hidden rounded-2xl border border-neon-cyan/20 bg-gradient-to-r from-neon-cyan/10 via-blue-500/5 to-transparent px-5 py-4">
+        <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2.5">
+            <FiBell size={18} className="shrink-0 text-neon-cyan" />
+            <p className="text-sm font-semibold text-white">
+              {status === "done"
+                ? "✓ You're all set — new jobs will land in your inbox."
+                : "Get notified when new jobs are posted"}
+            </p>
+          </div>
 
-          if (updateError) throw new Error("Could not subscribe.");
-        } else {
-          throw new Error(error.message || "Could not subscribe.");
-        }
-      }
+          {status !== "done" && (
+            <form
+              onSubmit={subscribe}
+              className="flex flex-col gap-2 sm:flex-row sm:shrink-0"
+            >
+              <input
+                type="email"
+                placeholder="you@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="rounded-xl border border-white/10 bg-white/[0.05] px-3 py-2 text-sm text-white placeholder-white/40 outline-none transition-all focus:border-neon-cyan/50 focus:bg-white/10 sm:w-56"
+              />
+              <button
+                type="submit"
+                disabled={status === "sending"}
+                className="inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-xl border border-neon-cyan/30 bg-neon-cyan/15 px-4 py-2 text-sm font-semibold text-neon-cyan transition-all hover:bg-neon-cyan/25 disabled:opacity-60"
+              >
+                {status === "sending" ? "…" : "Subscribe"}
+              </button>
+            </form>
+          )}
+        </div>
 
-      setStatus("done");
-      setEmail("");
-      setTimeout(() => setStatus("idle"), 3000);
-    } catch (err) {
-      setStatus("error");
-      setMsg(err.message || "Could not subscribe.");
-    }
-  };
+        {status === "error" && (
+          <p className="relative mt-2 text-xs text-red-400">{msg}</p>
+        )}
+      </div>
+    );
+  }
 
   if (status === "done") {
     return (
@@ -92,32 +124,11 @@ export default function JobUpdatesSubscribe() {
         </div>
 
         <form onSubmit={subscribe} className="mt-6 flex flex-col gap-3 sm:flex-row">
-          <input
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="flex-1 rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 text-white placeholder-white/40 outline-none transition-all focus:border-neon-cyan/50 focus:bg-white/10 focus:ring-1 focus:ring-neon-cyan/20"
-          />
-          <button
-            type="submit"
-            disabled={status === "sending"}
-            className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-2xl border border-neon-cyan/30 bg-gradient-to-r from-neon-cyan/20 to-neon-cyan/10 px-6 py-3 font-semibold text-neon-cyan transition-all hover:border-neon-cyan/50 hover:from-neon-cyan/30 hover:to-neon-cyan/20 disabled:opacity-60"
-          >
-            {status === "sending" ? (
-              "Subscribing…"
-            ) : (
-              <>
-                Subscribe
-                <FiArrowRight size={18} />
-              </>
-            )}
-          </button>
+          {input}
+          {button}
         </form>
 
-        {status === "error" && (
-          <p className="mt-3 text-sm text-red-400">{msg}</p>
-        )}
+        {status === "error" && <p className="mt-3 text-sm text-red-400">{msg}</p>}
       </div>
     </div>
   );

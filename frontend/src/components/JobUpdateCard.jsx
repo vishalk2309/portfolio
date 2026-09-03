@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FiBriefcase, FiCalendar, FiMapPin, FiAward, FiArrowRight, FiShare2 } from "react-icons/fi";
+import { FiBriefcase, FiCalendar, FiMapPin, FiAward, FiArrowRight, FiShare2, FiCopy } from "react-icons/fi";
 import { FaLinkedin, FaTwitter, FaWhatsapp } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
+import { useState } from "react";
 
 export default function JobUpdateCard({ update, viewMode = "grid" }) {
+  const [copied, setCopied] = useState(false);
+
   const startDate = update.start_date
     ? new Date(update.start_date).toLocaleDateString("en-US", {
         month: "short",
@@ -28,6 +31,12 @@ export default function JobUpdateCard({ update, viewMode = "grid" }) {
     twitter: `https://twitter.com/intent/tweet?text=Check out this job: ${encodeURIComponent(jobTitle)} at ${encodeURIComponent(jobCompany)}&url=${encodeURIComponent(jobUrl)}`,
     whatsapp: `https://wa.me/?text=Check out this job opportunity: ${encodeURIComponent(jobTitle)} at ${encodeURIComponent(jobCompany)} - ${encodeURIComponent(jobUrl)}`,
     email: `mailto:?subject=Interesting Job Opportunity: ${encodeURIComponent(jobTitle)}&body=Check this out: ${encodeURIComponent(jobUrl)}`,
+  };
+
+  const copyLink = () => {
+    navigator.clipboard.writeText(jobUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   // Grid view
@@ -93,6 +102,11 @@ export default function JobUpdateCard({ update, viewMode = "grid" }) {
           {update.job_type && (
             <span className="rounded-full border border-white/15 bg-white/5 px-2 py-0.5">
               {update.job_type}
+            </span>
+          )}
+          {update.work_mode && (
+            <span className="rounded-full border border-neon-cyan/25 bg-neon-cyan/10 px-2 py-0.5 text-neon-cyan">
+              {update.work_mode}
             </span>
           )}
         </div>
@@ -176,6 +190,23 @@ export default function JobUpdateCard({ update, viewMode = "grid" }) {
 
       {/* Share buttons */}
       <div className="mt-4 flex gap-2 border-t border-white/10 pt-3">
+        <button
+          onClick={copyLink}
+          className={`inline-flex items-center justify-center gap-1 rounded-lg px-2 py-2 text-sm font-medium transition-all ${
+            copied
+              ? "bg-emerald-500/20 text-emerald-400"
+              : "bg-white/5 text-purple-400 hover:bg-white/10"
+          }`}
+          title={copied ? "Copied!" : "Copy link"}
+        >
+          {copied ? (
+            <>
+              ✓ Copied
+            </>
+          ) : (
+            <FiCopy size={16} />
+          )}
+        </button>
         <a
           href={shareLinks.linkedin}
           target="_blank"
@@ -265,6 +296,11 @@ export default function JobUpdateCard({ update, viewMode = "grid" }) {
               {update.job_type}
             </span>
           )}
+          {update.work_mode && (
+            <span className="rounded-full border border-neon-cyan/25 bg-neon-cyan/10 px-2 py-0.5 text-neon-cyan">
+              {update.work_mode}
+            </span>
+          )}
           {startDate && (
             <span className="flex items-center gap-1">
               <FiCalendar size={12} />
@@ -276,6 +312,23 @@ export default function JobUpdateCard({ update, viewMode = "grid" }) {
 
       <div className="flex gap-2 sm:shrink-0">
         <div className="flex gap-1">
+          <button
+            onClick={copyLink}
+            className={`inline-flex items-center justify-center gap-1 rounded-lg px-2 py-2 text-xs font-medium transition-all ${
+              copied
+                ? "bg-emerald-500/20 text-emerald-400"
+                : "bg-white/5 text-purple-400 hover:bg-white/10"
+            }`}
+            title={copied ? "Copied!" : "Copy link"}
+          >
+            {copied ? (
+              <>
+                ✓ Copied
+              </>
+            ) : (
+              <FiCopy size={14} />
+            )}
+          </button>
           <a
             href={shareLinks.linkedin}
             target="_blank"

@@ -74,7 +74,7 @@ Deno.serve(async (req) => {
   // Get the job update
   const { data: job } = await supabase
     .from("job_updates")
-    .select("id,title,slug,description,company,position,location,job_type,experience,qualification,apply_url,published")
+    .select("id,title,slug,description,company,position,location,job_type,work_mode,batch,experience,qualification,apply_url,published")
     .eq("id", jobId)
     .maybeSingle();
 
@@ -107,7 +107,9 @@ Deno.serve(async (req) => {
       ${job.company ? `<p style="margin:8px 0;color:#555"><strong>💼 Company:</strong> ${esc(job.company)}</p>` : ""}
       ${job.position ? `<p style="margin:8px 0;color:#555"><strong>📌 Position:</strong> ${esc(job.position)}</p>` : ""}
       ${job.location ? `<p style="margin:8px 0;color:#555"><strong>📍 Location:</strong> ${esc(job.location)}</p>` : ""}
-      ${job.job_type ? `<p style="margin:8px 0;color:#555"><strong>🏢 Type:</strong> ${esc(job.job_type)}</p>` : ""}
+      ${job.job_type ? `<p style="margin:8px 0;color:#555"><strong>🏢 Job Type:</strong> ${esc(job.job_type)}</p>` : ""}
+      ${job.work_mode ? `<p style="margin:8px 0;color:#555"><strong>🌐 Work Mode:</strong> ${esc(job.work_mode)}</p>` : ""}
+      ${job.batch ? `<p style="margin:8px 0;color:#555"><strong>🎯 Batch:</strong> ${esc(job.batch)}</p>` : ""}
       ${job.experience ? `<p style="margin:8px 0;color:#555"><strong>📚 Experience:</strong> ${esc(job.experience)}</p>` : ""}
       ${job.qualification ? `<p style="margin:8px 0;color:#555"><strong>🎓 Qualification:</strong> ${esc(job.qualification)}</p>` : ""}
     </div>

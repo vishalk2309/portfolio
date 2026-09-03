@@ -14,7 +14,9 @@ create table if not exists job_updates (
   company     text,                       -- company name
   position    text,                       -- job title
   location    text,                       -- job location
-  job_type    text,                       -- Remote, Hybrid, On-site
+  job_type    text,                       -- Full-time, Part-time, Internship, Apprenticeship, Contract
+  work_mode   text,                       -- Remote, Hybrid, On-site
+  batch       text,                       -- batch / cohort identifier
   job_id      text,                       -- job identifier/reference
   experience  text,                       -- required experience (e.g., "3-5 years")
   qualification text,                    -- required qualification (e.g., "Bachelor's in CS")

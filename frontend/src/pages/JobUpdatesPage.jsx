@@ -6,6 +6,7 @@ import Background from "../components/Background";
 import Footer from "../components/Footer";
 import JobUpdateCard from "../components/JobUpdateCard";
 import JobUpdatesSubscribe from "../components/JobUpdatesSubscribe";
+import JobSubscribePopup from "../components/JobSubscribePopup";
 import AdSense from "../components/AdSense";
 import { useJobUpdates } from "../hooks/useJobUpdates";
 import { useSEO } from "../hooks/useSEO";
@@ -127,6 +128,16 @@ export default function JobUpdatesPage() {
           </p>
         </motion.div>
 
+        {/* Subscribe — kept above the fold so it's actually seen */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+          className="mt-6"
+        >
+          <JobUpdatesSubscribe compact />
+        </motion.div>
+
         {/* View Toggle - Top Right */}
         <div className="mt-8 flex justify-end">
           <div className="flex items-center gap-2 glass rounded-full p-1">
@@ -225,12 +236,9 @@ export default function JobUpdatesPage() {
 
         {/* AdSense Ad */}
         <AdSense slot="3452130548" />
-
-        <div className="mt-16">
-          <JobUpdatesSubscribe />
-        </div>
       </main>
 
+      <JobSubscribePopup />
       <Footer />
     </div>
   );
