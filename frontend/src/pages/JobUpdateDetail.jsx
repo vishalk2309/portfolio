@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowLeft, FiBriefcase, FiCalendar, FiMapPin, FiTag, FiAward, FiExternalLink } from "react-icons/fi";
 import Background from "../components/Background";
@@ -11,6 +11,7 @@ import { useStructuredData } from "../hooks/useStructuredData";
 
 export default function JobUpdateDetail() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { slug } = useParams();
   const [update, setUpdate] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -89,7 +90,11 @@ export default function JobUpdateDetail() {
   }, [slug]);
 
   const goBack = () => {
-    if (window.history.length > 1) navigate(-1);
+    // location.key is "default" when this is the first entry in the app's
+    // history (e.g. link opened directly from WhatsApp), so there is nothing
+    // in-app to go back to. window.history.length is unreliable here because
+    // the browser/in-app WebView may already have unrelated entries.
+    if (location.key !== "default") navigate(-1);
     else navigate("/jobs");
   };
 

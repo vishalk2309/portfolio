@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowLeft, FiGrid, FiList, FiMoon, FiSun, FiHome } from "react-icons/fi";
 import Background from "../components/Background";
@@ -15,6 +15,7 @@ import { applyMode, getMode } from "../theme";
 
 export default function JobUpdatesPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { updates, status } = useJobUpdates();
   const [selectedTag, setSelectedTag] = useState(null);
   const [viewMode, setViewMode] = useState("grid");
@@ -65,7 +66,10 @@ export default function JobUpdatesPage() {
   );
 
   const goBack = () => {
-    if (window.history.length > 1) navigate(-1);
+    // "default" key means this page is the first in-app history entry
+    // (opened directly from an external link), so navigate(-1) would leave
+    // the site instead of going back within the portfolio.
+    if (location.key !== "default") navigate(-1);
     else navigate("/");
   };
 
