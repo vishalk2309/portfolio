@@ -89,6 +89,21 @@ export default function JobUpdateDetail() {
     load();
   }, [slug]);
 
+  // Count one view per browser session per post.
+  useEffect(() => {
+    if (!update?.id || !supabase) return;
+
+    const key = `job_viewed_${update.id}`;
+    try {
+      if (sessionStorage.getItem(key)) return;
+      sessionStorage.setItem(key, "1");
+    } catch {
+      return; // private mode — don't count rather than count every load
+    }
+
+    supabase.rpc("bump_job_views", { p_id: update.id });
+  }, [update?.id]);
+
   const goBack = () => {
     // location.key is "default" when this is the first entry in the app's
     // history (e.g. link opened directly from WhatsApp), so there is nothing

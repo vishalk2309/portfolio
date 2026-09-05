@@ -187,13 +187,21 @@ export default function JobEditor() {
     if (url) set("cover_image", url);
   };
 
+  const totalViews = updates.reduce((sum, u) => sum + (u.views || 0), 0);
+
   if (!editing) {
     return (
       <div className="glass rounded-3xl p-6 sm:p-8">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-2xl font-bold">
-            <span className="gradient-text">Job Updates</span>
-          </h2>
+          <div>
+            <h2 className="text-2xl font-bold">
+              <span className="gradient-text">Job Updates</span>
+            </h2>
+            <p className="mt-1 text-xs text-white/40">
+              {totalViews.toLocaleString()} total view
+              {totalViews === 1 ? "" : "s"}
+            </p>
+          </div>
           <button
             onClick={startNew}
             className="rounded-xl bg-gradient-btn px-4 py-2 text-sm font-semibold text-base"
@@ -236,6 +244,12 @@ export default function JobEditor() {
                     {u.position ? ` • ${u.position}` : ""}
                   </div>
                 </div>
+                <span
+                  title={`${(u.views || 0).toLocaleString()} views`}
+                  className="shrink-0 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-xs tabular-nums text-white/60"
+                >
+                  👁 {(u.views || 0).toLocaleString()}
+                </span>
                 <button
                   onClick={() => togglePublish(u)}
                   className="rounded-lg px-3 py-1.5 text-xs text-white/60 hover:text-white"
