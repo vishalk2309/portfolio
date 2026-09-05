@@ -97,12 +97,27 @@ export default function JobUpdateDetail() {
     const key = `job_viewed_${update.id}`;
     try {
       if (sessionStorage.getItem(key)) return;
+      // Claim the key up front so a StrictMode double-mount or a fast
+      // re-render can't double count; released again if the call fails.
       sessionStorage.setItem(key, "1");
     } catch {
       return; // private mode — don't count rather than count every load
     }
 
-    supabase.rpc("bump_job_views", { p_id: update.id });
+    (async () => {
+      const { error } = await supabase.rpc("bump_job_views", {
+        p_id: update.id,
+      });
+      // Failed call (offline, RPC missing) — drop the claim so the next
+      // page load retries instead of losing the view for the whole session.
+      if (error) {
+        try {
+          sessionStorage.removeItem(key);
+        } catch {
+          /* nothing to release */
+        }
+      }
+    })();
   }, [update?.id]);
 
   const goBack = () => {
