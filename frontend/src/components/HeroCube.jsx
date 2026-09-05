@@ -28,7 +28,25 @@ function Cube() {
   );
 }
 
+// Remote-isolation browsers (Zscaler, some VDI) and older GPUs expose no WebGL
+// context at all. Probing once up front is cheaper than letting the Canvas
+// constructor throw, and lets the hero render without the cube.
+const supportsWebGL = () => {
+  if (typeof document === "undefined") return false;
+  try {
+    const canvas = document.createElement("canvas");
+    return !!(
+      window.WebGLRenderingContext &&
+      (canvas.getContext("webgl") || canvas.getContext("experimental-webgl"))
+    );
+  } catch {
+    return false;
+  }
+};
+
 export default function HeroCube() {
+  if (!supportsWebGL()) return null;
+
   return (
     <Canvas
       className="!absolute inset-0"

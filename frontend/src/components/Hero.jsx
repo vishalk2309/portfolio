@@ -4,6 +4,7 @@ import { useContent } from "../lib/ContentContext";
 import Magnetic from "./Magnetic";
 import IndependenceDayWish from "./IndependenceDayWish";
 import ResumeDownload from "./ResumeDownload";
+import ErrorBoundary from "./ErrorBoundary";
 //import PortfolioAiChat from "./PortfolioAiChat";
 
 // Lazy-load the WebGL cube so three.js ships as its own chunk.
@@ -32,9 +33,11 @@ export default function Hero() {
       >
         {/* 3D floating cube behind the name */}
         <div className="pointer-events-none absolute left-1/2 top-[14%] h-[55vh] w-[55vh] -translate-x-1/2 opacity-90">
-          <Suspense fallback={null}>
-            <HeroCube />
-          </Suspense>
+          <ErrorBoundary>
+            <Suspense fallback={null}>
+              <HeroCube />
+            </Suspense>
+          </ErrorBoundary>
         </div>
 
         {/* AI Chat Search Bar */}
