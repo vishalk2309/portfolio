@@ -5,6 +5,7 @@ import { FiArrowLeft, FiBriefcase, FiCalendar, FiMapPin, FiTag, FiAward, FiExter
 import Background from "../components/Background";
 import Footer from "../components/Footer";
 import JobSubscribePopup from "../components/JobSubscribePopup";
+import AdSense from "../components/AdSense";
 import { supabase } from "../lib/supabase";
 import { useSEO } from "../hooks/useSEO";
 import { useStructuredData } from "../hooks/useStructuredData";
@@ -339,6 +340,10 @@ export default function JobUpdateDetail() {
                 </button>
               </div>
             </div>
+
+            {/* AdSense Ad — reuses the Jobs Page unit ID. Swap for a dedicated
+                "Job Detail" unit if you want separate reporting. */}
+            <AdSense slot="3452130548" />
           </motion.article>
         )}
       </main>

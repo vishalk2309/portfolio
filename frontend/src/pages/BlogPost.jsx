@@ -9,6 +9,7 @@ import Comments from "../components/Comments";
 import SubscribeBox from "../components/SubscribeBox";
 import EnhancedNewsletter from "../components/EnhancedNewsletter";
 import BlogPostStats from "../components/BlogPostStats";
+import AdSense from "../components/AdSense";
 import { useBlogPost } from "../hooks/useBlogs";
 import { supabase } from "../lib/supabase";
 import { useSEO } from "../hooks/useSEO";
@@ -168,6 +169,10 @@ export default function BlogPost() {
               title={post.title}
             />
           </div>
+
+          {/* AdSense Ad — reuses the Blog Index unit ID. Swap for a dedicated
+              "Blog Post" unit if you want separate reporting. */}
+          <AdSense slot="7419295719" />
 
           <Comments blogId={post.id} onCountChange={setCommentCount} />
 
